@@ -2,13 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel/Kinyozi POS System - Kenya</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kinyozi POS">
+    <meta name="theme-color" content="#667eea">
+    <title>Kinyozi POS System - Kenya</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         body {
@@ -16,6 +29,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 10px;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
@@ -25,42 +39,48 @@
 
         header {
             background: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .header-title {
             flex: 1;
+            min-width: 200px;
         }
 
         .business-name {
-            font-size: 28px;
+            font-size: clamp(20px, 5vw, 28px);
             font-weight: bold;
             color: #667eea;
         }
 
         .business-subtitle {
-            font-size: 14px;
+            font-size: clamp(12px, 3vw, 14px);
             color: #666;
-            margin-top: 5px;
+            margin-top: 2px;
         }
 
         .user-info {
             text-align: right;
+            flex: 1;
+            min-width: 150px;
         }
 
         .user-name {
             font-weight: 600;
             color: #333;
+            font-size: clamp(12px, 3vw, 14px);
         }
 
         .user-role {
-            font-size: 12px;
+            font-size: 11px;
             color: #999;
         }
 
@@ -68,33 +88,42 @@
             background: #dc3545;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 15px;
             border-radius: 5px;
             cursor: pointer;
-            margin-left: 20px;
+            margin-left: 10px;
             font-weight: 600;
+            font-size: clamp(11px, 2.5vw, 13px);
+            touch-action: manipulation;
         }
 
-        .logout-btn:hover {
-            background: #c82333;
+        .logout-btn:active {
+            transform: scale(0.95);
         }
 
         .nav-tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
+            justify-content: flex-start;
         }
 
         .nav-btn {
             background: white;
             border: 2px solid #ddd;
-            padding: 12px 24px;
+            padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 24px);
             border-radius: 5px;
             cursor: pointer;
             font-weight: 600;
             color: #666;
             transition: all 0.3s ease;
+            font-size: clamp(11px, 2.5vw, 13px);
+            touch-action: manipulation;
+            white-space: nowrap;
+            flex: 1;
+            min-width: 80px;
+            min-height: 44px;
         }
 
         .nav-btn.active {
@@ -103,15 +132,14 @@
             border-color: #667eea;
         }
 
-        .nav-btn:hover {
-            border-color: #667eea;
-            color: #667eea;
+        .nav-btn:active {
+            transform: scale(0.95);
         }
 
         .content {
             display: none;
             background: white;
-            padding: 30px;
+            padding: clamp(15px, 5vw, 30px);
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -120,15 +148,22 @@
             display: block;
         }
 
+        .content h2 {
+            font-size: clamp(18px, 5vw, 24px);
+            margin-bottom: 15px;
+            color: #333;
+        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 600;
             color: #333;
+            font-size: clamp(12px, 2.5vw, 14px);
         }
 
         input[type="text"],
@@ -138,11 +173,13 @@
         select,
         textarea {
             width: 100%;
-            padding: 12px;
+            padding: clamp(10px, 2.5vw, 12px);
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 14px;
+            font-size: clamp(14px, 3vw, 16px);
             font-family: inherit;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         input:focus,
@@ -157,17 +194,24 @@
             background: #667eea;
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: clamp(10px, 2.5vw, 12px) clamp(15px, 3vw, 24px);
             border-radius: 5px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 14px;
+            font-size: clamp(12px, 3vw, 14px);
             transition: all 0.3s ease;
+            touch-action: manipulation;
+            -webkit-appearance: none;
+            appearance: none;
+            min-height: 44px;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
         }
 
         .btn:hover {
             background: #5568d3;
-            transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
 
@@ -199,12 +243,13 @@
         .table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 15px;
+            font-size: clamp(12px, 2.5vw, 14px);
         }
 
         .table th {
             background: #f8f9fa;
-            padding: 12px;
+            padding: clamp(8px, 2vw, 12px);
             text-align: left;
             font-weight: 600;
             border-bottom: 2px solid #ddd;
@@ -212,7 +257,7 @@
         }
 
         .table td {
-            padding: 12px;
+            padding: clamp(8px, 2vw, 12px);
             border-bottom: 1px solid #ddd;
         }
 
@@ -221,10 +266,11 @@
         }
 
         .alert {
-            padding: 15px;
+            padding: clamp(10px, 2.5vw, 15px);
             border-radius: 5px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border-left: 4px solid;
+            font-size: clamp(12px, 2.5vw, 14px);
         }
 
         .alert-success {
@@ -262,6 +308,7 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            padding: 10px;
         }
 
         .modal.active {
@@ -270,49 +317,57 @@
 
         .modal-content {
             background: white;
-            padding: 30px;
+            padding: clamp(15px, 4vw, 30px);
             border-radius: 10px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
+            max-width: 95vw;
+            width: 100%;
+            max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
         .modal-header {
-            font-size: 24px;
+            font-size: clamp(18px, 4vw, 24px);
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #333;
         }
 
         .modal-close {
             float: right;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             cursor: pointer;
             color: #999;
-        }
-
-        .modal-close:hover {
-            color: #333;
+            margin-bottom: 10px;
         }
 
         .pos-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: clamp(8px, 2vw, 15px);
+            margin-bottom: 15px;
         }
 
         .service-btn {
             background: #f0f0f0;
             border: 2px solid #ddd;
-            padding: 15px;
+            padding: clamp(10px, 2.5vw, 15px);
             border-radius: 5px;
             cursor: pointer;
             text-align: center;
             transition: all 0.3s ease;
+            font-size: clamp(12px, 2.5vw, 14px);
+            touch-action: manipulation;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .service-btn:active {
+            transform: scale(0.95);
         }
 
         .service-btn:hover {
@@ -328,19 +383,30 @@
 
         .service-name {
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
+            font-size: clamp(12px, 2.5vw, 14px);
         }
 
         .service-price {
-            font-size: 16px;
+            font-size: clamp(14px, 3vw, 16px);
             font-weight: bold;
             color: #28a745;
         }
 
+        .service-btn.selected .service-price {
+            color: #ffc107;
+        }
+
         .pos-container {
             display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 30px;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .pos-container {
+                grid-template-columns: 1fr 380px;
+            }
         }
 
         .pos-left {
@@ -349,147 +415,305 @@
 
         .pos-right {
             background: #f8f9fa;
-            padding: 20px;
+            padding: clamp(12px, 3vw, 20px);
             border-radius: 10px;
             height: fit-content;
-            position: sticky;
-            top: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .pos-right {
+                position: sticky;
+                top: 20px;
+            }
         }
 
         .receipt-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
+            display: grid;
+            grid-template-columns: 1fr 50px 80px 40px;
+            gap: 8px;
+            padding: clamp(8px, 2vw, 10px) 0;
             border-bottom: 1px solid #ddd;
-            font-size: 14px;
+            font-size: clamp(11px, 2.5vw, 13px);
+            align-items: center;
         }
 
         .receipt-item-name {
-            flex: 1;
+            font-weight: 500;
         }
 
         .receipt-item-qty {
-            width: 50px;
             text-align: center;
+            background: #e9ecef;
+            padding: 4px;
+            border-radius: 3px;
         }
 
         .receipt-item-price {
-            width: 80px;
             text-align: right;
-        }
-
-        .receipt-item-remove {
-            width: 30px;
-            text-align: center;
+            font-weight: 600;
         }
 
         .receipt-item-remove button {
             background: #dc3545;
             color: white;
             border: none;
-            padding: 2px 6px;
+            padding: 4px 8px;
             border-radius: 3px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
+            touch-action: manipulation;
+            width: 100%;
+            min-height: 30px;
+        }
+
+        .receipt-item-remove button:active {
+            transform: scale(0.9);
         }
 
         .receipt-totals {
-            margin-top: 20px;
-            padding-top: 15px;
+            margin-top: 15px;
+            padding-top: 12px;
             border-top: 2px solid #333;
         }
 
         .receipt-total-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 600;
+            font-size: clamp(12px, 2.5vw, 14px);
         }
 
         .receipt-grand-total {
             display: flex;
             justify-content: space-between;
-            font-size: 18px;
+            font-size: clamp(16px, 4vw, 18px);
             color: #28a745;
-            margin-top: 10px;
-            padding-top: 10px;
+            margin-top: 8px;
+            padding-top: 8px;
             border-top: 2px solid #333;
         }
 
         .btn-group {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
         }
 
         .btn-group .btn {
             flex: 1;
+            min-width: 80px;
         }
 
         .grid-2 {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
         .grid-3 {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 600px) {
+            .grid-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 1000px) {
+            .grid-3 {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
         }
 
         .card {
             background: #f8f9fa;
-            padding: 20px;
+            padding: clamp(15px, 4vw, 20px);
             border-radius: 10px;
             border-left: 4px solid #667eea;
         }
 
         .card-title {
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #333;
+            font-size: clamp(12px, 2.5vw, 14px);
         }
 
         .card-value {
-            font-size: 24px;
+            font-size: clamp(18px, 5vw, 24px);
             font-weight: bold;
             color: #667eea;
         }
 
-        .approval-section {
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-pending {
             background: #fff3cd;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            border-left: 4px solid #ffc107;
+            color: #856404;
         }
 
-        .approval-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #ffd700;
-        }
-
-        .approval-item:last-child {
-            border-bottom: none;
-        }
-
-        @media print {
-            body {
-                background: white;
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
             }
 
-            .no-print {
+            .user-info {
+                width: 100%;
+                text-align: left;
+                margin-top: 10px;
+            }
+
+            .logout-btn {
+                margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+            }
+
+            .nav-tabs {
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .nav-btn {
+                flex: 1;
+                min-width: 70px;
+                margin-bottom: 5px;
+            }
+
+            .pos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+
+            .receipt-item {
+                grid-template-columns: 1fr 35px;
+                gap: 5px;
+            }
+
+            .receipt-item-qty,
+            .receipt-item-price {
                 display: none;
             }
 
-            .receipt {
-                width: 80mm;
-                margin: 0;
-                padding: 10px;
-                font-family: 'Courier New', monospace;
-                background: white;
+            .receipt-item-remove {
+                grid-column: 2;
             }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            input[type="number"],
+            select,
+            textarea {
+                font-size: 16px;
+            }
+
+            .table {
+                font-size: 11px;
+            }
+
+            .table th,
+            .table td {
+                padding: 6px;
+            }
+
+            .modal-content {
+                padding: 15px;
+            }
+        }
+
+        @media (orientation: landscape) and (max-height: 600px) {
+            body {
+                padding: 5px;
+            }
+
+            header {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+
+            .content {
+                padding: 10px;
+            }
+
+            .nav-tabs {
+                gap: 5px;
+                margin-bottom: 10px;
+            }
+
+            .nav-btn {
+                padding: 6px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .business-name {
+                font-size: 18px;
+            }
+
+            .nav-btn {
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+
+            .service-btn {
+                min-height: 70px;
+            }
+
+            .pos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            }
+        }
+
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(10px, env(safe-area-inset-left));
+                padding-right: max(10px, env(safe-area-inset-right));
+                padding-top: max(10px, env(safe-area-inset-top));
+                padding-bottom: max(10px, env(safe-area-inset-bottom));
+            }
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .kinyozi-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
         }
 
         .receipt {
@@ -508,16 +732,14 @@
             margin-bottom: 10px;
             border-bottom: 1px dashed #333;
             padding-bottom: 10px;
-        }
-
-        .receipt-body {
-            margin: 10px 0;
+            font-weight: bold;
         }
 
         .receipt-line {
             display: flex;
             justify-content: space-between;
             margin: 5px 0;
+            font-size: 11px;
         }
 
         .receipt-footer {
@@ -528,141 +750,85 @@
             font-size: 10px;
         }
 
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge-approved {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .badge-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .badge-rejected {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .approval-counter {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .pos-container {
-                grid-template-columns: 1fr;
+        @media print {
+            body {
+                background: white;
             }
 
-            .grid-2, .grid-3 {
-                grid-template-columns: 1fr;
+            .no-print {
+                display: none;
             }
 
-            .pos-right {
+            header, .nav-tabs {
+                display: none;
+            }
+
+            .content {
+                display: none;
+            }
+
+            #receiptModal {
                 position: static;
+                background: white;
             }
 
-            header {
-                flex-direction: column;
-                align-items: flex-start;
+            .modal {
+                position: static;
+                background: white;
             }
 
-            .user-info {
-                text-align: left;
-                margin-top: 15px;
-            }
-
-            .logout-btn {
-                margin-left: 0;
-                margin-top: 10px;
+            .modal-content {
+                max-width: 80mm;
+                box-shadow: none;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
-        <header>
+        <!-- HEADER -->
+        <header class="no-print">
             <div class="header-title">
-                <div class="business-name" id="businessName">Hotel/Kinyozi POS</div>
-                <div class="business-subtitle" id="businessSubtitle">Point of Sales System</div>
+                <div class="business-name" id="businessName">Kinyozi POS System</div>
+                <div class="business-subtitle">Professional Hair Salon Management</div>
             </div>
             <div class="user-info">
-                <div class="user-name" id="currentUser">Not logged in</div>
-                <div class="user-role" id="currentRole">Guest</div>
+                <div class="user-name" id="userName">Welcome</div>
+                <div class="user-role" id="userRole">-</div>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
         </header>
 
-        <!-- Navigation Tabs -->
-        <div class="nav-tabs">
-            <button class="nav-btn active" onclick="switchTab('login')">Login</button>
-            <button class="nav-btn" onclick="switchTab('sales')" id="salesTab" style="display:none;">Sales</button>
-            <button class="nav-btn" onclick="switchTab('staff')" id="staffTab" style="display:none;">Staff Management</button>
-            <button class="nav-btn" onclick="switchTab('prices')" id="pricesTab" style="display:none;">Prices</button>
-            <button class="nav-btn" onclick="switchTab('approvals')" id="approvalsTab" style="display:none;">Approvals</button>
-            <button class="nav-btn" onclick="switchTab('reports')" id="reportsTab" style="display:none;">Reports</button>
+        <!-- NAVIGATION TABS -->
+        <div class="nav-tabs no-print" id="navTabs" style="display: none;">
+            <button class="nav-btn active" onclick="switchTab('sales')">🎯 Sales</button>
+            <button class="nav-btn" onclick="switchTab('staff')">👥 Staff</button>
+            <button class="nav-btn" onclick="switchTab('prices')">💰 Prices</button>
+            <button class="nav-btn" onclick="switchTab('reports')">📊 Reports</button>
         </div>
 
-        <!-- LOGIN TAB -->
+        <!-- LOGIN PAGE -->
         <div id="login" class="content active">
-            <h2>Welcome to Hotel/Kinyozi POS System</h2>
+            <h2>🪒 Kinyozi POS System - Login</h2>
             
-            <!-- Welcome Message -->
-            <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px; border-left: 4px solid #17a2b8;">
-                <h3 style="margin-top: 0; color: #0c5460;">🎯 Modern Point of Sales System</h3>
-                <p style="margin: 10px 0; color: #0c5460;">
-                    Welcome to your business management solution. Whether you run a kinyozi (hair salon), hotel, or both, 
-                    this system helps you manage staff, track sales, and grow your business.
+            <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px;">
+                <h3 style="margin-top: 0;">Welcome to Kinyozi Management</h3>
+                <p style="margin: 10px 0;">
+                    Professional Point of Sales system designed specifically for hair salons and barbershops (Kinyozi).
                 </p>
-                <ul style="margin: 10px 0; color: #0c5460; padding-left: 20px;">
-                    <li><strong>Manage Staff:</strong> Create accounts, assign roles, track performance</li>
-                    <li><strong>Process Sales:</strong> Quick transactions with professional receipts</li>
-                    <li><strong>Fair Pricing:</strong> Dual-approval system prevents pricing bias</li>
-                    <li><strong>Real-Time Reports:</strong> Track sales by staff and service</li>
-                    <li><strong>Cloud Backup:</strong> Automatic Google Sheets sync</li>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>Quick service sales processing</li>
+                    <li>Track barber/stylist performance</li>
+                    <li>Fair pricing with approvals</li>
+                    <li>Real-time sales reports</li>
+                    <li>Professional receipts</li>
                 </ul>
             </div>
 
-            <!-- Login/Account Container -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 900px;">
-                <!-- Login Section -->
+                <!-- LOGIN SECTION -->
                 <div>
-                    <h3 style="color: #333; margin-bottom: 20px;">🔐 Login to Your Account</h3>
+                    <h3 style="color: #333; margin-bottom: 20px;">🔐 Login</h3>
                     <div style="background: #f8f9fa; padding: 30px; border-radius: 10px;">
                         <div class="form-group">
                             <label>Email Address</label>
@@ -679,39 +845,38 @@
                         
                         <p style="text-align: center; color: #666; margin-bottom: 0;">
                             <strong>Demo Credentials:</strong><br>
-                            <small>Email: manager@hotel.com</small><br>
+                            <small>Email: manager@kinyozi.com</small><br>
                             <small>Password: manager123</small>
                         </p>
                     </div>
                 </div>
 
-                <!-- Create Account Section -->
+                <!-- CREATE ACCOUNT SECTION -->
                 <div>
-                    <h3 style="color: #333; margin-bottom: 20px;">✨ Create New Business Account</h3>
+                    <h3 style="color: #333; margin-bottom: 20px;">✨ Create New Salon Account</h3>
                     <div style="background: #f0f7ff; padding: 30px; border-radius: 10px; border-left: 4px solid #667eea;">
                         <p style="color: #666; margin-bottom: 20px; font-size: 14px;">
-                            New to the system? Create your business account as a manager. You'll be able to:
+                            New salon? Create your manager account to:
                         </p>
                         <ul style="color: #666; margin-bottom: 20px; padding-left: 20px; font-size: 14px;">
-                            <li>Create your business profile</li>
-                            <li>Manage your team</li>
-                            <li>Set services and prices</li>
-                            <li>Approve price changes</li>
-                            <li>Track sales reports</li>
+                            <li>Manage your barbers/stylists</li>
+                            <li>Set service prices</li>
+                            <li>Track daily earnings</li>
+                            <li>Monitor staff performance</li>
                         </ul>
                         
                         <button class="btn btn-success" onclick="toggleCreateAccount()" style="width: 100%; margin-bottom: 15px;">
                             Create New Account
                         </button>
                         
-                        <!-- Create Account Form (Hidden by default) -->
+                        <!-- CREATE ACCOUNT FORM -->
                         <div id="createAccountForm" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
-                            <h4 style="color: #333; margin-bottom: 15px;">📝 Business Manager Setup</h4>
+                            <h4 style="color: #333; margin-bottom: 15px;">📝 Salon Setup</h4>
                             
                             <div class="form-group">
-                                <label>Business Name/Title</label>
-                                <input type="text" id="newBusinessName" placeholder="e.g., John's Kinyozi or Premier Hotel">
-                                <small style="color: #666;">This will be displayed at the top of the system</small>
+                                <label>Salon Name</label>
+                                <input type="text" id="newSalonName" placeholder="e.g., John's Top Cuts">
+                                <small style="color: #666;">Name appears at top of system</small>
                             </div>
                             
                             <div class="form-group">
@@ -732,7 +897,7 @@
                             <div class="form-group">
                                 <label>Password</label>
                                 <input type="password" id="newManagerPassword" placeholder="Create a strong password">
-                                <small style="color: #666;">Minimum 8 characters recommended</small>
+                                <small style="color: #666;">Minimum 6 characters</small>
                             </div>
                             
                             <div class="form-group">
@@ -740,22 +905,10 @@
                                 <input type="password" id="newManagerPasswordConfirm" placeholder="Confirm your password">
                             </div>
                             
-                            <div class="form-group">
-                                <label>Business Type</label>
-                                <select id="businessType" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
-                                    <option value="">-- Select Business Type --</option>
-                                    <option value="kinyozi">Kinyozi (Hair Salon/Barbershop)</option>
-                                    <option value="hotel">Hotel/Lodge</option>
-                                    <option value="hybrid">Hotel + Kinyozi/Spa</option>
-                                    <option value="restaurant">Restaurant/Cafe</option>
-                                    <option value="other">Other Service Business</option>
-                                </select>
-                            </div>
-                            
                             <div class="form-group" style="background: #fff3cd; padding: 12px; border-radius: 5px; border-left: 4px solid #ffc107;">
                                 <label style="margin-bottom: 10px;">
                                     <input type="checkbox" id="agreeTerms" style="margin-right: 8px;">
-                                    I agree to the terms and understand this is my business account
+                                    I agree to terms and understand this is my salon account
                                 </label>
                             </div>
                             
@@ -773,302 +926,191 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Info Section -->
-            <div class="alert alert-success" style="max-width: 900px; margin-top: 30px;">
-                <h4 style="margin-top: 0; color: #155724;">💡 How It Works</h4>
-                <p style="color: #155724; margin: 10px 0;">
-                    Create your account as the manager/owner. You'll set up your business, create staff accounts, 
-                    add services, and manage everything. Your staff logs in with their own credentials to process sales 
-                    and approve price changes. All data syncs automatically to your Google Sheet for backup and access from anywhere.
-                </p>
-            </div>
         </div>
 
         <!-- SALES TAB -->
         <div id="sales" class="content">
-            <h2>Point of Sales</h2>
+            <h2>🪒 Process Service Sale</h2>
             <div id="salesMessage"></div>
 
-            <!-- Welcome Message -->
-            <div class="alert alert-success" style="max-width: 700px; margin-bottom: 30px; border-left: 4px solid #28a745;">
-                <h3 style="margin-top: 0; color: #155724;">🎯 Welcome to Sales</h3>
-                <p style="margin: 10px 0; color: #155724;">
-                    You're all set to process customer transactions! Here's how to make a sale:
-                </p>
-                <ul style="margin: 10px 0; color: #155724; padding-left: 20px;">
-                    <li><strong>Select Services:</strong> Click on services your customer wants (left side)</li>
-                    <li><strong>Adjust Quantities:</strong> Change quantity if customer wants multiple services</li>
-                    <li><strong>Apply Discount (Optional):</strong> Enter discount amount if available</li>
-                    <li><strong>Choose Payment:</strong> Select payment method (Cash, M-Pesa, Card, Cheque)</li>
-                    <li><strong>Complete Sale:</strong> Click "Complete Sale" to finalize and record transaction</li>
-                    <li><strong>Print Receipt:</strong> Click "Print" to generate and print professional receipt</li>
-                </ul>
-                <p style="margin: 10px 0; color: #155724; font-style: italic;">
-                    ✨ <strong>Tip:</strong> After printing, the system automatically prepares for your next customer!
+            <div class="alert alert-success" style="max-width: 700px; margin-bottom: 20px;">
+                <h4 style="margin-top: 0;">Quick Service Processing</h4>
+                <p style="margin: 10px 0;">
+                    Select services, customer pays, print receipt. Easy!
                 </p>
             </div>
-            
+
             <div class="pos-container">
+                <!-- LEFT SIDE: SERVICES -->
                 <div class="pos-left">
-                    <h3>Services</h3>
-                    <div class="pos-grid" id="servicesGrid">
-                        <!-- Services will be loaded here -->
-                    </div>
+                    <h3>Select Services</h3>
+                    <div class="pos-grid" id="servicesGrid"></div>
                 </div>
 
+                <!-- RIGHT SIDE: RECEIPT -->
                 <div class="pos-right">
                     <h3>Receipt</h3>
-                    <div id="receiptItems"></div>
-                    
-                    <div class="receipt-totals">
-                        <div class="receipt-total-row">
-                            <span>Subtotal:</span>
-                            <span id="subtotal">KES 0.00</span>
-                        </div>
-                        <div class="receipt-total-row">
-                            <span>Discount:</span>
-                            <input type="number" id="discount" value="0" style="width: 100px; padding: 5px;" placeholder="KES">
-                        </div>
-                        <div class="receipt-grand-total">
-                            <span>Total:</span>
-                            <span id="total">KES 0.00</span>
+                    <div id="receipt">
+                        <div id="receiptItems"></div>
+                        <div class="receipt-totals">
+                            <div class="receipt-total-row">
+                                <span>Subtotal:</span>
+                                <span id="subtotal">KES 0.00</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Discount (KES)</label>
+                                <input type="number" id="discount" placeholder="0" value="0" oninput="updateTotals()">
+                            </div>
+                            <div class="receipt-grand-total">
+                                <span>Total:</span>
+                                <span id="total">KES 0.00</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Payment Method</label>
+                                <select id="paymentMethod">
+                                    <option value="cash">Cash</option>
+                                    <option value="mpesa">M-Pesa</option>
+                                    <option value="card">Card</option>
+                                    <option value="cheque">Cheque</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label>Payment Method</label>
-                        <select id="paymentMethod">
-                            <option value="cash">Cash</option>
-                            <option value="mpesa">M-Pesa</option>
-                            <option value="card">Card</option>
-                            <option value="cheque">Cheque</option>
-                        </select>
-                    </div>
-
                     <div class="btn-group">
-                        <button class="btn btn-danger" onclick="clearCart()">Clear</button>
-                        <button class="btn btn-warning" onclick="printReceipt()">Print</button>
-                        <button class="btn btn-success" onclick="completeSale()">Complete Sale</button>
+                        <button class="btn btn-success" onclick="completeSale()" style="flex: 2;">Complete Sale</button>
+                        <button class="btn btn-warning" onclick="showPrintModal()" style="flex: 1;">Print</button>
+                        <button class="btn btn-danger" onclick="clearCart()" style="flex: 1;">Clear</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- STAFF MANAGEMENT TAB -->
+        <!-- STAFF TAB -->
         <div id="staff" class="content">
-            <h2>Staff Management</h2>
+            <h2>💇 Manage Barbers/Stylists</h2>
             <div id="staffMessage"></div>
 
-            <!-- Welcome Message -->
-            <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px; border-left: 4px solid #17a2b8;">
-                <h3 style="margin-top: 0; color: #0c5460;">👋 Welcome to Staff Management</h3>
-                <p style="margin: 10px 0; color: #0c5460;">
-                    As the manager, you have the power to build your team and control your business. Here's what you can do:
+            <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px;">
+                <h3 style="margin-top: 0;">👥 Staff Management</h3>
+                <p style="margin: 10px 0;">
+                    Create barber and stylist accounts to track performance and manage your team.
                 </p>
-                <ul style="margin: 10px 0; color: #0c5460; padding-left: 20px;">
-                    <li><strong>Create Staff Accounts:</strong> Add your barbers, receptionists, or any team member</li>
-                    <li><strong>Set Temporary Passwords:</strong> Secure credentials that staff must change on first login</li>
-                    <li><strong>Assign Roles:</strong> Choose between Staff and Manager roles based on responsibilities</li>
-                    <li><strong>Track Performance:</strong> See sales and activities for each team member in Reports</li>
-                    <li><strong>Manage Access:</strong> Deactivate accounts when team members leave</li>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>Create barber/stylist accounts</li>
+                    <li>Track sales per person</li>
+                    <li>View individual performance</li>
+                    <li>Manage active/inactive status</li>
                 </ul>
-                <p style="margin: 10px 0; color: #0c5460; font-style: italic;">
-                    💡 <strong>Tip:</strong> Your first staff member's name becomes your business title, so choose wisely!
-                </p>
             </div>
 
-            <div class="form-group" style="max-width: 500px; background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
-                <h3 style="margin-top: 0; color: #333;">📝 Create New Staff Account</h3>
-                <p style="color: #666; margin-bottom: 20px; font-size: 14px;">
-                    Fill in the details below to create a new staff member account. They will receive a temporary password that must be changed on first login.
-                </p>
-                
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="staffName" placeholder="Enter staff full name">
+            <div style="max-width: 600px;">
+                <h3 style="color: #333; margin-bottom: 20px;">Add New Staff</h3>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="staffName" placeholder="Barber/Stylist name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="staffEmail" placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" id="staffPhone" placeholder="0712345678">
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="staffRole">
+                            <option value="barber">Barber</option>
+                            <option value="stylist">Stylist</option>
+                            <option value="apprentice">Apprentice</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Temporary Password</label>
+                        <input type="password" id="staffPassword" placeholder="Temporary password">
+                    </div>
+                    <button class="btn" onclick="createStaff()" style="width: 100%;">Add Staff</button>
                 </div>
-                
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="staffEmail" placeholder="Enter staff email">
-                </div>
-                
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="text" id="staffPhone" placeholder="Enter phone number">
-                </div>
-
-                <div class="form-group">
-                    <label>Role</label>
-                    <select id="staffRole">
-                        <option value="staff">Staff Member</option>
-                        <option value="manager">Manager</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Temporary Password</label>
-                    <input type="text" id="staffPassword" placeholder="Set temporary password">
-                    <small style="color: #666;">Staff must change on first login</small>
-                </div>
-
-                <button class="btn" onclick="createStaff()">Create Staff Account</button>
             </div>
 
-            <h3 style="margin-top: 40px;">Existing Staff</h3>
-            <div class="loading" id="staffLoading">
-                <div class="spinner"></div>
-                <p>Loading staff...</p>
+            <h3 style="margin-top: 30px; color: #333;">Staff List</h3>
+            <div style="overflow-x: auto;">
+                <table class="table" id="staffTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="staffList">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #999;">No staff added yet</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <table class="table" id="staffTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="staffTableBody">
-                </tbody>
-            </table>
         </div>
 
         <!-- PRICES TAB -->
         <div id="prices" class="content">
-            <h2>Price Management</h2>
+            <h2>💰 Service Prices</h2>
             <div id="pricesMessage"></div>
 
-            <!-- Welcome Message -->
-            <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px; border-left: 4px solid #17a2b8;">
-                <h3 style="margin-top: 0; color: #0c5460;">💰 Welcome to Price Management</h3>
-                <p style="margin: 10px 0; color: #0c5460;">
-                    Control your pricing strategy with built-in approval system to prevent unfair pricing. Here's how it works:
-                </p>
-                <ul style="margin: 10px 0; color: #0c5460; padding-left: 20px;">
-                    <li><strong>Add Services:</strong> Create new services with names and prices in KES</li>
-                    <li><strong>Set Categories:</strong> Organize services (Haircut, Shave, Treatment, etc.)</li>
-                    <li><strong>Propose Price Changes:</strong> Submit new prices for staff approval</li>
-                    <li><strong>Require 2 Approvals:</strong> At least 2 staff members must approve price changes</li>
-                    <li><strong>Prevent Bias:</strong> No single person can unfairly change prices</li>
-                    <li><strong>Track History:</strong> See all price changes and who approved them</li>
-                </ul>
-                <p style="margin: 10px 0; color: #0c5460;">
-                    <strong>⚠️ Important:</strong> Price changes help your business grow, but must be fair to all. The approval system ensures transparency!
+            <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px;">
+                <h3 style="margin-top: 0;">💰 Price Management</h3>
+                <p style="margin: 10px 0;">
+                    Manage your service prices. Price changes require approval to ensure fairness.
                 </p>
             </div>
 
-            <p style="margin-bottom: 20px; color: #666; max-width: 700px;">
-                <strong>Note:</strong> Price changes require approval from at least 2 registered staff members to prevent pricing bias.
-            </p>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                <div>
-                    <h3>Add New Service</h3>
+            <div style="max-width: 600px;">
+                <h3 style="color: #333; margin-bottom: 20px;">Add New Service</h3>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
                     <div class="form-group">
                         <label>Service Name</label>
-                        <input type="text" id="newServiceName" placeholder="e.g., Haircut">
+                        <input type="text" id="newServiceName" placeholder="e.g., Fade, Cornrows, Relaxer">
                     </div>
                     <div class="form-group">
                         <label>Price (KES)</label>
-                        <input type="number" id="newServicePrice" placeholder="0.00" min="0" step="0.01">
+                        <input type="number" id="newServicePrice" placeholder="500" min="0">
                     </div>
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select id="newServiceCategory">
-                            <option value="haircut">Haircut</option>
-                            <option value="shave">Shave</option>
-                            <option value="treatment">Treatment</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <button class="btn" onclick="addNewService()">Add Service</button>
-                </div>
-
-                <div>
-                    <h3>Pending Approvals <span class="approval-counter" id="pendingCount">0</span></h3>
-                    <div id="pendingApprovalsDiv" style="background: #fff3cd; padding: 15px; border-radius: 5px; min-height: 100px;">
-                        <p style="color: #666;">No pending approvals</p>
-                    </div>
+                    <button class="btn btn-success" onclick="addNewService()" style="width: 100%;">Add Service</button>
                 </div>
             </div>
 
-            <h3 style="margin-top: 40px;">Current Services & Prices</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Service Name</th>
-                        <th>Category</th>
-                        <th>Current Price</th>
-                        <th>New Price</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="pricesTableBody">
-                </tbody>
-            </table>
-        </div>
-
-        <!-- APPROVALS TAB -->
-        <div id="approvals" class="content">
-            <h2>Price Approvals</h2>
-            <div id="approvalsMessage"></div>
-
-            <!-- Welcome Message -->
-            <div class="alert alert-warning" style="max-width: 700px; margin-bottom: 30px; border-left: 4px solid #ffc107;">
-                <h3 style="margin-top: 0; color: #856404;">✅ Your Approval Power</h3>
-                <p style="margin: 10px 0; color: #856404;">
-                    As a registered staff member, you have the power to approve or reject price changes. This helps keep pricing fair!
-                </p>
-                <ul style="margin: 10px 0; color: #856404; padding-left: 20px;">
-                    <li><strong>Review Requests:</strong> Manager proposes new prices, you review them</li>
-                    <li><strong>Approve Fairly:</strong> Click "Approve" if the new price seems reasonable</li>
-                    <li><strong>Reject if Unfair:</strong> Click "Reject" if the price increase is too high</li>
-                    <li><strong>Your Vote Matters:</strong> Need 2 approvals total to change prices</li>
-                    <li><strong>No Self-Approval:</strong> Can't approve your own proposed prices (prevents fraud)</li>
-                    <li><strong>See Changes:</strong> Once approved, new prices appear in Sales tab</li>
-                </ul>
-                <p style="margin: 10px 0; color: #856404;">
-                    <strong>💡 Remember:</strong> Fair pricing keeps customers happy and business growing!
-                </p>
-            </div>
-
-            <p style="margin-bottom: 20px; color: #666;">
-                As a staff member, approve or reject price change requests below.
-            </p>
-
-            <div id="approvalsListDiv">
-                <p style="text-align: center; color: #999;">No pending approvals</p>
+            <h3 style="margin-top: 30px; color: #333;">Current Services</h3>
+            <div style="overflow-x: auto;">
+                <table class="table" id="servicesTable">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="servicesList">
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #999;">Loading services...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
         <!-- REPORTS TAB -->
         <div id="reports" class="content">
-            <h2>Sales Reports</h2>
+            <h2>📊 Daily Reports</h2>
             <div id="reportsMessage"></div>
 
-            <!-- Welcome Message -->
-            <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px; border-left: 4px solid #17a2b8;">
-                <h3 style="margin-top: 0; color: #0c5460;">📊 Welcome to Sales Analytics</h3>
-                <p style="margin: 10px 0; color: #0c5460;">
-                    Track your business performance with real-time reports and insights. Here's what you can see:
-                </p>
-                <ul style="margin: 10px 0; color: #0c5460; padding-left: 20px;">
-                    <li><strong>Today's Summary:</strong> Total sales, number of transactions, average per transaction</li>
-                    <li><strong>Staff Performance:</strong> See which team members generated most sales</li>
-                    <li><strong>Recent Transactions:</strong> View last 10 sales with full details</li>
-                    <li><strong>Payment Methods:</strong> See how customers paid (Cash, M-Pesa, Card, Cheque)</li>
-                    <li><strong>Track Trends:</strong> Monitor which services are popular</li>
-                    <li><strong>Export Data:</strong> Download reports to Google Sheets for deeper analysis</li>
-                </ul>
-                <p style="margin: 10px 0; color: #0c5460;">
-                    <strong>📈 Managers:</strong> Use these reports to make business decisions and recognize top performers!
-                </p>
-                <p style="margin: 10px 0; color: #0c5460;">
-                    <strong>👥 Staff:</strong> Check your personal performance and see how you compare with the team!
+            <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px;">
+                <h3 style="margin-top: 0;">📊 Sales Analytics</h3>
+                <p style="margin: 10px 0;">
+                    Track today's performance and see which staff are doing well.
                 </p>
             </div>
 
@@ -1082,74 +1124,115 @@
                     <div class="card-value" id="totalTransactions">0</div>
                 </div>
                 <div class="card">
-                    <div class="card-title">Average Transaction</div>
+                    <div class="card-title">Average per Transaction</div>
                     <div class="card-value" id="avgTransaction">KES 0.00</div>
                 </div>
             </div>
 
-            <h3 style="margin-top: 40px;">Sales by Staff</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Staff Member</th>
-                        <th>Transactions</th>
-                        <th>Total Sales</th>
-                        <th>Average</th>
-                    </tr>
-                </thead>
-                <tbody id="salesByStaffBody">
-                </tbody>
-            </table>
+            <h3 style="margin-top: 30px; color: #333;">Performance by Barber/Stylist</h3>
+            <div style="overflow-x: auto;">
+                <table class="table" id="staffPerformanceTable">
+                    <thead>
+                        <tr>
+                            <th>Staff Member</th>
+                            <th>Transactions</th>
+                            <th>Total Sales</th>
+                            <th>Average</th>
+                        </tr>
+                    </thead>
+                    <tbody id="staffPerformanceList">
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #999;">No sales yet today</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-            <h3 style="margin-top: 40px;">Recent Transactions</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Staff Member</th>
-                        <th>Service</th>
-                        <th>Amount</th>
-                        <th>Payment Method</th>
-                    </tr>
-                </thead>
-                <tbody id="transactionsTableBody">
-                </tbody>
-            </table>
+            <h3 style="margin-top: 30px; color: #333;">Recent Transactions</h3>
+            <div style="overflow-x: auto;">
+                <table class="table" id="transactionsTable">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Barber</th>
+                            <th>Services</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsList">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #999;">No transactions yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <!-- Print Receipt Modal -->
-    <div class="modal" id="receiptModal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeReceiptModal()">&times;</span>
-            <div id="receiptContent" style="font-family: 'Courier New', monospace;"></div>
-            <div style="margin-top: 20px; text-align: center;">
-                <button class="btn" onclick="printAndReturn()">Print & Continue</button>
-                <button class="btn btn-danger" style="margin-left: 10px;" onclick="closeReceiptModal()">Cancel</button>
+        <!-- PRINT MODAL -->
+        <div id="receiptModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-close" onclick="closePrintModal()">&times;</div>
+                <div class="modal-header">Receipt Preview</div>
+                <div id="printReceipt" class="receipt"></div>
+                <div class="btn-group" style="margin-top: 20px;">
+                    <button class="btn" onclick="printAndReturn()" style="flex: 2;">Print & Continue</button>
+                    <button class="btn btn-danger" onclick="closePrintModal()" style="flex: 1;">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         // ============================================
-        // GLOBAL STATE & CONFIGURATION
+        // KINYOZI POS SYSTEM - JAVASCRIPT
         // ============================================
 
-        const GOOGLE_SHEET_ID = '1W4OWK6f_Mp0u6sNTuCRM_PAYcng2Eed9grJ4b7O4-CI';
-        const GOOGLE_API_KEY = 'YOUR_API_KEY_HERE'; // You'll need to add this
+        // Google Apps Script Deployment URL (add after setup)
+        const GAS_DEPLOYMENT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
 
+        // STATE VARIABLES
         let currentUser = null;
         let currentRole = null;
-        let managerName = null; // Will be set from manager account
-        let businessName = 'Hotel/Kinyozi POS System'; // Default, will be replaced by manager name
+        let businessName = 'Kinyozi POS';
+        let managerName = '';
+        
+        // DATA ARRAYS
         let staffList = [];
         let servicesList = [];
         let cartItems = [];
         let salesData = [];
-        let priceApprovals = [];
+
+        // KINYOZI DEFAULT SERVICES
+        const DEFAULT_SERVICES = [
+            { id: 1, name: 'Haircut', price: 300, status: 'active' },
+            { id: 2, name: 'Fade', price: 250, status: 'active' },
+            { id: 3, name: 'Shave', price: 100, status: 'active' },
+            { id: 4, name: 'Hair Treatment', price: 500, status: 'active' },
+            { id: 5, name: 'Beard Trim', price: 150, status: 'active' },
+            { id: 6, name: 'Full Service (Cut + Shave)', price: 400, status: 'active' },
+            { id: 7, name: 'Cornrows', price: 350, status: 'active' },
+            { id: 8, name: 'Relaxer/Chemically Treated Hair', price: 600, status: 'active' }
+        ];
 
         // ============================================
-        // AUTHENTICATION FUNCTIONS
+        // INITIALIZATION
+        // ============================================
+
+        function initialize() {
+            loadFromLocalStorage();
+            if (!currentUser) {
+                switchTab('login');
+            } else {
+                switchTab('sales');
+                loadServices();
+                loadStaff();
+                loadSalesReports();
+            }
+        }
+
+        // ============================================
+        // AUTHENTICATION
         // ============================================
 
         function login() {
@@ -1164,15 +1247,15 @@
 
             // Demo accounts
             const demoAccounts = [
-                { email: 'manager@hotel.com', password: 'manager123', name: 'Manager Admin', role: 'manager', businessTitle: 'Your Hotel/Kinyozi' },
-                { email: 'staff1@hotel.com', password: 'staff123', name: 'John Kipchoge', role: 'staff', businessTitle: '' },
-                { email: 'staff2@hotel.com', password: 'staff123', name: 'Mary Nakada', role: 'staff', businessTitle: '' }
+                { email: 'manager@kinyozi.com', password: 'manager123', name: 'Manager', role: 'manager', businessTitle: 'Your Kinyozi' },
+                { email: 'staff1@kinyozi.com', password: 'staff123', name: 'John Kipchoge', role: 'barber', businessTitle: '' },
+                { email: 'staff2@kinyozi.com', password: 'staff123', name: 'Mary Nakada', role: 'stylist', businessTitle: '' }
             ];
 
-            // Check demo accounts first
+            // Check demo accounts
             let user = demoAccounts.find(acc => acc.email === email && acc.password === password);
 
-            // If not found in demo, check newly created accounts
+            // Check newly created accounts
             if (!user) {
                 const businessAccounts = JSON.parse(localStorage.getItem('businessAccounts') || '[]');
                 user = businessAccounts.find(acc => acc.email === email && acc.password === password);
@@ -1182,21 +1265,18 @@
                 currentUser = user.name;
                 currentRole = user.role;
                 
-                // Set business name from user account
                 if (user.businessTitle) {
                     businessName = user.businessTitle;
                 } else {
-                    businessName = 'Hotel/Kinyozi POS System';
+                    businessName = 'Kinyozi POS';
                 }
                 
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 localStorage.setItem('businessName', businessName);
                 
-                messageDiv.innerHTML = '<div class="alert alert-success">✅ Login successful! Welcome to your POS system.</div>';
+                messageDiv.innerHTML = '<div class="alert alert-success">✅ Login successful!</div>';
                 
-                // Update UI
                 updateHeaderInfo();
-                showUserTabs();
                 
                 setTimeout(() => {
                     switchTab('sales');
@@ -1205,7 +1285,7 @@
                     loadSalesReports();
                 }, 1000);
             } else {
-                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Invalid email or password. Please try again or create a new account.</div>';
+                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Invalid email or password</div>';
             }
         }
 
@@ -1213,41 +1293,35 @@
             const form = document.getElementById('createAccountForm');
             if (form.style.display === 'none') {
                 form.style.display = 'block';
-                // Clear any previous messages
-                document.getElementById('createAccountMessage').innerHTML = '';
             } else {
                 form.style.display = 'none';
-                // Clear form
                 clearCreateAccountForm();
             }
         }
 
         function clearCreateAccountForm() {
-            document.getElementById('newBusinessName').value = '';
+            document.getElementById('newSalonName').value = '';
             document.getElementById('newManagerName').value = '';
             document.getElementById('newManagerEmail').value = '';
             document.getElementById('newManagerPhone').value = '';
             document.getElementById('newManagerPassword').value = '';
             document.getElementById('newManagerPasswordConfirm').value = '';
-            document.getElementById('businessType').value = '';
             document.getElementById('agreeTerms').checked = false;
             document.getElementById('createAccountMessage').innerHTML = '';
         }
 
         function createNewAccount() {
-            const businessName = document.getElementById('newBusinessName').value.trim();
+            const salonName = document.getElementById('newSalonName').value.trim();
             const managerName = document.getElementById('newManagerName').value.trim();
             const email = document.getElementById('newManagerEmail').value.trim();
             const phone = document.getElementById('newManagerPhone').value.trim();
             const password = document.getElementById('newManagerPassword').value;
             const passwordConfirm = document.getElementById('newManagerPasswordConfirm').value;
-            const businessType = document.getElementById('businessType').value;
             const agreeTerms = document.getElementById('agreeTerms').checked;
             const messageDiv = document.getElementById('createAccountMessage');
 
-            // Validation
-            if (!businessName || !managerName || !email || !phone || !password || !businessType || !agreeTerms) {
-                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Please fill in all fields and agree to terms</div>';
+            if (!salonName || !managerName || !email || !phone || !password || !agreeTerms) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Please fill in all fields</div>';
                 return;
             }
 
@@ -1257,182 +1331,174 @@
             }
 
             if (password.length < 6) {
-                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Password must be at least 6 characters</div>';
+                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Password must be 6+ characters</div>';
                 return;
             }
 
             if (!email.includes('@')) {
-                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Please enter a valid email address</div>';
+                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Please enter a valid email</div>';
                 return;
             }
 
-            // Create new manager account
             const newManager = {
                 email: email,
                 password: password,
                 name: managerName,
                 role: 'manager',
-                businessTitle: businessName,
-                businessType: businessType,
+                businessTitle: salonName,
                 phone: phone,
                 dateCreated: new Date().toLocaleDateString('en-KE')
             };
 
-            // Add to demo accounts (in real system, would save to database/Google Sheets)
-            const demoAccounts = [
-                { email: 'manager@hotel.com', password: 'manager123', name: 'Manager Admin', role: 'manager', businessTitle: 'Your Hotel/Kinyozi' },
-                { email: 'staff1@hotel.com', password: 'staff123', name: 'John Kipchoge', role: 'staff', businessTitle: '' },
-                { email: 'staff2@hotel.com', password: 'staff123', name: 'Mary Nakada', role: 'staff', businessTitle: '' }
-            ];
-
-            // Check if email already exists
-            if (demoAccounts.find(acc => acc.email === email)) {
-                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Email already registered. Please login or use a different email.</div>';
+            let businessAccounts = JSON.parse(localStorage.getItem('businessAccounts') || '[]');
+            
+            if (businessAccounts.find(acc => acc.email === email)) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Email already registered</div>';
                 return;
             }
 
-            // Save new account to localStorage
-            let businessAccounts = JSON.parse(localStorage.getItem('businessAccounts') || '[]');
             businessAccounts.push(newManager);
             localStorage.setItem('businessAccounts', JSON.stringify(businessAccounts));
 
-            // Show success message
             messageDiv.innerHTML = `
                 <div class="alert alert-success">
-                    <h4 style="margin-top: 0; color: #155724;">✅ Account Created Successfully!</h4>
-                    <p style="color: #155724; margin: 10px 0;">
-                        Your business account has been created. You can now login with your credentials.
+                    <h4 style="margin-top: 0;">✅ Account Created!</h4>
+                    <p style="margin: 10px 0;">
+                        Salon: <strong>${salonName}</strong><br>
+                        Email: <strong>${email}</strong>
                     </p>
-                    <strong style="color: #155724;">Your Account Details:</strong><br>
-                    <small style="color: #155724;">
-                        Business: ${businessName}<br>
-                        Email: ${email}<br>
-                        Business Type: ${businessType.toUpperCase()}
-                    </small>
-                    <p style="color: #155724; margin-top: 15px; margin-bottom: 0;">
-                        <strong>Next Steps:</strong><br>
-                        1. Login with your email and password<br>
-                        2. Go to Staff Management to create staff accounts<br>
-                        3. Go to Prices to add your services<br>
-                        4. Start processing sales!
+                    <p style="margin: 10px 0;">
+                        You can now login with your credentials!
                     </p>
                 </div>
             `;
 
-            // Clear form
-            clearCreateAccountForm();
-
-            // Auto-fill login form
             document.getElementById('loginEmail').value = email;
             document.getElementById('loginPassword').value = '';
             document.getElementById('loginPassword').focus();
 
-            // Hide create account form
             setTimeout(() => {
                 document.getElementById('createAccountForm').style.display = 'none';
             }, 3000);
         }
 
+        function logout() {
+            currentUser = null;
+            currentRole = null;
+            localStorage.removeItem('currentUser');
+            updateHeaderInfo();
+            switchTab('login');
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            cartItems = [];
+            updateReceipt();
+        }
+
         function updateHeaderInfo() {
             if (currentUser) {
-                document.getElementById('currentUser').textContent = currentUser;
-                document.getElementById('currentRole').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1);
                 document.getElementById('businessName').textContent = businessName;
+                document.getElementById('userName').textContent = currentUser;
+                document.getElementById('userRole').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1);
+                // Show navigation tabs
+                const navTabs = document.getElementById('navTabs');
+                if (navTabs) {
+                    navTabs.style.display = 'flex';
+                }
             } else {
-                document.getElementById('currentUser').textContent = 'Not logged in';
-                document.getElementById('currentRole').textContent = 'Guest';
-                document.getElementById('businessName').textContent = 'Hotel/Kinyozi POS System';
+                // Hide navigation tabs
+                const navTabs = document.getElementById('navTabs');
+                if (navTabs) {
+                    navTabs.style.display = 'none';
+                }
             }
-        }
-
-        function showUserTabs() {
-            document.getElementById('salesTab').style.display = 'block';
-            if (currentRole === 'manager') {
-                document.getElementById('staffTab').style.display = 'block';
-                document.getElementById('pricesTab').style.display = 'block';
-            }
-            if (currentRole === 'staff' || currentRole === 'manager') {
-                document.getElementById('approvalsTab').style.display = 'block';
-            }
-            document.getElementById('reportsTab').style.display = 'block';
-        }
-
-        function hideUserTabs() {
-            document.getElementById('salesTab').style.display = 'none';
-            document.getElementById('staffTab').style.display = 'none';
-            document.getElementById('pricesTab').style.display = 'none';
-            document.getElementById('approvalsTab').style.display = 'none';
-            document.getElementById('reportsTab').style.display = 'none';
         }
 
         // ============================================
-        // TAB NAVIGATION
+        // NAVIGATION
         // ============================================
 
         function switchTab(tabName) {
-            if (!currentUser && tabName !== 'login') {
-                alert('Please login first');
-                return;
-            }
-
             // Hide all content
-            const contents = document.querySelectorAll('.content');
-            contents.forEach(content => content.classList.remove('active'));
-
-            // Remove active class from all buttons
-            const buttons = document.querySelectorAll('.nav-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-
-            // Show selected content
-            const selectedContent = document.getElementById(tabName);
-            if (selectedContent) {
-                selectedContent.classList.add('active');
+            const allContent = document.querySelectorAll('.content');
+            allContent.forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Show selected tab
+            const tabEl = document.getElementById(tabName);
+            if (tabEl) {
+                tabEl.classList.add('active');
             }
-
-            // Mark button as active
-            event.target.classList.add('active');
+            
+            // Update active button styling
+            const allButtons = document.querySelectorAll('.nav-btn');
+            allButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Find and activate the correct button
+            allButtons.forEach(btn => {
+                if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'" + tabName + "'")) {
+                    btn.classList.add('active');
+                }
+            });
         }
 
         // ============================================
-        // SALES FUNCTIONS
+        // SERVICES/SALES
         // ============================================
 
         function loadServices() {
-            // Default services
-            const defaultServices = [
-                { id: 1, name: 'Haircut', price: 300, category: 'haircut' },
-                { id: 2, name: 'Fade', price: 250, category: 'haircut' },
-                { id: 3, name: 'Shave', price: 100, category: 'shave' },
-                { id: 4, name: 'Hair Treatment', price: 500, category: 'treatment' },
-                { id: 5, name: 'Beard Trim', price: 150, category: 'shave' },
-                { id: 6, name: 'Full Service', price: 600, category: 'other' }
-            ];
-
-            servicesList = defaultServices;
+            const stored = localStorage.getItem('servicesList');
+            if (stored) {
+                servicesList = JSON.parse(stored);
+            } else {
+                servicesList = DEFAULT_SERVICES.map(s => ({...s, id: Date.now() + Math.random()}));
+                localStorage.setItem('servicesList', JSON.stringify(servicesList));
+            }
             displayServices();
         }
 
         function displayServices() {
             const grid = document.getElementById('servicesGrid');
             grid.innerHTML = '';
-
+            
             servicesList.forEach(service => {
-                const btn = document.createElement('div');
-                btn.className = 'service-btn';
-                btn.innerHTML = `
-                    <div class="service-name">${service.name}</div>
-                    <div class="service-price">KES ${service.price}</div>
+                if (service.status === 'active') {
+                    const btn = document.createElement('button');
+                    btn.className = 'service-btn';
+                    btn.innerHTML = `
+                        <div class="service-name">${service.name}</div>
+                        <div class="service-price">KES ${service.price}</div>
+                    `;
+                    btn.onclick = () => addToCart(service);
+                    grid.appendChild(btn);
+                }
+            });
+            
+            displayServicesList();
+        }
+
+        function displayServicesList() {
+            const tbody = document.getElementById('servicesList');
+            tbody.innerHTML = '';
+            
+            servicesList.forEach(service => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${service.name}</td>
+                    <td>KES ${service.price}</td>
+                    <td><span class="status-badge badge-approved">Active</span></td>
+                    <td><button class="btn btn-warning" onclick="editService(${servicesList.indexOf(service)})" style="padding: 4px 8px;">Edit</button></td>
                 `;
-                btn.onclick = () => addToCart(service);
-                grid.appendChild(btn);
             });
         }
 
         function addToCart(service) {
-            const existingItem = cartItems.find(item => item.id === service.id);
+            const existing = cartItems.find(item => item.id === service.id);
             
-            if (existingItem) {
-                existingItem.quantity++;
+            if (existing) {
+                existing.quantity++;
             } else {
                 cartItems.push({
                     ...service,
@@ -1444,33 +1510,22 @@
         }
 
         function updateReceipt() {
-            const receiptDiv = document.getElementById('receiptItems');
-            receiptDiv.innerHTML = '';
-
+            const itemsDiv = document.getElementById('receiptItems');
+            itemsDiv.innerHTML = '';
+            
             cartItems.forEach((item, index) => {
-                const itemTotal = item.price * item.quantity;
-                const row = document.createElement('div');
-                row.className = 'receipt-item';
-                row.innerHTML = `
+                const div = document.createElement('div');
+                div.className = 'receipt-item';
+                div.innerHTML = `
                     <div class="receipt-item-name">${item.name}</div>
-                    <div class="receipt-item-qty">
-                        <input type="number" value="${item.quantity}" min="1" 
-                               onchange="updateQuantity(${index}, this.value)" style="width: 40px; padding: 4px;">
-                    </div>
-                    <div class="receipt-item-price">KES ${itemTotal.toFixed(2)}</div>
-                    <div class="receipt-item-remove">
-                        <button onclick="removeFromCart(${index})">Remove</button>
-                    </div>
+                    <div class="receipt-item-qty">${item.quantity}</div>
+                    <div class="receipt-item-price">KES ${(item.price * item.quantity).toFixed(2)}</div>
+                    <div class="receipt-item-remove"><button onclick="removeFromCart(${index})">Remove</button></div>
                 `;
-                receiptDiv.appendChild(row);
+                itemsDiv.appendChild(div);
             });
-
+            
             updateTotals();
-        }
-
-        function updateQuantity(index, value) {
-            cartItems[index].quantity = parseInt(value) || 1;
-            updateReceipt();
         }
 
         function removeFromCart(index) {
@@ -1478,25 +1533,22 @@
             updateReceipt();
         }
 
-        function clearCart() {
-            if (confirm('Clear all items from cart?')) {
-                cartItems = [];
-                updateReceipt();
-            }
-        }
-
         function updateTotals() {
             const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const discount = parseFloat(document.getElementById('discount').value) || 0;
             const total = Math.max(0, subtotal - discount);
-
+            
             document.getElementById('subtotal').textContent = `KES ${subtotal.toFixed(2)}`;
             document.getElementById('total').textContent = `KES ${total.toFixed(2)}`;
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('discount').addEventListener('change', updateTotals);
-        });
+        function clearCart() {
+            if (confirm('Clear cart?')) {
+                cartItems = [];
+                document.getElementById('discount').value = '0';
+                updateReceipt();
+            }
+        }
 
         function completeSale() {
             if (cartItems.length === 0) {
@@ -1509,7 +1561,6 @@
             const total = Math.max(0, subtotal - discount);
             const paymentMethod = document.getElementById('paymentMethod').value;
 
-            // Create sale record
             const sale = {
                 id: Date.now(),
                 date: new Date().toLocaleString('en-KE'),
@@ -1526,159 +1577,117 @@
 
             // Clear cart
             cartItems = [];
+            document.getElementById('discount').value = '0';
             updateReceipt();
-            updateTotals();
             
-            // Show success message
+            // Show success
             const salesMessage = document.getElementById('salesMessage');
-            salesMessage.innerHTML = `<div class="alert alert-success" style="margin-bottom: 20px;">✅ Sale completed successfully! Total: KES ${total.toFixed(2)} | Payment: ${paymentMethod.toUpperCase()}</div>`;
+            salesMessage.innerHTML = `<div class="alert alert-success">✅ Sale completed! Total: KES ${total.toFixed(2)}</div>`;
             
-            // Auto-hide success message after 3 seconds
             setTimeout(() => {
                 salesMessage.innerHTML = '';
             }, 3000);
+
+            loadSalesReports();
         }
 
-        function printReceipt() {
+        function showPrintModal() {
             if (cartItems.length === 0) {
-                alert('Cart is empty');
+                alert('Nothing to print');
                 return;
             }
 
             const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const discount = parseFloat(document.getElementById('discount').value) || 0;
             const total = Math.max(0, subtotal - discount);
-            const paymentMethod = document.getElementById('paymentMethod').value;
 
             let receiptHTML = `
-                <div style="text-align: center; margin-bottom: 10px;">
-                    <strong>${businessName}</strong><br>
-                    <small>POS Receipt</small>
+                <div class="receipt-header">
+                    ${businessName}<br>
+                    <small>Professional Kinyozi</small>
                 </div>
-                <hr style="border: none; border-top: 1px dashed #333;">
-                <div style="margin: 10px 0;">
-                    <small>Date: ${new Date().toLocaleString('en-KE')}</small><br>
-                    <small>Staff: ${currentUser}</small>
-                </div>
-                <hr style="border: none; border-top: 1px dashed #333;">
-                <div style="margin: 10px 0;">
+                <div class="receipt-body">
             `;
 
             cartItems.forEach(item => {
-                const itemTotal = (item.price * item.quantity).toFixed(2);
                 receiptHTML += `
-                    <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                    <div class="receipt-line">
                         <span>${item.name} x${item.quantity}</span>
-                        <span>KES ${itemTotal}</span>
+                        <span>KES ${(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                 `;
             });
 
             receiptHTML += `
                 </div>
-                <hr style="border: none; border-top: 1px dashed #333;">
-                <div style="display: flex; justify-content: space-between; margin: 10px 0;">
-                    <strong>Subtotal:</strong>
-                    <strong>KES ${subtotal.toFixed(2)}</strong>
-                </div>
+                <div class="receipt-footer">
+                    <div class="receipt-line">
+                        <span>Subtotal:</span>
+                        <span>KES ${subtotal.toFixed(2)}</span>
+                    </div>
             `;
 
             if (discount > 0) {
                 receiptHTML += `
-                    <div style="display: flex; justify-content: space-between; margin: 5px 0; color: #28a745;">
-                        <strong>Discount:</strong>
-                        <strong>-KES ${discount.toFixed(2)}</strong>
+                    <div class="receipt-line">
+                        <span>Discount:</span>
+                        <span>-KES ${discount.toFixed(2)}</span>
                     </div>
                 `;
             }
 
             receiptHTML += `
-                <hr style="border: none; border-top: 1px solid #333;">
-                <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin: 10px 0;">
-                    <span>TOTAL:</span>
-                    <span>KES ${total.toFixed(2)}</span>
-                </div>
-                <hr style="border: none; border-top: 1px dashed #333;">
-                <div style="text-align: center; margin-top: 10px;">
-                    <small>Payment: ${paymentMethod.toUpperCase()}</small><br>
-                    <small>Thank you for your business!</small>
+                    <div class="receipt-line" style="font-weight: bold; border-top: 1px dashed #333; padding-top: 5px;">
+                        <span>TOTAL:</span>
+                        <span>KES ${total.toFixed(2)}</span>
+                    </div>
+                    <div style="margin-top: 5px;">
+                        <span>Payment: ${document.getElementById('paymentMethod').value.toUpperCase()}</span>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 10px;">
+                        ${new Date().toLocaleString('en-KE')}<br>
+                        Barber: ${currentUser}
+                    </div>
                 </div>
             `;
 
-            document.getElementById('receiptContent').innerHTML = receiptHTML;
+            document.getElementById('printReceipt').innerHTML = receiptHTML;
             document.getElementById('receiptModal').classList.add('active');
         }
 
-        function closeReceiptModal() {
+        function closePrintModal() {
             document.getElementById('receiptModal').classList.remove('active');
         }
 
         function printAndReturn() {
-            // Trigger browser print dialog
             window.print();
             
-            // Close modal after short delay to allow print dialog to open
             setTimeout(() => {
-                closeReceiptModal();
-                
-                // Clear cart and return to fresh sales view
+                closePrintModal();
                 cartItems = [];
+                document.getElementById('discount').value = '0';
                 updateReceipt();
-                updateTotals();
                 
-                // Show success message
                 const salesMessage = document.getElementById('salesMessage');
-                salesMessage.innerHTML = '<div class="alert alert-success" style="margin-bottom: 20px;">✅ Sale completed successfully! Cart cleared. Ready for next customer.</div>';
+                salesMessage.innerHTML = `<div class="alert alert-success">✅ Receipt printed! Ready for next customer</div>`;
                 
-                // Auto-hide success message after 3 seconds
                 setTimeout(() => {
                     salesMessage.innerHTML = '';
-                }, 3000);
+                }, 2000);
             }, 500);
         }
 
         // ============================================
-        // STAFF MANAGEMENT FUNCTIONS (MANAGER ONLY)
+        // STAFF MANAGEMENT
         // ============================================
 
         function loadStaff() {
-            // Demo staff data
-            const demoStaff = [
-                { id: 1, name: 'John Kipchoge', email: 'staff1@hotel.com', phone: '0712345678', role: 'staff', status: 'active', dateCreated: '2024-01-15' },
-                { id: 2, name: 'Mary Nakada', email: 'staff2@hotel.com', phone: '0787654321', role: 'staff', status: 'active', dateCreated: '2024-02-20' }
-            ];
-
-            staffList = demoStaff;
+            const stored = localStorage.getItem('staffList');
+            staffList = stored ? JSON.parse(stored) : [];
             displayStaff();
         }
 
-        function displayStaff() {
-            const tbody = document.getElementById('staffTableBody');
-            tbody.innerHTML = '';
-
-            staffList.forEach(staff => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${staff.name}</td>
-                    <td>${staff.email}</td>
-                    <td>${staff.phone}</td>
-                    <td>${staff.role.charAt(0).toUpperCase() + staff.role.slice(1)}</td>
-                    <td><span class="status-badge badge-approved">${staff.status}</span></td>
-                    <td>
-                        <button class="btn" style="padding: 6px 12px; font-size: 12px;" onclick="editStaff(${staff.id})">Edit</button>
-                        <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;" onclick="deactivateStaff(${staff.id})">Deactivate</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
         function createStaff() {
-            if (currentRole !== 'manager') {
-                alert('Only managers can create staff accounts');
-                return;
-            }
-
             const name = document.getElementById('staffName').value.trim();
             const email = document.getElementById('staffEmail').value.trim();
             const phone = document.getElementById('staffPhone').value.trim();
@@ -1697,61 +1706,134 @@
                 email: email,
                 phone: phone,
                 role: role,
-                status: 'active',
-                dateCreated: new Date().toLocaleDateString('en-KE'),
-                businessName: name // First account becomes the business name
+                status: 'active'
             };
 
             staffList.push(newStaff);
             localStorage.setItem('staffList', JSON.stringify(staffList));
 
-            messageDiv.innerHTML = `<div class="alert alert-success">Staff account created for ${name}. Temporary password: ${password}</div>`;
-
-            // Clear form
+            messageDiv.innerHTML = `<div class="alert alert-success">✅ ${name} (${role}) added! Temp password: ${password}</div>`;
+            
             document.getElementById('staffName').value = '';
             document.getElementById('staffEmail').value = '';
             document.getElementById('staffPhone').value = '';
             document.getElementById('staffPassword').value = '';
-
+            
             displayStaff();
+
+            setTimeout(() => { messageDiv.innerHTML = ''; }, 3000);
         }
 
-        function editStaff(id) {
-            const staff = staffList.find(s => s.id === id);
-            if (staff) {
-                alert(`Edit staff: ${staff.name}\n\nFeature: Change password and details`);
-            }
-        }
-
-        function deactivateStaff(id) {
-            if (confirm('Are you sure you want to deactivate this staff member?')) {
-                const staff = staffList.find(s => s.id === id);
-                if (staff) {
-                    staff.status = 'inactive';
-                    localStorage.setItem('staffList', JSON.stringify(staffList));
-                    displayStaff();
-                    alert('Staff deactivated');
-                }
-            }
-        }
-
-        // ============================================
-        // PRICE MANAGEMENT FUNCTIONS
-        // ============================================
-
-        function addNewService() {
-            if (currentRole !== 'manager') {
-                alert('Only managers can add services');
+        function displayStaff() {
+            const tbody = document.getElementById('staffList');
+            tbody.innerHTML = '';
+            
+            if (staffList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No staff added</td></tr>';
                 return;
             }
 
+            staffList.forEach(staff => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${staff.name}</td>
+                    <td><span class="kinyozi-badge">${staff.role}</span></td>
+                    <td>${staff.email}</td>
+                    <td><span class="status-badge badge-approved">Active</span></td>
+                    <td>
+                        <button class="btn btn-danger" onclick="deactivateStaff('${staff.id}')" style="padding: 4px 8px; font-size: 11px;">Deactivate</button>
+                    </td>
+                `;
+            });
+        }
+
+        function deactivateStaff(staffId) {
+            if (confirm('Deactivate this staff member?')) {
+                staffList = staffList.filter(s => s.id != staffId);
+                localStorage.setItem('staffList', JSON.stringify(staffList));
+                displayStaff();
+            }
+        }
+
+        // ============================================
+        // REPORTS
+        // ============================================
+
+        function loadSalesReports() {
+            const stored = localStorage.getItem('salesData');
+            salesData = stored ? JSON.parse(stored) : [];
+            
+            const today = new Date().toLocaleDateString('en-KE');
+            const todaysSales = salesData.filter(s => new Date(s.date).toLocaleDateString('en-KE') === today);
+            
+            let totalSales = 0;
+            let totalTransactions = 0;
+            
+            todaysSales.forEach(sale => {
+                totalSales += sale.total;
+                totalTransactions++;
+            });
+            
+            document.getElementById('todaysSales').textContent = `KES ${totalSales.toFixed(2)}`;
+            document.getElementById('totalTransactions').textContent = totalTransactions;
+            document.getElementById('avgTransaction').textContent = totalTransactions > 0 ? `KES ${(totalSales / totalTransactions).toFixed(2)}` : 'KES 0.00';
+            
+            // Staff performance
+            const staffPerf = {};
+            todaysSales.forEach(sale => {
+                if (!staffPerf[sale.staffMember]) {
+                    staffPerf[sale.staffMember] = { transactions: 0, total: 0 };
+                }
+                staffPerf[sale.staffMember].transactions++;
+                staffPerf[sale.staffMember].total += sale.total;
+            });
+            
+            const tbody = document.getElementById('staffPerformanceList');
+            tbody.innerHTML = '';
+            
+            Object.entries(staffPerf).forEach(([staff, data]) => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${staff}</td>
+                    <td>${data.transactions}</td>
+                    <td>KES ${data.total.toFixed(2)}</td>
+                    <td>KES ${(data.total / data.transactions).toFixed(2)}</td>
+                `;
+            });
+
+            if (Object.keys(staffPerf).length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">No sales yet today</td></tr>';
+            }
+
+            // Recent transactions
+            const transactionsTbody = document.getElementById('transactionsList');
+            transactionsTbody.innerHTML = '';
+            
+            const recentSales = todaysSales.slice(-10).reverse();
+            recentSales.forEach(sale => {
+                const itemsList = sale.items.map(i => `${i.name} (${i.quantity})`).join(', ');
+                const row = transactionsTbody.insertRow();
+                row.innerHTML = `
+                    <td>${new Date(sale.date).toLocaleTimeString('en-KE', {hour: '2-digit', minute: '2-digit'})}</td>
+                    <td>${sale.staffMember}</td>
+                    <td>${itemsList}</td>
+                    <td>KES ${sale.total.toFixed(2)}</td>
+                    <td>${sale.paymentMethod.toUpperCase()}</td>
+                `;
+            });
+
+            if (recentSales.length === 0) {
+                transactionsTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No transactions</td></tr>';
+            }
+        }
+
+        function addNewService() {
             const name = document.getElementById('newServiceName').value.trim();
             const price = parseFloat(document.getElementById('newServicePrice').value);
-            const category = document.getElementById('newServiceCategory').value;
             const messageDiv = document.getElementById('pricesMessage');
 
             if (!name || !price) {
-                messageDiv.innerHTML = '<div class="alert alert-danger">Please enter service name and price</div>';
+                messageDiv.innerHTML = '<div class="alert alert-danger">Please enter name and price</div>';
                 return;
             }
 
@@ -1759,107 +1841,42 @@
                 id: Date.now(),
                 name: name,
                 price: price,
-                category: category,
-                dateAdded: new Date().toLocaleDateString('en-KE')
+                status: 'active'
             };
 
             servicesList.push(newService);
             localStorage.setItem('servicesList', JSON.stringify(servicesList));
 
-            messageDiv.innerHTML = `<div class="alert alert-success">${name} added at KES ${price}</div>`;
-
+            messageDiv.innerHTML = `<div class="alert alert-success">✅ ${name} (KES ${price}) added</div>`;
+            
             document.getElementById('newServiceName').value = '';
             document.getElementById('newServicePrice').value = '';
-
+            
             displayServices();
+
+            setTimeout(() => { messageDiv.innerHTML = ''; }, 2000);
         }
 
         // ============================================
-        // REPORTS FUNCTIONS
+        // STORAGE
         // ============================================
 
-        function loadSalesReports() {
-            const saved = localStorage.getItem('salesData');
-            salesData = saved ? JSON.parse(saved) : [];
-
-            displaySalesReports();
-        }
-
-        function displaySalesReports() {
-            // Today's sales
-            const today = new Date().toLocaleDateString('en-KE');
-            const todaySales = salesData
-                .filter(sale => sale.date.includes(today))
-                .reduce((sum, sale) => sum + sale.total, 0);
-
-            document.getElementById('todaysSales').textContent = `KES ${todaySales.toFixed(2)}`;
-            document.getElementById('totalTransactions').textContent = salesData.length;
-            
-            const avgTransaction = salesData.length > 0 
-                ? salesData.reduce((sum, sale) => sum + sale.total, 0) / salesData.length 
-                : 0;
-            document.getElementById('avgTransaction').textContent = `KES ${avgTransaction.toFixed(2)}`;
-
-            // Sales by staff
-            const staffSales = {};
-            salesData.forEach(sale => {
-                if (!staffSales[sale.staffMember]) {
-                    staffSales[sale.staffMember] = { transactions: 0, total: 0 };
-                }
-                staffSales[sale.staffMember].transactions++;
-                staffSales[sale.staffMember].total += sale.total;
-            });
-
-            const staffBody = document.getElementById('salesByStaffBody');
-            staffBody.innerHTML = '';
-            Object.entries(staffSales).forEach(([staffName, data]) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${staffName}</td>
-                    <td>${data.transactions}</td>
-                    <td>KES ${data.total.toFixed(2)}</td>
-                    <td>KES ${(data.total / data.transactions).toFixed(2)}</td>
-                `;
-                staffBody.appendChild(row);
-            });
-
-            // Recent transactions
-            const transBody = document.getElementById('transactionsTableBody');
-            transBody.innerHTML = '';
-            salesData.slice(-10).reverse().forEach(sale => {
-                const itemNames = sale.items.map(i => i.name).join(', ');
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${sale.date}</td>
-                    <td>${sale.staffMember}</td>
-                    <td>${itemNames}</td>
-                    <td>KES ${sale.total.toFixed(2)}</td>
-                    <td>${sale.paymentMethod}</td>
-                `;
-                transBody.appendChild(row);
-            });
-        }
-
-        // Initialize on page load
-        window.addEventListener('load', function() {
-            const saved = localStorage.getItem('currentUser');
-            const savedBusinessName = localStorage.getItem('managerName');
-            
-            if (savedBusinessName) {
-                businessName = savedBusinessName;
-                document.getElementById('businessName').textContent = businessName;
-            }
-            
-            if (saved) {
-                const user = JSON.parse(saved);
-                currentUser = user.name;
-                currentRole = user.role;
+        function loadFromLocalStorage() {
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                const userData = JSON.parse(user);
+                currentUser = userData.name;
+                currentRole = userData.role;
+                businessName = localStorage.getItem('businessName') || 'Kinyozi POS';
                 updateHeaderInfo();
-                showUserTabs();
-                loadServices();
-                loadStaff();
             }
-        });
+        }
+
+        // ============================================
+        // STARTUP
+        // ============================================
+
+        window.onload = initialize;
     </script>
 </body>
 </html>

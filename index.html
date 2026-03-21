@@ -574,7 +574,19 @@
             color: #856404;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
+            .pos-container {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .pos-right {
+                position: static;
+            }
+
             header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -641,6 +653,12 @@
 
             .modal-content {
                 padding: 15px;
+            }
+
+            /* Mobile login page - stack columns */
+            .login-grid {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
             }
         }
 
@@ -825,11 +843,11 @@
                 </ul>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 900px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 900px;" class="login-grid">
                 <!-- LOGIN SECTION -->
                 <div>
                     <h3 style="color: #333; margin-bottom: 20px;">🔐 Login</h3>
-                    <div style="background: #f8f9fa; padding: 30px; border-radius: 10px;">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
                         <div class="form-group">
                             <label>Email Address</label>
                             <input type="email" id="loginEmail" placeholder="Enter your email">
@@ -838,16 +856,39 @@
                             <label>Password</label>
                             <input type="password" id="loginPassword" placeholder="Enter your password">
                         </div>
-                        <button class="btn" onclick="login()" style="width: 100%;">Login</button>
+                        <button class="btn" onclick="login()" style="width: 100%; margin-bottom: 10px;">Login</button>
+                        <button class="btn" onclick="toggleForgotPassword()" style="width: 100%; background: #6c757d; margin-bottom: 10px;">Forgot Password?</button>
                         <div id="loginMessage" style="margin-top: 15px;"></div>
                         
                         <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
                         
-                        <p style="text-align: center; color: #666; margin-bottom: 0;">
+                        <p style="text-align: center; color: #666; margin-bottom: 0; font-size: 13px;">
                             <strong>Demo Credentials:</strong><br>
-                            <small>Email: manager@kinyozi.com</small><br>
-                            <small>Password: manager123</small>
+                            <small>📧 manager@kinyozi.com</small><br>
+                            <small>🔑 manager123</small>
                         </p>
+                    </div>
+
+                    <!-- FORGOT PASSWORD FORM -->
+                    <div id="forgotPasswordForm" style="display: none; margin-top: 15px; background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 4px solid #ffc107;">
+                        <h4 style="margin-top: 0; color: #856404; font-size: 16px;">🔑 Reset Password</h4>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="resetEmail" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" id="resetPassword" placeholder="New password (6+ characters)">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" id="resetPasswordConfirm" placeholder="Confirm password">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <button class="btn btn-success" onclick="resetPassword()" style="width: 100%;">Reset Password</button>
+                            <button class="btn" onclick="toggleForgotPassword()" style="width: 100%; background: #6c757d;">Cancel</button>
+                        </div>
+                        <div id="resetMessage" style="margin-top: 15px;"></div>
                     </div>
                 </div>
 
@@ -1183,7 +1224,7 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // ============================================
         // KINYOZI POS SYSTEM - JAVASCRIPT
         // ============================================
@@ -1286,6 +1327,106 @@
                 }, 1000);
             } else {
                 messageDiv.innerHTML = '<div class="alert alert-danger">❌ Invalid email or password</div>';
+            }
+        }
+
+        function toggleForgotPassword() {
+            const form = document.getElementById('forgotPasswordForm');
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+                document.getElementById('resetEmail').value = '';
+                document.getElementById('resetPassword').value = '';
+                document.getElementById('resetPasswordConfirm').value = '';
+                document.getElementById('resetMessage').innerHTML = '';
+            } else {
+                form.style.display = 'none';
+            }
+        }
+
+        function resetPassword() {
+            const email = document.getElementById('resetEmail').value.trim();
+            const newPassword = document.getElementById('resetPassword').value;
+            const confirmPassword = document.getElementById('resetPasswordConfirm').value;
+            const messageDiv = document.getElementById('resetMessage');
+
+            // Validation
+            if (!email || !newPassword || !confirmPassword) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Please fill in all fields</div>';
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Passwords do not match</div>';
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Password must be 6+ characters</div>';
+                return;
+            }
+
+            if (!email.includes('@')) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Please enter a valid email</div>';
+                return;
+            }
+
+            // Check demo accounts
+            const demoAccounts = [
+                { email: 'manager@kinyozi.com', password: 'manager123', name: 'Manager', role: 'manager', businessTitle: 'Your Kinyozi' },
+                { email: 'staff1@kinyozi.com', password: 'staff123', name: 'John Kipchoge', role: 'barber', businessTitle: '' },
+                { email: 'staff2@kinyozi.com', password: 'staff123', name: 'Mary Nakada', role: 'stylist', businessTitle: '' }
+            ];
+
+            let userFound = false;
+            let accountType = 'demo';
+
+            // Check if email exists in demo accounts
+            const demoUser = demoAccounts.find(acc => acc.email === email);
+            if (demoUser) {
+                userFound = true;
+                accountType = 'demo';
+                // Update demo account (for demo purpose)
+                demoUser.password = newPassword;
+            } else {
+                // Check in custom accounts
+                const businessAccounts = JSON.parse(localStorage.getItem('businessAccounts') || '[]');
+                const customUser = businessAccounts.find(acc => acc.email === email);
+                if (customUser) {
+                    userFound = true;
+                    accountType = 'custom';
+                    customUser.password = newPassword;
+                    localStorage.setItem('businessAccounts', JSON.stringify(businessAccounts));
+                }
+            }
+
+            if (userFound) {
+                messageDiv.innerHTML = `
+                    <div class="alert alert-success">
+                        <h4 style="margin-top: 0;">✅ Password Reset Successful!</h4>
+                        <p style="margin: 10px 0;">
+                            Your password has been reset successfully.
+                        </p>
+                        <p style="margin: 10px 0;">
+                            <strong>New Email:</strong> ${email}<br>
+                            <strong>New Password:</strong> ${newPassword}
+                        </p>
+                        <p style="margin: 10px 0; font-size: 12px;">
+                            You can now login with your new password!
+                        </p>
+                    </div>
+                `;
+
+                // Auto-fill login form
+                document.getElementById('loginEmail').value = email;
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('loginPassword').focus();
+
+                // Hide reset form after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('forgotPasswordForm').style.display = 'none';
+                }, 3000);
+            } else {
+                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Email not found. Please check and try again.</div>';
             }
         }
 
@@ -1868,15 +2009,4 @@
                 currentUser = userData.name;
                 currentRole = userData.role;
                 businessName = localStorage.getItem('businessName') || 'Kinyozi POS';
-                updateHeaderInfo();
-            }
-        }
-
-        // ============================================
-        // STARTUP
-        // ============================================
-
-        window.onload = initialize;
-    </script>
-</body>
-</html>
+                updateHeaderI

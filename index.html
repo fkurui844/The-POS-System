@@ -574,91 +574,276 @@
             color: #856404;
         }
 
-        @media (max-width: 768px) {
-            .pos-container {
-                grid-template-columns: 1fr;
-            }
-
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-
-            .pos-right {
-                position: static;
-            }
-
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .user-info {
-                width: 100%;
-                text-align: left;
-                margin-top: 10px;
-            }
-
-            .logout-btn {
-                margin-left: 0;
-                margin-top: 10px;
-                width: 100%;
-            }
-
-            .nav-tabs {
-                flex-wrap: wrap;
-                justify-content: space-between;
-            }
-
-            .nav-btn {
-                flex: 1;
-                min-width: 70px;
-                margin-bottom: 5px;
-            }
-
-            .pos-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
-
-            .receipt-item {
-                grid-template-columns: 1fr 35px;
-                gap: 5px;
-            }
-
-            .receipt-item-qty,
-            .receipt-item-price {
-                display: none;
-            }
-
-            .receipt-item-remove {
-                grid-column: 2;
-            }
-
-            input[type="text"],
-            input[type="email"],
-            input[type="password"],
-            input[type="number"],
-            select,
-            textarea {
-                font-size: 16px;
-            }
-
-            .table {
-                font-size: 11px;
-            }
-
-            .table th,
-            .table td {
-                padding: 6px;
-            }
-
-            .modal-content {
-                padding: 15px;
-            }
-
+        @media (max-width: 900px) {
             /* Mobile login page - stack columns */
             .login-grid {
                 grid-template-columns: 1fr !important;
-                gap: 20px !important;
+                gap: 15px !important;
+                max-width: 100% !important;
+            }
+
+            .login-grid > div {
+                width: 100%;
+            }
+
+            .login-grid h3 {
+                font-size: 18px !important;
+                margin-bottom: 15px !important;
+            }
+
+            .login-grid .form-group {
+                margin-bottom: 12px !important;
+            }
+
+            .login-grid label {
+                font-size: 14px !important;
+                margin-bottom: 5px !important;
+            }
+
+            .login-grid input,
+            .login-grid select {
+                font-size: 16px !important;
+                padding: 12px !important;
+                width: 100% !important;
+            }
+
+            .login-grid .btn {
+                font-size: 14px !important;
+                padding: 12px !important;
+                width: 100% !important;
+                min-height: 44px !important;
+            }
+
+            .login-grid .alert {
+                font-size: 13px !important;
+                padding: 12px !important;
+                margin-bottom: 15px !important;
+            }
+
+            .login-grid .alert ul {
+                margin: 8px 0 !important;
+                padding-left: 18px !important;
+                font-size: 13px !important;
+            }
+
+            .login-grid .alert li {
+                margin-bottom: 5px !important;
+            }
+
+            .login-grid h4 {
+                font-size: 16px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .login-grid small {
+                font-size: 12px !important;
+                display: block !important;
+                margin-top: 4px !important;
+            }
+
+            .login-grid hr {
+                margin: 15px 0 !important;
+            }
+
+            .login-grid p {
+                font-size: 13px !important;
+                line-height: 1.5 !important;
+            }
+
+            #forgotPasswordForm {
+                margin-top: 12px !important;
+                padding: 15px !important;
+            }
+
+            #createAccountForm {
+                margin-top: 12px !important;
+                padding-top: 12px !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .login-grid {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+                padding: 0 5px !important;
+            }
+
+            .login-grid > div {
+                padding: 15px !important;
+                background: #f8f9fa !important;
+                border-radius: 8px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .login-grid h2 {
+                font-size: 20px !important;
+                margin-bottom: 15px !important;
+            }
+
+            .login-grid h3 {
+                font-size: 16px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .login-grid h4 {
+                font-size: 14px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .login-grid label {
+                font-size: 13px !important;
+                margin-bottom: 4px !important;
+            }
+
+            .login-grid input,
+            .login-grid select,
+            .login-grid textarea {
+                font-size: 16px !important;
+                padding: 11px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .login-grid .btn {
+                font-size: 13px !important;
+                padding: 11px !important;
+                margin-bottom: 8px !important;
+                min-height: 44px !important;
+            }
+
+            .login-grid .alert {
+                font-size: 12px !important;
+                padding: 10px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .login-grid .alert h3 {
+                font-size: 15px !important;
+                margin-bottom: 8px !important;
+            }
+
+            .login-grid ul {
+                padding-left: 16px !important;
+                margin: 6px 0 !important;
+            }
+
+            .login-grid li {
+                margin-bottom: 4px !important;
+                font-size: 12px !important;
+            }
+
+            #forgotPasswordForm {
+                background: #fff3cd !important;
+                padding: 12px !important;
+                border-radius: 6px !important;
+                margin-top: 10px !important;
+                border-left: 3px solid #ffc107 !important;
+            }
+
+            #createAccountForm {
+                background: transparent !important;
+                padding: 0 !important;
+                margin-top: 10px !important;
+                border: none !important;
+            }
+
+            .login-grid > div > div:last-child {
+                padding: 0 !important;
+                background: transparent !important;
+            }
+
+            .login-grid > div > div:first-of-type {
+                padding: 15px !important;
+                background: #f8f9fa !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-grid {
+                padding: 0 !important;
+            }
+
+            .login-grid > div {
+                padding: 12px !important;
+                margin-bottom: 8px !important;
+                background: white !important;
+                border-radius: 6px !important;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+            }
+
+            .login-grid h2 {
+                font-size: 18px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .login-grid h3 {
+                font-size: 15px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .login-grid label {
+                font-size: 12px !important;
+                font-weight: 600 !important;
+            }
+
+            .login-grid input,
+            .login-grid select {
+                font-size: 16px !important;
+                padding: 10px !important;
+                margin-bottom: 8px !important;
+                border: 1px solid #ddd !important;
+                border-radius: 4px !important;
+            }
+
+            .login-grid .btn {
+                font-size: 12px !important;
+                padding: 10px !important;
+                margin-bottom: 6px !important;
+                min-height: 44px !important;
+                width: 100% !important;
+            }
+
+            .login-grid .alert {
+                font-size: 11px !important;
+                padding: 8px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .login-grid .alert h3 {
+                font-size: 14px !important;
+                margin-bottom: 6px !important;
+            }
+
+            .login-grid .alert p {
+                font-size: 11px !important;
+                margin: 5px 0 !important;
+            }
+
+            .login-grid ul {
+                padding-left: 14px !important;
+                margin: 5px 0 !important;
+            }
+
+            .login-grid li {
+                font-size: 11px !important;
+                margin-bottom: 3px !important;
+            }
+
+            #forgotPasswordForm,
+            #createAccountForm {
+                padding: 12px !important;
+                margin-top: 8px !important;
+                border-radius: 4px !important;
+            }
+
+            #forgotPasswordForm {
+                background: #fff3cd !important;
+                border-left: 3px solid #ffc107 !important;
+            }
+
+            .login-grid hr {
+                margin: 10px 0 !important;
+                border: none !important;
+                border-top: 1px solid #ddd !important;
             }
         }
 
@@ -820,9 +1005,10 @@
         <!-- NAVIGATION TABS -->
         <div class="nav-tabs no-print" id="navTabs" style="display: none;">
             <button class="nav-btn active" onclick="switchTab('sales')">🎯 Sales</button>
-            <button class="nav-btn" onclick="switchTab('staff')">👥 Staff</button>
-            <button class="nav-btn" onclick="switchTab('prices')">💰 Prices</button>
-            <button class="nav-btn" onclick="switchTab('reports')">📊 Reports</button>
+            <button class="nav-btn" onclick="switchTab('expenses')">💸 Expenses</button>
+            <button class="nav-btn manager-only" onclick="switchTab('reports')" style="display: none;">📊 Reports</button>
+            <button class="nav-btn manager-only" onclick="switchTab('staff')" style="display: none;">👥 Staff</button>
+            <button class="nav-btn manager-only" onclick="switchTab('prices')" style="display: none;">💰 Prices</button>
         </div>
 
         <!-- LOGIN PAGE -->
@@ -864,7 +1050,7 @@
                         
                         <p style="text-align: center; color: #666; margin-bottom: 0; font-size: 13px;">
                             <strong>Demo Credentials:</strong><br>
-                            <small>📧 manager@kinyozi.com</small><br>
+                            <small>📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a2cfc3ccc3c5c7d0e2c9cbccdbcdd8cb8cc1cdcf">[email&#160;protected]</a></small><br>
                             <small>🔑 manager123</small>
                         </p>
                     </div>
@@ -1026,7 +1212,161 @@
             </div>
         </div>
 
-        <!-- STAFF TAB -->
+        <!-- EXPENSES TAB -->
+        <div id="expenses" class="content">
+            <h2>💸 Purchases & Expenses</h2>
+            <div id="expensesMessage"></div>
+
+            <!-- STAFF VIEW: Record Own Expenses -->
+            <div id="staffExpensesView" style="display: none;">
+                <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px;">
+                    <h3 style="margin-top: 0;">💸 Record Your Expenses</h3>
+                    <p style="margin: 10px 0;">
+                        Track purchases and expenses. All expenses are recorded and visible to your manager.
+                    </p>
+                </div>
+
+                <div style="max-width: 600px;">
+                    <h3 style="color: #333; margin-bottom: 20px;">Add New Expense</h3>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" id="expenseDescription" placeholder="e.g., Hair products, supplies, tools">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="expenseCategory">
+                                <option value="supplies">Supplies & Materials</option>
+                                <option value="tools">Tools & Equipment</option>
+                                <option value="cleaning">Cleaning & Maintenance</option>
+                                <option value="personal">Personal Purchases</option>
+                                <option value="transport">Transport</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount (KES)</label>
+                            <input type="number" id="expenseAmount" placeholder="500" min="0" step="0.01">
+                        </div>
+                        <button class="btn btn-success" onclick="recordExpense()" style="width: 100%;">Record Expense</button>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px; color: #333;">Your Expenses Today</h3>
+                <div style="overflow-x: auto;">
+                    <table class="table" id="staffExpensesTable">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffExpensesList">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #999;">No expenses recorded yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="grid-2" style="margin-top: 20px;">
+                    <div class="card">
+                        <div class="card-title">Total Expenses Today</div>
+                        <div class="card-value" id="staffTotalExpenses">KES 0.00</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Net Earnings</div>
+                        <div class="card-value" id="staffNetEarnings" style="color: #28a745;">KES 0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MANAGER VIEW: All Staff Expenses -->
+            <div id="managerExpensesView" style="display: none;">
+                <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px;">
+                    <h3 style="margin-top: 0;">💸 All Staff Expenses & Purchases</h3>
+                    <p style="margin: 10px 0;">
+                        Track all employee expenses and monitor business costs.
+                    </p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-title">Total Expenses</div>
+                        <div class="card-value" id="managerTotalExpenses">KES 0.00</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Number of Expenses</div>
+                        <div class="card-value" id="totalExpensesCount">0</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Net Sales (after expenses)</div>
+                        <div class="card-value" id="netSales" style="color: #28a745;">KES 0.00</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px; color: #333;">Expenses by Category</h3>
+                <div style="overflow-x: auto;">
+                    <table class="table" id="expensesCategoryTable">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Count</th>
+                                <th>Total Amount</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expensesCategoryList">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #999;">No expenses yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 30px; color: #333;">All Staff Expenses</h3>
+                <div style="overflow-x: auto;">
+                    <table class="table" id="allExpensesTable">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Staff Member</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allExpensesList">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #999;">No expenses recorded yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 30px; color: #333;">Staff Net Earnings (Sales - Expenses)</h3>
+                <div style="overflow-x: auto;">
+                    <table class="table" id="staffNetEarningsTable">
+                        <thead>
+                            <tr>
+                                <th>Staff Member</th>
+                                <th>Total Sales</th>
+                                <th>Total Expenses</th>
+                                <th>Net Earnings</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffNetEarningsList">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #999;">No data yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <div id="staff" class="content">
             <h2>💇 Manage Barbers/Stylists</h2>
             <div id="staffMessage"></div>
@@ -1145,68 +1485,123 @@
 
         <!-- REPORTS TAB -->
         <div id="reports" class="content">
-            <h2>📊 Daily Reports</h2>
+            <h2>📊 Reports</h2>
             <div id="reportsMessage"></div>
 
-            <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px;">
-                <h3 style="margin-top: 0;">📊 Sales Analytics</h3>
-                <p style="margin: 10px 0;">
-                    Track today's performance and see which staff are doing well.
-                </p>
+            <!-- MANAGER REPORTS -->
+            <div id="managerReports" style="display: none;">
+                <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px;">
+                    <h3 style="margin-top: 0;">📊 Business Analytics</h3>
+                    <p style="margin: 10px 0;">
+                        Track your salon's performance and see which staff are doing well.
+                    </p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-title">Today's Sales</div>
+                        <div class="card-value" id="todaysSales">KES 0.00</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Total Transactions</div>
+                        <div class="card-value" id="totalTransactions">0</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Average per Transaction</div>
+                        <div class="card-value" id="avgTransaction">KES 0.00</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px; color: #333;">👥 Performance by Staff Member</h3>
+                <div style="overflow-x: auto;">
+                    <table class="table" id="staffPerformanceTable">
+                        <thead>
+                            <tr>
+                                <th>Staff Member</th>
+                                <th>Role</th>
+                                <th>Transactions</th>
+                                <th>Total Sales</th>
+                                <th>Average</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffPerformanceList">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #999;">No sales yet today</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 30px; color: #333;">Recent Transactions</h3>
+                <div style="overflow-x: auto;">
+                    <table class="table" id="transactionsTable">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Barber</th>
+                                <th>Services</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsList">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #999;">No transactions yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <div class="grid-3">
-                <div class="card">
-                    <div class="card-title">Today's Sales</div>
-                    <div class="card-value" id="todaysSales">KES 0.00</div>
+            <!-- STAFF PERSONAL REPORTS -->
+            <div id="staffReports" style="display: none;">
+                <div class="alert alert-success" style="max-width: 700px; margin-bottom: 30px;">
+                    <h3 style="margin-top: 0;">📊 Your Personal Performance</h3>
+                    <p style="margin: 10px 0;">
+                        Track your sales and performance today.
+                    </p>
                 </div>
-                <div class="card">
-                    <div class="card-title">Total Transactions</div>
-                    <div class="card-value" id="totalTransactions">0</div>
-                </div>
-                <div class="card">
-                    <div class="card-title">Average per Transaction</div>
-                    <div class="card-value" id="avgTransaction">KES 0.00</div>
-                </div>
-            </div>
 
-            <h3 style="margin-top: 30px; color: #333;">Performance by Barber/Stylist</h3>
-            <div style="overflow-x: auto;">
-                <table class="table" id="staffPerformanceTable">
-                    <thead>
-                        <tr>
-                            <th>Staff Member</th>
-                            <th>Transactions</th>
-                            <th>Total Sales</th>
-                            <th>Average</th>
-                        </tr>
-                    </thead>
-                    <tbody id="staffPerformanceList">
-                        <tr>
-                            <td colspan="4" style="text-align: center; color: #999;">No sales yet today</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-title">Your Today's Sales</div>
+                        <div class="card-value" id="staffTodaysSales">KES 0.00</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Your Transactions</div>
+                        <div class="card-value" id="staffTotalTransactions">0</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Your Average</div>
+                        <div class="card-value" id="staffAvgTransaction">KES 0.00</div>
+                    </div>
+                </div>
 
-            <h3 style="margin-top: 30px; color: #333;">Recent Transactions</h3>
-            <div style="overflow-x: auto;">
-                <table class="table" id="transactionsTable">
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Barber</th>
-                            <th>Services</th>
-                            <th>Total</th>
-                            <th>Payment</th>
-                        </tr>
-                    </thead>
-                    <tbody id="transactionsList">
-                        <tr>
-                            <td colspan="5" style="text-align: center; color: #999;">No transactions yet</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h3 style="margin-top: 30px; color: #333;">Your Today's Transactions</h3>
+                <div style="overflow-x: auto;">
+                    <table class="table" id="staffTransactionsTable">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Services</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffTransactionsList">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #999;">No transactions yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top: 30px; background: #e8f5e9; padding: 20px; border-radius: 10px; border-left: 4px solid #28a745;">
+                    <h4 style="color: #2e7d32; margin-top: 0;">💡 Keep It Up!</h4>
+                    <p style="color: #555; margin: 0;">
+                        Keep processing sales to grow your numbers. Your manager can see your performance in the Staff Management tab.
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -1224,7 +1619,7 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // ============================================
         // KINYOZI POS SYSTEM - JAVASCRIPT
         // ============================================
@@ -1269,6 +1664,7 @@
                 loadServices();
                 loadStaff();
                 loadSalesReports();
+                loadExpensesReports();
             }
         }
 
@@ -1296,10 +1692,16 @@
             // Check demo accounts
             let user = demoAccounts.find(acc => acc.email === email && acc.password === password);
 
-            // Check newly created accounts
+            // Check custom business accounts (managers)
             if (!user) {
                 const businessAccounts = JSON.parse(localStorage.getItem('businessAccounts') || '[]');
                 user = businessAccounts.find(acc => acc.email === email && acc.password === password);
+            }
+
+            // Check staff accounts
+            if (!user) {
+                const staffAccounts = JSON.parse(localStorage.getItem('staffAccounts') || '[]');
+                user = staffAccounts.find(acc => acc.email === email && acc.password === password);
             }
 
             if (user) {
@@ -1315,7 +1717,7 @@
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 localStorage.setItem('businessName', businessName);
                 
-                messageDiv.innerHTML = '<div class="alert alert-success">✅ Login successful!</div>';
+                messageDiv.innerHTML = '<div class="alert alert-success">✅ Login successful! Welcome ' + user.name + '!</div>';
                 
                 updateHeaderInfo();
                 
@@ -1326,7 +1728,7 @@
                     loadSalesReports();
                 }, 1000);
             } else {
-                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Invalid email or password</div>';
+                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Invalid email or password. Please try again.</div>';
             }
         }
 
@@ -1540,10 +1942,32 @@
                 document.getElementById('businessName').textContent = businessName;
                 document.getElementById('userName').textContent = currentUser;
                 document.getElementById('userRole').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1);
+                
                 // Show navigation tabs
                 const navTabs = document.getElementById('navTabs');
                 if (navTabs) {
                     navTabs.style.display = 'flex';
+                }
+
+                // Show/hide manager-only tabs based on role
+                const managerOnlyTabs = document.querySelectorAll('.manager-only');
+                managerOnlyTabs.forEach(tab => {
+                    if (currentRole === 'manager') {
+                        tab.style.display = 'block';
+                    } else {
+                        tab.style.display = 'none';
+                    }
+                });
+
+                // If staff member, hide manager-only content tabs
+                if (currentRole !== 'manager') {
+                    // Hide manager-only content sections
+                    ['staff', 'prices', 'reports'].forEach(tabId => {
+                        const contentDiv = document.getElementById(tabId);
+                        if (contentDiv) {
+                            contentDiv.style.display = 'none';
+                        }
+                    });
                 }
             } else {
                 // Hide navigation tabs
@@ -1841,28 +2265,76 @@
                 return;
             }
 
+            if (password.length < 6) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">Password must be 6+ characters</div>';
+                return;
+            }
+
+            if (!email.includes('@')) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">Invalid email address</div>';
+                return;
+            }
+
+            // Create staff member object
             const newStaff = {
                 id: Date.now(),
                 name: name,
                 email: email,
                 phone: phone,
                 role: role,
-                status: 'active'
+                status: 'active',
+                businessName: businessName,
+                dateCreated: new Date().toLocaleDateString('en-KE')
             };
 
+            // Save to staff list
             staffList.push(newStaff);
             localStorage.setItem('staffList', JSON.stringify(staffList));
 
-            messageDiv.innerHTML = `<div class="alert alert-success">✅ ${name} (${role}) added! Temp password: ${password}</div>`;
+            // Also save as a loginable account (staff can now login with their credentials)
+            const staffAccount = {
+                email: email,
+                password: password,
+                name: name,
+                role: role,
+                businessTitle: businessName,
+                phone: phone,
+                dateCreated: new Date().toLocaleDateString('en-KE')
+            };
+
+            // Save to loginable accounts
+            let staffAccounts = JSON.parse(localStorage.getItem('staffAccounts') || '[]');
+            staffAccounts.push(staffAccount);
+            localStorage.setItem('staffAccounts', JSON.stringify(staffAccounts));
+
+            messageDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <h4 style="margin-top: 0;">✅ Staff Account Created!</h4>
+                    <p style="margin: 10px 0;">
+                        <strong>${name}</strong> has been added as a <strong>${role}</strong>.
+                    </p>
+                    <p style="margin: 10px 0;">
+                        <strong>Login Credentials for ${name}:</strong><br>
+                        📧 Email: <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">${email}</code><br>
+                        🔑 Password: <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">${password}</code>
+                    </p>
+                    <p style="margin: 10px 0; font-size: 12px; color: #666;">
+                        Share these credentials with ${name}. They can now login and process sales!
+                    </p>
+                </div>
+            `;
             
+            // Clear form
             document.getElementById('staffName').value = '';
             document.getElementById('staffEmail').value = '';
             document.getElementById('staffPhone').value = '';
             document.getElementById('staffPassword').value = '';
             
+            // Refresh staff list display
             displayStaff();
 
-            setTimeout(() => { messageDiv.innerHTML = ''; }, 3000);
+            // Auto-hide message after 5 seconds
+            setTimeout(() => { messageDiv.innerHTML = ''; }, 5000);
         }
 
         function displayStaff() {
@@ -1907,6 +2379,24 @@
             const today = new Date().toLocaleDateString('en-KE');
             const todaysSales = salesData.filter(s => new Date(s.date).toLocaleDateString('en-KE') === today);
             
+            // Show/hide report sections based on role
+            const managerReports = document.getElementById('managerReports');
+            const staffReports = document.getElementById('staffReports');
+            
+            if (currentRole === 'manager') {
+                // Show manager reports
+                if (managerReports) managerReports.style.display = 'block';
+                if (staffReports) staffReports.style.display = 'none';
+                loadManagerReports(todaysSales);
+            } else {
+                // Show staff reports
+                if (managerReports) managerReports.style.display = 'none';
+                if (staffReports) staffReports.style.display = 'block';
+                loadStaffReports(todaysSales);
+            }
+        }
+
+        function loadManagerReports(todaysSales) {
             let totalSales = 0;
             let totalTransactions = 0;
             
@@ -1919,23 +2409,32 @@
             document.getElementById('totalTransactions').textContent = totalTransactions;
             document.getElementById('avgTransaction').textContent = totalTransactions > 0 ? `KES ${(totalSales / totalTransactions).toFixed(2)}` : 'KES 0.00';
             
-            // Staff performance
+            // Staff performance with roles
             const staffPerf = {};
             todaysSales.forEach(sale => {
                 if (!staffPerf[sale.staffMember]) {
-                    staffPerf[sale.staffMember] = { transactions: 0, total: 0 };
+                    staffPerf[sale.staffMember] = { transactions: 0, total: 0, role: '' };
                 }
                 staffPerf[sale.staffMember].transactions++;
                 staffPerf[sale.staffMember].total += sale.total;
+            });
+
+            // Get roles from staffList
+            staffList.forEach(staff => {
+                if (staffPerf[staff.name]) {
+                    staffPerf[staff.name].role = staff.role;
+                }
             });
             
             const tbody = document.getElementById('staffPerformanceList');
             tbody.innerHTML = '';
             
             Object.entries(staffPerf).forEach(([staff, data]) => {
+                const roleDisplay = data.role ? `<span class="kinyozi-badge">${data.role}</span>` : '-';
                 const row = tbody.insertRow();
                 row.innerHTML = `
                     <td>${staff}</td>
+                    <td>${roleDisplay}</td>
                     <td>${data.transactions}</td>
                     <td>KES ${data.total.toFixed(2)}</td>
                     <td>KES ${(data.total / data.transactions).toFixed(2)}</td>
@@ -1943,7 +2442,7 @@
             });
 
             if (Object.keys(staffPerf).length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">No sales yet today</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No sales yet today</td></tr>';
             }
 
             // Recent transactions
@@ -1965,6 +2464,43 @@
 
             if (recentSales.length === 0) {
                 transactionsTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No transactions</td></tr>';
+            }
+        }
+
+        function loadStaffReports(todaysSales) {
+            // Filter sales for current staff member only
+            const myTodaysSales = todaysSales.filter(s => s.staffMember === currentUser);
+            
+            let myTotalSales = 0;
+            let myTotalTransactions = 0;
+            
+            myTodaysSales.forEach(sale => {
+                myTotalSales += sale.total;
+                myTotalTransactions++;
+            });
+            
+            document.getElementById('staffTodaysSales').textContent = `KES ${myTotalSales.toFixed(2)}`;
+            document.getElementById('staffTotalTransactions').textContent = myTotalTransactions;
+            document.getElementById('staffAvgTransaction').textContent = myTotalTransactions > 0 ? `KES ${(myTotalSales / myTotalTransactions).toFixed(2)}` : 'KES 0.00';
+
+            // Staff's transactions
+            const staffTransactionsTbody = document.getElementById('staffTransactionsList');
+            staffTransactionsTbody.innerHTML = '';
+            
+            const recentSales = myTodaysSales.slice(-10).reverse();
+            recentSales.forEach(sale => {
+                const itemsList = sale.items.map(i => `${i.name} (${i.quantity})`).join(', ');
+                const row = staffTransactionsTbody.insertRow();
+                row.innerHTML = `
+                    <td>${new Date(sale.date).toLocaleTimeString('en-KE', {hour: '2-digit', minute: '2-digit'})}</td>
+                    <td>${itemsList}</td>
+                    <td>KES ${sale.total.toFixed(2)}</td>
+                    <td>${sale.paymentMethod.toUpperCase()}</td>
+                `;
+            });
+
+            if (recentSales.length === 0) {
+                staffTransactionsTbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">No transactions yet</td></tr>';
             }
         }
 
@@ -1999,14 +2535,239 @@
         }
 
         // ============================================
-        // STORAGE
+        // EXPENSES & PURCHASES
         // ============================================
+
+        let expensesData = [];
+
+        function recordExpense() {
+            const description = document.getElementById('expenseDescription').value.trim();
+            const category = document.getElementById('expenseCategory').value;
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+            const messageDiv = document.getElementById('expensesMessage');
+
+            if (!description || !amount || amount <= 0) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">❌ Please fill all fields with valid amount</div>';
+                return;
+            }
+
+            const expense = {
+                id: Date.now(),
+                date: new Date().toLocaleString('en-KE'),
+                staffMember: currentUser,
+                description: description,
+                category: category,
+                amount: amount
+            };
+
+            expensesData.push(expense);
+            localStorage.setItem('expensesData', JSON.stringify(expensesData));
+
+            messageDiv.innerHTML = `<div class="alert alert-success">✅ Expense recorded! KES ${amount.toFixed(2)} - ${description}</div>`;
+            
+            document.getElementById('expenseDescription').value = '';
+            document.getElementById('expenseAmount').value = '';
+            
+            loadExpensesReports();
+
+            setTimeout(() => { messageDiv.innerHTML = ''; }, 3000);
+        }
+
+        function loadExpensesData() {
+            const stored = localStorage.getItem('expensesData');
+            expensesData = stored ? JSON.parse(stored) : [];
+        }
+
+        function loadExpensesReports() {
+            loadExpensesData();
+
+            const staffExpensesView = document.getElementById('staffExpensesView');
+            const managerExpensesView = document.getElementById('managerExpensesView');
+
+            if (currentRole === 'manager') {
+                if (staffExpensesView) staffExpensesView.style.display = 'none';
+                if (managerExpensesView) managerExpensesView.style.display = 'block';
+                loadManagerExpensesReport();
+            } else {
+                if (staffExpensesView) staffExpensesView.style.display = 'block';
+                if (managerExpensesView) managerExpensesView.style.display = 'none';
+                loadStaffExpensesReport();
+            }
+        }
+
+        function loadStaffExpensesReport() {
+            const today = new Date().toLocaleDateString('en-KE');
+            const myExpenses = expensesData.filter(e => 
+                e.staffMember === currentUser && 
+                new Date(e.date).toLocaleDateString('en-KE') === today
+            );
+
+            // Calculate totals
+            let totalExpenses = 0;
+            myExpenses.forEach(e => {
+                totalExpenses += e.amount;
+            });
+
+            // Get sales for this staff today
+            const mySalesData = salesData.filter(s => 
+                s.staffMember === currentUser && 
+                new Date(s.date).toLocaleDateString('en-KE') === today
+            );
+
+            let totalSales = 0;
+            mySalesData.forEach(s => {
+                totalSales += s.total;
+            });
+
+            let netEarnings = totalSales - totalExpenses;
+
+            document.getElementById('staffTotalExpenses').textContent = `KES ${totalExpenses.toFixed(2)}`;
+            document.getElementById('staffNetEarnings').textContent = `KES ${netEarnings.toFixed(2)}`;
+            document.getElementById('staffNetEarnings').style.color = netEarnings >= 0 ? '#28a745' : '#dc3545';
+
+            // Staff expenses table
+            const tbody = document.getElementById('staffExpensesList');
+            tbody.innerHTML = '';
+
+            if (myExpenses.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No expenses recorded yet</td></tr>';
+                return;
+            }
+
+            myExpenses.forEach(expense => {
+                const row = tbody.insertRow();
+                const time = new Date(expense.date).toLocaleTimeString('en-KE', {hour: '2-digit', minute: '2-digit'});
+                row.innerHTML = `
+                    <td>${time}</td>
+                    <td>${expense.description}</td>
+                    <td><span class="kinyozi-badge">${expense.category}</span></td>
+                    <td>KES ${expense.amount.toFixed(2)}</td>
+                    <td><button class="btn btn-danger" onclick="deleteExpense('${expense.id}')" style="padding: 4px 8px; font-size: 11px;">Delete</button></td>
+                `;
+            });
+        }
+
+        function loadManagerExpensesReport() {
+            const today = new Date().toLocaleDateString('en-KE');
+            const todayExpenses = expensesData.filter(e => 
+                new Date(e.date).toLocaleDateString('en-KE') === today
+            );
+
+            // Calculate totals
+            let totalExpenses = 0;
+            todayExpenses.forEach(e => {
+                totalExpenses += e.amount;
+            });
+
+            // Calculate total sales
+            const todaySales = salesData.filter(s => 
+                new Date(s.date).toLocaleDateString('en-KE') === today
+            );
+            let totalSales = 0;
+            todaySales.forEach(s => {
+                totalSales += s.total;
+            });
+
+            let netSales = totalSales - totalExpenses;
+
+            document.getElementById('managerTotalExpenses').textContent = `KES ${totalExpenses.toFixed(2)}`;
+            document.getElementById('totalExpensesCount').textContent = todayExpenses.length;
+            document.getElementById('netSales').textContent = `KES ${netSales.toFixed(2)}`;
+            document.getElementById('netSales').style.color = netSales >= 0 ? '#28a745' : '#dc3545';
+
+            // Expenses by category
+            const categoryData = {};
+            todayExpenses.forEach(e => {
+                if (!categoryData[e.category]) {
+                    categoryData[e.category] = { count: 0, total: 0 };
+                }
+                categoryData[e.category].count++;
+                categoryData[e.category].total += e.amount;
+            });
+
+            const categoryTbody = document.getElementById('expensesCategoryList');
+            categoryTbody.innerHTML = '';
+
+            Object.entries(categoryData).forEach(([category, data]) => {
+                const percentage = totalExpenses > 0 ? ((data.total / totalExpenses) * 100).toFixed(1) : '0.0';
+                const row = categoryTbody.insertRow();
+                row.innerHTML = `
+                    <td>${category}</td>
+                    <td>${data.count}</td>
+                    <td>KES ${data.total.toFixed(2)}</td>
+                    <td>${percentage}%</td>
+                `;
+            });
+
+            if (Object.keys(categoryData).length === 0) {
+                categoryTbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">No expenses yet</td></tr>';
+            }
+
+            // All expenses table
+            const allTbody = document.getElementById('allExpensesList');
+            allTbody.innerHTML = '';
+
+            if (todayExpenses.length === 0) {
+                allTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No expenses recorded yet</td></tr>';
+            } else {
+                const recentExpenses = todayExpenses.slice(-20).reverse();
+                recentExpenses.forEach(expense => {
+                    const time = new Date(expense.date).toLocaleTimeString('en-KE', {hour: '2-digit', minute: '2-digit'});
+                    const row = allTbody.insertRow();
+                    row.innerHTML = `
+                        <td>${time}</td>
+                        <td>${expense.staffMember}</td>
+                        <td>${expense.description}</td>
+                        <td><span class="kinyozi-badge">${expense.category}</span></td>
+                        <td>KES ${expense.amount.toFixed(2)}</td>
+                    `;
+                });
+            }
+
+            // Staff net earnings
+            const staffEarnings = {};
+            todaySales.forEach(sale => {
+                if (!staffEarnings[sale.staffMember]) {
+                    staffEarnings[sale.staffMember] = { sales: 0, expenses: 0 };
+                }
+                staffEarnings[sale.staffMember].sales += sale.total;
+            });
+
+            todayExpenses.forEach(expense => {
+                if (!staffEarnings[expense.staffMember]) {
+                    staffEarnings[expense.staffMember] = { sales: 0, expenses: 0 };
+                }
+                staffEarnings[expense.staffMember].expenses += expense.amount;
+            });
+
+            const earningsTbody = document.getElementById('staffNetEarningsList');
+            earningsTbody.innerHTML = '';
+
+            Object.entries(staffEarnings).forEach(([staff, data]) => {
+                const netEarning = data.sales - data.expenses;
+                const row = earningsTbody.insertRow();
+                row.innerHTML = `
+                    <td>${staff}</td>
+                    <td>KES ${data.sales.toFixed(2)}</td>
+                    <td>KES ${data.expenses.toFixed(2)}</td>
+                    <td style="color: ${netEarning >= 0 ? '#28a745' : '#dc3545'}; font-weight: 600;">KES ${netEarning.toFixed(2)}</td>
+                `;
+            });
+
+            if (Object.keys(staffEarnings).length === 0) {
+                earningsTbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">No data yet</td></tr>';
+            }
+        }
+
+        function deleteExpense(expenseId) {
+            if (confirm('Delete this expense?')) {
+                expensesData = expensesData.filter(e => e.id != expenseId);
+                localStorage.setItem('expensesData', JSON.stringify(expensesData));
+                loadExpensesReports();
+            }
+        }
 
         function loadFromLocalStorage() {
             const user = localStorage.getItem('currentUser');
             if (user) {
-                const userData = JSON.parse(user);
-                currentUser = userData.name;
-                currentRole = userData.role;
-                businessName = localStorage.getItem('businessName') || 'Kinyozi POS';
-                updateHeaderI
+                const user

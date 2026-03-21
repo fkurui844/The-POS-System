@@ -3116,6 +3116,35 @@
         // ============================================
         // STORAGE
         // ============================================
+
+        function loadFromLocalStorage() {
             const user = localStorage.getItem('currentUser');
             if (user) {
-                const user
+                currentUser = JSON.parse(user).name;
+                currentRole = JSON.parse(user).role;
+            }
+            
+            const bname = localStorage.getItem('businessName');
+            if (bname) {
+                businessName = bname;
+            }
+            
+            loadExpensesData();
+            loadSalesData();
+        }
+
+        function loadSalesData() {
+            const stored = localStorage.getItem('salesData');
+            salesData = stored ? JSON.parse(stored) : [];
+        }
+
+        // ============================================
+        // PAGE INITIALIZATION
+        // ============================================
+
+        window.onload = function() {
+            initialize();
+        };
+    </script>
+</body>
+</html>

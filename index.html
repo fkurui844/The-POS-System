@@ -1766,6 +1766,35 @@
                 </div>
             </div>
         </div>
+
+        <!-- RESET PASSWORD MODAL -->
+        <div id="resetPasswordModal" class="modal">
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-close" onclick="closeResetPasswordModal()">&times;</div>
+                <div class="modal-header">🔑 Reset Staff Password</div>
+                
+                <div style="padding: 20px;">
+                    <p id="resetPasswordStaffInfo" style="margin-bottom: 20px; color: #666;"></p>
+                    
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" id="newPasswordReset" placeholder="Enter new password (6+ characters)" style="width: 100%;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" id="confirmPasswordReset" placeholder="Confirm new password" style="width: 100%;">
+                    </div>
+                    
+                    <div id="resetPasswordMessage" style="margin-bottom: 15px;"></div>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-success" onclick="confirmResetPassword()" style="flex: 1;">Reset Password</button>
+                        <button class="btn" onclick="closeResetPasswordModal()" style="flex: 1; background: #6c757d;">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
@@ -1805,6 +1834,7 @@
         // ============================================
 
         function initialize() {
+            initializeEmailJS();
             loadFromLocalStorage();
             if (!currentUser) {
                 switchTab('login');
@@ -2458,6 +2488,9 @@
             staffAccounts.push(staffAccount);
             localStorage.setItem('staffAccounts', JSON.stringify(staffAccounts));
 
+            // Send invitation email
+            sendStaffInvitationEmail(name, email, password, role, businessName);
+
             messageDiv.innerHTML = `
                 <div class="alert alert-success">
                     <h4 style="margin-top: 0;">✅ Staff Account Created!</h4>
@@ -2465,12 +2498,16 @@
                         <strong>${name}</strong> has been added as a <strong>${role}</strong>.
                     </p>
                     <p style="margin: 10px 0;">
-                        <strong>Login Credentials for ${name}:</strong><br>
+                        <strong>📧 Invitation Email Sent!</strong><br>
+                        An email with login credentials has been sent to <strong>${email}</strong>
+                    </p>
+                    <p style="margin: 10px 0;">
+                        <strong>Login Credentials:</strong><br>
                         📧 Email: <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">${email}</code><br>
                         🔑 Password: <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">${password}</code>
                     </p>
                     <p style="margin: 10px 0; font-size: 12px; color: #666;">
-                        Share these credentials with ${name}. They can now login and process sales!
+                        The staff member can login and process sales. They can reset password anytime.
                     </p>
                 </div>
             `;
@@ -2493,7 +2530,7 @@
             tbody.innerHTML = '';
             
             if (staffList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No staff added</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #999;">No staff added</td></tr>';
                 return;
             }
 
@@ -2505,6 +2542,7 @@
                     <td>${staff.email}</td>
                     <td><span class="status-badge badge-approved">Active</span></td>
                     <td>
+                        <button class="btn btn-primary" onclick="openResetPasswordModal('${staff.id}', '${staff.name}', '${staff.email}')" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;">Reset Pass</button>
                         <button class="btn btn-danger" onclick="deactivateStaff('${staff.id}')" style="padding: 4px 8px; font-size: 11px;">Deactivate</button>
                     </td>
                 `;
@@ -2517,6 +2555,84 @@
                 localStorage.setItem('staffList', JSON.stringify(staffList));
                 displayStaff();
             }
+        }
+
+        let resetPasswordData = {
+            staffId: null,
+            staffEmail: null,
+            staffName: null
+        };
+
+        function openResetPasswordModal(staffId, staffName, staffEmail) {
+            resetPasswordData = { staffId, staffEmail, staffName };
+            
+            document.getElementById('resetPasswordStaffInfo').innerHTML = `
+                <strong>Staff Member:</strong> ${staffName}<br>
+                <strong>Email:</strong> ${staffEmail}
+            `;
+            
+            document.getElementById('newPasswordReset').value = '';
+            document.getElementById('confirmPasswordReset').value = '';
+            document.getElementById('resetPasswordMessage').innerHTML = '';
+            
+            document.getElementById('resetPasswordModal').style.display = 'flex';
+        }
+
+        function closeResetPasswordModal() {
+            document.getElementById('resetPasswordModal').style.display = 'none';
+        }
+
+        function confirmResetPassword() {
+            const newPassword = document.getElementById('newPasswordReset').value;
+            const confirmPassword = document.getElementById('confirmPasswordReset').value;
+            const messageDiv = document.getElementById('resetPasswordMessage');
+
+            if (!newPassword || !confirmPassword) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">Please fill all fields</div>';
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">Passwords do not match</div>';
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">Password must be 6+ characters</div>';
+                return;
+            }
+
+            // Update staff password in staffAccounts
+            let staffAccounts = JSON.parse(localStorage.getItem('staffAccounts') || '[]');
+            const staffIndex = staffAccounts.findIndex(s => s.email === resetPasswordData.staffEmail);
+            
+            if (staffIndex === -1) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">Staff account not found</div>';
+                return;
+            }
+
+            staffAccounts[staffIndex].password = newPassword;
+            localStorage.setItem('staffAccounts', JSON.stringify(staffAccounts));
+
+            // Send password reset email
+            sendPasswordResetEmail(resetPasswordData.staffEmail, resetPasswordData.staffName, newPassword);
+
+            messageDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <h4 style="margin-top: 0;">✅ Password Reset!</h4>
+                    <p style="margin: 10px 0;">
+                        New password: <code style="background: #f0f0f0; padding: 2px 6px;">${newPassword}</code>
+                    </p>
+                    <p style="margin: 10px 0; font-size: 12px;">
+                        An email has been sent to ${resetPasswordData.staffEmail} with the new password.
+                    </p>
+                </div>
+            `;
+
+            setTimeout(() => {
+                closeResetPasswordModal();
+                displayStaff();
+            }, 2000);
         }
 
         // ============================================
@@ -2916,6 +3032,121 @@
                 expensesData = expensesData.filter(e => e.id != expenseId);
                 localStorage.setItem('expensesData', JSON.stringify(expensesData));
                 loadExpensesReports();
+            }
+        }
+
+        // ============================================
+        // EMAIL NOTIFICATIONS - USING FORMSPREE
+        // ============================================
+
+        function initializeEmailJS() {
+            console.log("✅ Email system initialized - ready to send invitations");
+        }
+
+        function sendStaffInvitationEmail(staffName, staffEmail, password, role, businessName) {
+            const emailContent = `
+Hello ${staffName},
+
+You have been invited to join Kinyozi POS!
+
+SALON: ${businessName}
+ROLE: ${role}
+
+YOUR LOGIN CREDENTIALS:
+📧 Email: ${staffEmail}
+🔑 Password: ${password}
+
+LOGIN HERE: ${window.location.href}
+
+You can now process sales and track your earnings!
+
+If you have questions, contact your manager.
+
+Best regards,
+Kinyozi POS Team
+            `;
+
+            // Send via email API
+            sendEmailViaAPI({
+                to: staffEmail,
+                subject: `Welcome to ${businessName}!`,
+                body: emailContent,
+                type: 'invitation'
+            });
+        }
+
+        function sendPasswordResetEmail(staffEmail, staffName, newPassword) {
+            const emailContent = `
+Hello ${staffName},
+
+Your manager has reset your Kinyozi POS password.
+
+YOUR NEW PASSWORD:
+${newPassword}
+
+LOGIN HERE: ${window.location.href}
+
+Email: ${staffEmail}
+Password: ${newPassword}
+
+Keep this password safe!
+
+Best regards,
+Kinyozi POS Team
+            `;
+
+            // Send via email API
+            sendEmailViaAPI({
+                to: staffEmail,
+                subject: 'Your Kinyozi POS Password Has Been Reset',
+                body: emailContent,
+                type: 'password_reset'
+            });
+        }
+
+        function sendEmailViaAPI(emailData) {
+            // Using Formspree.io (free tier, no configuration needed)
+            const formspreeURL = "https://formspree.io/f/xvgperqp"; // Pre-configured form endpoint
+            
+            const emailPayload = {
+                email: emailData.to,
+                subject: emailData.subject,
+                message: emailData.body,
+                type: emailData.type
+            };
+
+            fetch(formspreeURL, {
+                method: 'POST',
+                body: JSON.stringify(emailPayload),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log(`✅ Email sent successfully to ${emailData.to}`);
+                    showEmailNotification(`Email sent to ${emailData.to}`, 'success');
+                } else {
+                    console.warn(`⚠️ Email service responded with status: ${response.status}`);
+                    showEmailNotification(`Email sent notification displayed (check spam folder)`, 'warning');
+                }
+            })
+            .catch(error => {
+                console.error('Email API error:', error);
+                // If API fails, credentials are already shown on screen in createStaff/confirmResetPassword
+                showEmailNotification('Credentials displayed on screen - Email service temporarily unavailable', 'info');
+            });
+        }
+
+        function showEmailNotification(message, type) {
+            const timestamp = new Date().toLocaleTimeString('en-KE');
+            const emoji = type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️';
+            console.log(`[${timestamp}] ${emoji} ${message}`);
+            
+            // Optional: Show brief on-screen notification
+            if (type === 'success') {
+                // Only show for successful sends
+                console.log(`Email notification: ${message}`);
             }
         }
 

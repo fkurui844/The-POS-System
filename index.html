@@ -1007,8 +1007,9 @@
             <button class="nav-btn active" onclick="switchTab('sales')">🎯 Sales</button>
             <button class="nav-btn" onclick="switchTab('expenses')">💸 Expenses</button>
             <button class="nav-btn manager-only" onclick="switchTab('reports')" style="display: none;">📊 Reports</button>
+            <button class="nav-btn manager-only" onclick="switchTab('profit')" style="display: none;">💰 Profit</button>
             <button class="nav-btn manager-only" onclick="switchTab('staff')" style="display: none;">👥 Staff</button>
-            <button class="nav-btn manager-only" onclick="switchTab('prices')" style="display: none;">💰 Prices</button>
+            <button class="nav-btn manager-only" onclick="switchTab('prices')" style="display: none;">💎 Prices</button>
         </div>
 
         <!-- LOGIN PAGE -->
@@ -1605,7 +1606,155 @@
             </div>
         </div>
 
-        <!-- PRINT MODAL -->
+        <!-- PROFIT ANALYSIS TAB (Manager Only) -->
+        <div id="profit" class="content">
+            <h2>💰 Profit Analysis & Business Insights</h2>
+            <div id="profitMessage"></div>
+
+            <div class="alert alert-info" style="max-width: 700px; margin-bottom: 30px;">
+                <h3 style="margin-top: 0;">💰 Complete Profit Analysis</h3>
+                <p style="margin: 10px 0;">
+                    Comprehensive view of your business profitability, breakdown by staff, and financial insights.
+                </p>
+            </div>
+
+            <!-- KEY METRICS -->
+            <h3 style="color: #333; margin-bottom: 20px;">📊 Today's Key Metrics</h3>
+            <div class="grid-3">
+                <div class="card" style="border-left-color: #667eea;">
+                    <div class="card-title">Gross Sales</div>
+                    <div class="card-value" id="profitGrossSales">KES 0.00</div>
+                    <small style="color: #666; margin-top: 5px; display: block;">Before expenses</small>
+                </div>
+                <div class="card" style="border-left-color: #dc3545;">
+                    <div class="card-title">Total Expenses</div>
+                    <div class="card-value" id="profitTotalExpenses">KES 0.00</div>
+                    <small style="color: #666; margin-top: 5px; display: block;">All costs</small>
+                </div>
+                <div class="card" style="border-left-color: #28a745;">
+                    <div class="card-title">Net Profit</div>
+                    <div class="card-value" id="profitNetProfit" style="color: #28a745;">KES 0.00</div>
+                    <small style="color: #666; margin-top: 5px; display: block;">Sales - Expenses</small>
+                </div>
+            </div>
+
+            <!-- PROFIT ANALYSIS -->
+            <h3 style="margin-top: 30px; color: #333;">📈 Profit Breakdown</h3>
+            <div class="grid-2">
+                <div class="card" style="border-left-color: #ffc107;">
+                    <div class="card-title">Profit Margin</div>
+                    <div class="card-value" id="profitMargin">0%</div>
+                    <small style="color: #666; margin-top: 5px; display: block;">Profit ÷ Sales</small>
+                </div>
+                <div class="card" style="border-left-color: #17a2b8;">
+                    <div class="card-title">Expense Ratio</div>
+                    <div class="card-value" id="expenseRatio">0%</div>
+                    <small style="color: #666; margin-top: 5px; display: block;">Expenses ÷ Sales</small>
+                </div>
+            </div>
+
+            <!-- STAFF PROFIT BREAKDOWN -->
+            <h3 style="margin-top: 30px; color: #333;">👥 Staff Net Earnings</h3>
+            <div style="overflow-x: auto;">
+                <table class="table" id="staffProfitTable">
+                    <thead>
+                        <tr>
+                            <th>Staff Member</th>
+                            <th>Sales</th>
+                            <th>Expenses</th>
+                            <th>Net Earnings</th>
+                            <th>% of Total Sales</th>
+                        </tr>
+                    </thead>
+                    <tbody id="staffProfitList">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #999;">No data yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- EXPENSE BREAKDOWN -->
+            <h3 style="margin-top: 30px; color: #333;">📊 Expense Breakdown by Category</h3>
+            <div style="overflow-x: auto;">
+                <table class="table" id="expenseBreakdownTable">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Count</th>
+                            <th>Amount</th>
+                            <th>% of Total</th>
+                            <th>% of Sales</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenseBreakdownList">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #999;">No expenses yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- DAILY TREND -->
+            <h3 style="margin-top: 30px; color: #333;">📈 Today's Hourly Trend</h3>
+            <div style="overflow-x: auto;">
+                <table class="table" id="hourlyTrendTable">
+                    <thead>
+                        <tr>
+                            <th>Time Period</th>
+                            <th>Transactions</th>
+                            <th>Sales</th>
+                            <th>Avg per Transaction</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hourlyTrendList">
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #999;">No transactions yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- INSIGHTS -->
+            <h3 style="margin-top: 30px; color: #333;">💡 Business Insights</h3>
+            <div id="businessInsights" style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                <div class="card" style="background: #e8f5e9; border-left-color: #28a745;">
+                    <h4 style="color: #2e7d32; margin-top: 0;">✅ Top Performer</h4>
+                    <p id="topPerformer" style="margin: 0; color: #555;">Data loading...</p>
+                </div>
+                <div class="card" style="background: #fff3cd; border-left-color: #ffc107;">
+                    <h4 style="color: #856404; margin-top: 0;">⚠️ Highest Expenses</h4>
+                    <p id="highestExpense" style="margin: 0; color: #555;">Data loading...</p>
+                </div>
+                <div class="card" style="background: #d1ecf1; border-left-color: #17a2b8;">
+                    <h4 style="color: #0c5460; margin-top: 0;">📊 Business Health</h4>
+                    <p id="businessHealth" style="margin: 0; color: #555;">Data loading...</p>
+                </div>
+            </div>
+
+            <!-- SUMMARY -->
+            <h3 style="margin-top: 30px; color: #333;">📋 Financial Summary</h3>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #667eea;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <p style="margin: 0; color: #666; font-size: 14px;"><strong>Gross Sales:</strong></p>
+                        <p style="margin: 5px 0 0 0; font-size: 18px; color: #667eea; font-weight: bold;" id="summaryGrossSales">KES 0.00</p>
+                    </div>
+                    <div>
+                        <p style="margin: 0; color: #666; font-size: 14px;"><strong>Total Expenses:</strong></p>
+                        <p style="margin: 5px 0 0 0; font-size: 18px; color: #dc3545; font-weight: bold;" id="summaryExpenses">KES 0.00</p>
+                    </div>
+                    <div>
+                        <p style="margin: 0; color: #666; font-size: 14px;"><strong>Net Profit:</strong></p>
+                        <p style="margin: 5px 0 0 0; font-size: 18px; color: #28a745; font-weight: bold;" id="summaryNetProfit">KES 0.00</p>
+                    </div>
+                    <div>
+                        <p style="margin: 0; color: #666; font-size: 14px;"><strong>Profit Margin:</strong></p>
+                        <p style="margin: 5px 0 0 0; font-size: 18px; color: #667eea; font-weight: bold;" id="summaryProfitMargin">0%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="receiptModal" class="modal">
             <div class="modal-content">
                 <div class="modal-close" onclick="closePrintModal()">&times;</div>
@@ -1665,6 +1814,7 @@
                 loadStaff();
                 loadSalesReports();
                 loadExpensesReports();
+                loadProfitAnalysis();
             }
         }
 
@@ -2154,6 +2304,7 @@
             }, 3000);
 
             loadSalesReports();
+            loadProfitAnalysis();
         }
 
         function showPrintModal() {
@@ -2569,6 +2720,7 @@
             document.getElementById('expenseAmount').value = '';
             
             loadExpensesReports();
+            loadProfitAnalysis();
 
             setTimeout(() => { messageDiv.innerHTML = ''; }, 3000);
         }
@@ -2767,7 +2919,203 @@
             }
         }
 
-        function loadFromLocalStorage() {
+        // ============================================
+        // PROFIT ANALYSIS (Manager Only)
+        // ============================================
+
+        function loadProfitAnalysis() {
+            if (currentRole !== 'manager') return;
+
+            const today = new Date().toLocaleDateString('en-KE');
+            
+            // Get today's sales
+            const todaySales = salesData.filter(s => 
+                new Date(s.date).toLocaleDateString('en-KE') === today
+            );
+            
+            // Get today's expenses
+            const todayExpenses = expensesData.filter(e => 
+                new Date(e.date).toLocaleDateString('en-KE') === today
+            );
+
+            // Calculate totals
+            let grossSales = 0;
+            todaySales.forEach(s => {
+                grossSales += s.total;
+            });
+
+            let totalExpenses = 0;
+            todayExpenses.forEach(e => {
+                totalExpenses += e.amount;
+            });
+
+            let netProfit = grossSales - totalExpenses;
+            let profitMargin = grossSales > 0 ? ((netProfit / grossSales) * 100).toFixed(1) : 0;
+            let expenseRatio = grossSales > 0 ? ((totalExpenses / grossSales) * 100).toFixed(1) : 0;
+
+            // Update main metrics
+            document.getElementById('profitGrossSales').textContent = `KES ${grossSales.toFixed(2)}`;
+            document.getElementById('profitTotalExpenses').textContent = `KES ${totalExpenses.toFixed(2)}`;
+            document.getElementById('profitNetProfit').textContent = `KES ${netProfit.toFixed(2)}`;
+            document.getElementById('profitNetProfit').style.color = netProfit >= 0 ? '#28a745' : '#dc3545';
+            
+            document.getElementById('profitMargin').textContent = `${profitMargin}%`;
+            document.getElementById('expenseRatio').textContent = `${expenseRatio}%`;
+
+            // Update summary
+            document.getElementById('summaryGrossSales').textContent = `KES ${grossSales.toFixed(2)}`;
+            document.getElementById('summaryExpenses').textContent = `KES ${totalExpenses.toFixed(2)}`;
+            document.getElementById('summaryNetProfit').textContent = `KES ${netProfit.toFixed(2)}`;
+            document.getElementById('summaryNetProfit').style.color = netProfit >= 0 ? '#28a745' : '#dc3545';
+            document.getElementById('summaryProfitMargin').textContent = `${profitMargin}%`;
+
+            // Staff profit breakdown
+            const staffProfits = {};
+            todaySales.forEach(sale => {
+                if (!staffProfits[sale.staffMember]) {
+                    staffProfits[sale.staffMember] = { sales: 0, expenses: 0 };
+                }
+                staffProfits[sale.staffMember].sales += sale.total;
+            });
+
+            todayExpenses.forEach(expense => {
+                if (!staffProfits[expense.staffMember]) {
+                    staffProfits[expense.staffMember] = { sales: 0, expenses: 0 };
+                }
+                staffProfits[expense.staffMember].expenses += expense.amount;
+            });
+
+            const staffTbody = document.getElementById('staffProfitList');
+            staffTbody.innerHTML = '';
+
+            Object.entries(staffProfits).forEach(([staff, data]) => {
+                const netEarning = data.sales - data.expenses;
+                const percentage = grossSales > 0 ? ((data.sales / grossSales) * 100).toFixed(1) : 0;
+                const row = staffTbody.insertRow();
+                row.innerHTML = `
+                    <td>${staff}</td>
+                    <td>KES ${data.sales.toFixed(2)}</td>
+                    <td>KES ${data.expenses.toFixed(2)}</td>
+                    <td style="color: ${netEarning >= 0 ? '#28a745' : '#dc3545'}; font-weight: 600;">KES ${netEarning.toFixed(2)}</td>
+                    <td>${percentage}%</td>
+                `;
+            });
+
+            if (Object.keys(staffProfits).length === 0) {
+                staffTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No sales data yet</td></tr>';
+            }
+
+            // Expense breakdown
+            const expenseBreakdown = {};
+            todayExpenses.forEach(expense => {
+                if (!expenseBreakdown[expense.category]) {
+                    expenseBreakdown[expense.category] = { count: 0, amount: 0 };
+                }
+                expenseBreakdown[expense.category].count++;
+                expenseBreakdown[expense.category].amount += expense.amount;
+            });
+
+            const expenseTbody = document.getElementById('expenseBreakdownList');
+            expenseTbody.innerHTML = '';
+
+            Object.entries(expenseBreakdown).forEach(([category, data]) => {
+                const percentOfTotal = totalExpenses > 0 ? ((data.amount / totalExpenses) * 100).toFixed(1) : 0;
+                const percentOfSales = grossSales > 0 ? ((data.amount / grossSales) * 100).toFixed(1) : 0;
+                const row = expenseTbody.insertRow();
+                row.innerHTML = `
+                    <td>${category}</td>
+                    <td>${data.count}</td>
+                    <td>KES ${data.amount.toFixed(2)}</td>
+                    <td>${percentOfTotal}%</td>
+                    <td>${percentOfSales}%</td>
+                `;
+            });
+
+            if (Object.keys(expenseBreakdown).length === 0) {
+                expenseTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No expenses yet</td></tr>';
+            }
+
+            // Hourly trend
+            const hourlyData = {};
+            todaySales.forEach(sale => {
+                const hour = new Date(sale.date).getHours();
+                const period = `${String(hour).padStart(2, '0')}:00 - ${String(hour + 1).padStart(2, '0')}:00`;
+                if (!hourlyData[period]) {
+                    hourlyData[period] = { transactions: 0, sales: 0 };
+                }
+                hourlyData[period].transactions++;
+                hourlyData[period].sales += sale.total;
+            });
+
+            const hourlyTbody = document.getElementById('hourlyTrendList');
+            hourlyTbody.innerHTML = '';
+
+            Object.entries(hourlyData).forEach(([period, data]) => {
+                const average = data.transactions > 0 ? (data.sales / data.transactions).toFixed(2) : 0;
+                const row = hourlyTbody.insertRow();
+                row.innerHTML = `
+                    <td>${period}</td>
+                    <td>${data.transactions}</td>
+                    <td>KES ${data.sales.toFixed(2)}</td>
+                    <td>KES ${average}</td>
+                `;
+            });
+
+            if (Object.keys(hourlyData).length === 0) {
+                hourlyTbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">No transactions yet</td></tr>';
+            }
+
+            // Business insights
+            let topPerformerText = 'No data yet';
+            let maxSales = 0;
+            let topStaff = '';
+            Object.entries(staffProfits).forEach(([staff, data]) => {
+                if (data.sales > maxSales) {
+                    maxSales = data.sales;
+                    topStaff = staff;
+                }
+            });
+            if (topStaff) {
+                topPerformerText = `${topStaff} with KES ${maxSales.toFixed(2)} in sales`;
+            }
+
+            let highestExpenseText = 'No expenses yet';
+            let maxExpense = 0;
+            let expenseCategory = '';
+            Object.entries(expenseBreakdown).forEach(([category, data]) => {
+                if (data.amount > maxExpense) {
+                    maxExpense = data.amount;
+                    expenseCategory = category;
+                }
+            });
+            if (expenseCategory) {
+                const percentage = totalExpenses > 0 ? ((maxExpense / totalExpenses) * 100).toFixed(1) : 0;
+                highestExpenseText = `${expenseCategory} (KES ${maxExpense.toFixed(2)}, ${percentage}% of total)`;
+            }
+
+            let healthText = 'Calculating...';
+            if (grossSales > 0) {
+                if (profitMargin >= 50) {
+                    healthText = `✅ Excellent! ${profitMargin}% profit margin. Keep it up!`;
+                } else if (profitMargin >= 30) {
+                    healthText = `✅ Good! ${profitMargin}% profit margin. Business is healthy.`;
+                } else if (profitMargin >= 10) {
+                    healthText = `⚠️ Fair. ${profitMargin}% profit margin. Monitor expenses.`;
+                } else if (profitMargin >= 0) {
+                    healthText = `⚠️ Low profit. ${profitMargin}% margin. Review expenses urgently.`;
+                } else {
+                    healthText = `❌ Loss! Negative profit. Urgent action needed!`;
+                }
+            }
+
+            document.getElementById('topPerformer').innerHTML = topPerformerText;
+            document.getElementById('highestExpense').innerHTML = highestExpenseText;
+            document.getElementById('businessHealth').innerHTML = healthText;
+        }
+
+        // ============================================
+        // STORAGE
+        // ============================================
             const user = localStorage.getItem('currentUser');
             if (user) {
                 const user

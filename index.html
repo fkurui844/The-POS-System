@@ -1832,7 +1832,7 @@ function showView(view) {
             saveUsers(users);
 
             // Paste your Google Apps Script deployment URL here to sync signups to Sheets
-            const SIGNUP_API = '';
+            const SIGNUP_API = 'https://script.google.com/macros/s/AKfycbz_Ng1TvCoMFrECrwDigFzZ5YP9dYySvhstPukVw7lZ4gWHLU4xIHoqunS02o67Y9eRhw/exec';
             if (SIGNUP_API) {
                 fetch(SIGNUP_API, { method: 'POST', body: JSON.stringify({ action: 'addStaff', payload: newUser }) })
                     .catch(err => console.warn('Sheet sync failed:', err));
@@ -1955,7 +1955,7 @@ function showView(view) {
 // ══════════════════════════════════════════
 // GOOGLE APPS SCRIPT URL (paste yours here)
 // ══════════════════════════════════════════
-const API_URL = '';
+const API_URL = 'https://script.google.com/macros/s/AKfycbz_Ng1TvCoMFrECrwDigFzZ5YP9dYySvhstPukVw7lZ4gWHLU4xIHoqunS02o67Y9eRhw/exec';
 
 // ══════════════════════════════════════════
 // INIT
@@ -2296,7 +2296,7 @@ function processSale() {
     const now      = new Date().toISOString();
     const sale = { id:Date.now(), date:now, staffMember, items:items.map(i=>`${i.name} x${i.qty}`).join(', '), subtotal, discount, total, paymentMethod:method };
     const sales = getSales(); sales.push(sale); saveSales(sales);
-    if (API_URL) fetch(API_URL,{method:'POST',body:JSON.stringify({action:'recordSale',payload:sale})}).catch(()=>{});
+    if (API_URL) fetch(API_URL,{method:'POST',body:JSON.stringify({shopId: currentShopId, action:'recordSale',payload:sale})}).catch(()=>{});
     document.getElementById('receiptDate').textContent = new Date(now).toLocaleString('en-KE');
     document.getElementById('rStaff').textContent      = staffMember;
     document.getElementById('rMethod').textContent     = method.charAt(0).toUpperCase()+method.slice(1);
@@ -2329,7 +2329,7 @@ function saveNewService() {
     const services = getServices();
     const service  = { id:Date.now(), name, category, price, status:'active' };
     services.push(service); saveServices(services);
-    if (API_URL) fetch(API_URL,{method:'POST',body:JSON.stringify({action:'addService',payload:service})}).catch(()=>{});
+    if (API_URL) fetch(API_URL,{method:'POST',body:JSON.stringify({shopId: currentShopId, action:'addService',payload:service})}).catch(()=>{});
     closeAddServiceModal(); renderServicesGrid(); showToast('Service added!', 'success');
 }
 
@@ -2352,6 +2352,7 @@ function addExpense() {
     document.getElementById('expDate').valueAsDate = new Date();
     _expenseFilter = { period: 'all', staff: '', cat: '' };
     _staffFilter   = 'all';
+    if (API_URL) fetch(API_URL,{method:'POST',body:JSON.stringify({shopId: currentShopId, action:'recordExpense',payload:expense})}).catch(()=>{});
     loadExpensesList();
     showToast('Expense recorded!', 'success');
 }
@@ -2437,7 +2438,7 @@ function addStaffMember() {
     // Also add to global user list so they can log in from the landing page
     const allUsers = getAllUsers();
     if (!allUsers.find(u => u.email === email)) { allUsers.push(newUser); saveAllUsers(allUsers); }
-    if (API_URL) fetch(API_URL,{method:'POST',body:JSON.stringify({action:'addStaff',payload:newUser})}).catch(()=>{});
+    if (API_URL) fetch(API_URL,{method:'POST',body:JSON.stringify({shopId: currentShopId, action:'addStaff',payload:newUser})}).catch(()=>{});
     document.getElementById('staffName').value     = '';
     document.getElementById('staffPhone').value    = '';
     document.getElementById('staffEmail').value    = '';

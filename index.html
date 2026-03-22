@@ -1835,8 +1835,8 @@ function showView(view) {
             if (!user) { showMsg('loginError', 'Incorrect email or password. Please try again.'); return; }
             sessionStorage.setItem('barberpro_user', JSON.stringify(user));
             closeModal();
-            landingShowToast('Welcome back, ' + user.name + '! ✂️', 'success');
-            // showView('pos');
+            // Small delay so modal closes cleanly before switching view
+            setTimeout(() => showView('pos'), 120);
         }
 
         function handleSignup() {

@@ -1024,6 +1024,7 @@
 
         @media(min-width:769px) { #posToast { bottom:30px; } }
     
+
     </style>
 </head>
 <body>
@@ -1808,11 +1809,9 @@
 function showView(view) {
     document.getElementById('view-landing').style.display = view === 'landing' ? 'block' : 'none';
     document.getElementById('view-pos').style.display     = view === 'pos'     ? 'block' : 'none';
+    if (devEl) devEl.style.display = view === 'dev' ? 'block' : 'none';
 
-    if (view === 'pos') {
-        // Reinitialise POS after showing it
-        initPOS();
-    }
+    if (view === 'pos') initPOS();
 }
 
 // ══════════════════════════════════════════
@@ -1872,6 +1871,13 @@ function showView(view) {
             if (!email || !password) { showMsg('loginError', 'Please enter your email and password.'); return; }
             const user = getUsers().find(u => u.email === email && u.password === password);
             if (!user) { showMsg('loginError', 'Incorrect email or password. Please try again.'); return; }
+
+            // Check if account or shop is suspended by developer
+            if (user.suspended) {
+                showMsg('loginError', '🔴 This account has been suspended. Please contact support.');
+                return;
+            }
+
             sessionStorage.setItem('barberpro_user', JSON.stringify(user));
             closeModal();
             // Small delay so modal closes cleanly before switching view
@@ -2860,6 +2866,14 @@ function initPOS() {
     if (!stored) { showView('landing'); return; }
 
     currentUser  = JSON.parse(stored);
+    // Re-verify suspension status from global user list (developer may have suspended since login)
+    const freshUser = getAllUsers().find(u => u.id === currentUser.id);
+    if (freshUser && freshUser.suspended) {
+        sessionStorage.removeItem('barberpro_user');
+        showView('landing');
+        setTimeout(() => alert('🔴 Your account has been suspended. Please contact your system administrator.'), 300);
+        return;
+    }
     currentShopId = resolveShopId(currentUser);
 
     // Topbar date
@@ -2905,6 +2919,9 @@ function initPOS() {
         navigate('sale');
     }
 }
+
+
+// ══════════════════════════════════════════
 </script>
 </body>
 </html>

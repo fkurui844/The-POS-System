@@ -645,119 +645,121 @@
             --green: #28a745;
             --red: #dc3545;
             --yellow: #ffc107;
-            --sidebar-w: 220px;
         }
 
         /* ── LAYOUT ── */
         #app { display:flex; height:100vh; overflow:hidden; }
 
-        /* ── SIDEBAR (desktop) ── */
-        .sidebar {
-            width: var(--sidebar-w);
-            background: linear-gradient(160deg, #1a1a2e 0%, #0f3460 100%);
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-            overflow-y: auto;
-        }
+        /* sidebar removed */
 
-        .sidebar-logo {
-            padding: 24px 20px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-        }
 
-        .sidebar-logo h2 { color: #c9a84c; font-size: 20px; font-weight: 800; }
-        .sidebar-logo p  { color: rgba(255,255,255,0.7); font-size: 12px; margin-top:2px; }
-
-        .sidebar-user {
-            padding: 16px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-avatar {
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            background: #c9a84c;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 16px; font-weight: 700; color: #1a1a2e;
-            flex-shrink: 0;
-        }
-
-        .user-info p  { color: white; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
-        .user-info span { color: rgba(255,255,255,0.65); font-size: 11px; text-transform: capitalize; }
-
-        .sidebar-nav { flex:1; padding: 12px 0; }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 13px 20px;
-            color: rgba(255,255,255,0.75);
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
-            border-left: 3px solid transparent;
-        }
-
-        .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
-        .nav-item.active { background: rgba(201,168,76,0.15); color: #c9a84c; border-left-color: #c9a84c; font-weight: 700; }
-        .nav-icon { font-size: 18px; min-width: 22px; text-align: center; }
-
-        .sidebar-footer {
-            padding: 16px 20px;
-            border-top: 1px solid rgba(255,255,255,0.15);
-        }
-
-        .logout-btn {
-            width: 100%;
-            padding: 10px;
-            background: rgba(201,168,76,0.2);
-            color: #c9a84c;
-            border: 1px solid rgba(201,168,76,0.4);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            transition: background 0.2s;
-        }
-
-        .logout-btn:hover { background: rgba(201,168,76,0.35); }
-
-        /* ── MAIN CONTENT ── */
-        .main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        /* ── AVATAR DROPDOWN ── */
+        #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
         .topbar {
             background: #1a1a2e;
-            padding: 14px 20px;
+            padding: 0 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 1px 8px rgba(0,0,0,0.3);
             flex-shrink: 0;
+            height: 58px;
+            position: relative;
+            z-index: 200;
         }
 
-        .topbar-title { font-size: 18px; font-weight: 700; color: #c9a84c; }
-        .topbar-date  { font-size: 12px; color: rgba(255,255,255,0.5); }
+        .topbar-left { display: flex; align-items: center; gap: 10px; }
+        .topbar-brand { color: #c9a84c; font-size: 18px; font-weight: 800; letter-spacing: 0.5px; }
+        .topbar-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.55); }
+        .topbar-sep { color: rgba(255,255,255,0.2); margin: 0 4px; }
 
-        .hamburger {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 22px;
+        .avatar-btn {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c9a84c, #a07830);
+            border: 2px solid rgba(201,168,76,0.5);
+            color: #1a1a2e;
+            font-size: 14px;
+            font-weight: 800;
             cursor: pointer;
-            color: #c9a84c;
-            padding: 4px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            position: relative;
         }
+        .avatar-btn:hover { border-color: #c9a84c; box-shadow: 0 0 0 3px rgba(201,168,76,0.2); }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            min-width: 220px;
+            overflow: hidden;
+            z-index: 9000;
+            animation: dropIn 0.18s ease;
+        }
+
+        .dropdown-menu.open { display: block; }
+
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .dd-header {
+            background: linear-gradient(135deg, #1a1a2e, #0f3460);
+            padding: 14px 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .dd-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c9a84c, #a07830);
+            color: #1a1a2e;
+            font-size: 13px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .dd-name  { color: white; font-size: 13px; font-weight: 700; }
+        .dd-role  { color: #c9a84c; font-size: 11px; text-transform: capitalize; font-weight: 600; }
+
+        .dd-divider { height: 1px; background: #f0f0f0; }
+
+        .dd-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 13px 16px;
+            cursor: pointer;
+            font-size: 14px; font-weight: 500; color: #333;
+            transition: background 0.15s;
+            border: none; background: none; width: 100%; text-align: left;
+        }
+        .dd-item:hover { background: #fdf9f0; color: #8b6914; }
+        .dd-item.active { background: #fdf1cc; color: #8b6914; font-weight: 700; }
+        .dd-item.locked { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+        .dd-item .dd-icon { font-size: 17px; min-width: 22px; text-align: center; }
+
+        .dd-logout {
+            display: flex; align-items: center; gap: 12px;
+            padding: 13px 16px;
+            cursor: pointer;
+            font-size: 14px; font-weight: 600; color: #dc3545;
+            border-top: 1px solid #f0f0f0;
+            border: none; background: none; width: 100%; text-align: left;
+            transition: background 0.15s;
+        }
+        .dd-logout:hover { background: #fff5f5; }
+
+        .dropdown-backdrop {
+            display: none; position: fixed; inset: 0; z-index: 8999;
+        }
+        .dropdown-backdrop.open { display: block; }
 
         .content {
             flex: 1;
@@ -766,296 +768,14 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* ── SECTIONS ── */
-        .section { display:none; }
-        .section.active { display:block; }
-
-        /* ── CARDS ── */
-        .card {
-            background: white;
-            border-radius: 14px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            margin-bottom: 16px;
-        }
-
-        .card-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* ── STAT CARDS ── */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            margin-bottom: 16px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 14px;
-            padding: 18px 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            border-left: 4px solid #c9a84c;
-        }
-
-        .stat-card.green  { border-left-color: var(--green); }
-        .stat-card.yellow { border-left-color: var(--yellow); }
-        .stat-card.red    { border-left-color: var(--red); }
-
-        .stat-label { font-size: 12px; color: #888; margin-bottom: 6px; }
-        .stat-value { font-size: 24px; font-weight: 700; color: #333; }
-        .stat-sub   { font-size: 11px; color: #aaa; margin-top: 4px; }
-
-        /* ── FORMS ── */
-        .form-row { margin-bottom: 14px; }
-        .form-row label { display:block; font-size:13px; font-weight:600; color:#555; margin-bottom:5px; }
-
-        .form-row input,
-        .form-row select,
-        .form-row textarea {
-            width: 100%;
-            padding: 11px 14px;
-            border: 1.5px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 15px;
-            outline: none;
-            background: white;
-            transition: border-color 0.2s;
-            color: #333;
-            font-family: inherit;
-        }
-
-        .form-row input:focus,
-        .form-row select:focus,
-        .form-row textarea:focus { border-color: #c9a84c; }
-
-        .form-row textarea { resize: vertical; min-height: 80px; }
-
-        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-        /* ── BUTTONS ── */
-        .btn {
-            padding: 11px 20px;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-primary { background: linear-gradient(135deg, #c9a84c, #a07830); color: #1a1a2e; font-weight: 700; }
-        .btn-primary:hover { opacity: 0.9; }
-        .btn-success { background: var(--green); color: white; }
-        .btn-danger  { background: var(--red);   color: white; }
-        .btn-outline { background: white; color: #c9a84c; border: 1.5px solid #c9a84c; }
-        .btn-sm { padding: 7px 14px; font-size: 12px; border-radius: 8px; }
-        .btn-full { width: 100%; justify-content: center; }
-
-        /* ── TABLES ── */
-        .table-wrap { overflow-x: auto; }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        th {
-            background: #faf9f5;
-            padding: 10px 12px;
-            text-align: left;
-            font-weight: 700;
-            color: #555;
-            border-bottom: 1px solid #eee;
-            white-space: nowrap;
-        }
-
-        td {
-            padding: 11px 12px;
-            border-bottom: 1px solid #f0f0f0;
-            color: #444;
-        }
-
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: #fafbff; }
-
-        /* ── BADGE ── */
-        .badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        .badge-green  { background: #d4edda; color: #155724; }
-        .badge-red    { background: #f8d7da; color: #721c24; }
-        .badge-yellow { background: #fff3cd; color: #856404; }
-        .badge-purple { background: #fdf1cc; color: #8b6914; }
-
-        /* ── CHECKOUT / CART ── */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .service-btn {
-            background: #faf9f5;
-            border: 1.5px solid #e0e6ff;
-            border-radius: 12px;
-            padding: 14px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 13px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .service-btn:hover,
-        .service-btn.selected {
-            background: #c9a84c;
-            border-color: #c9a84c;
-            color: white;
-        }
-
-        .service-price { font-size: 12px; margin-top: 4px; opacity: 0.75; }
-
-        .cart-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
-            gap: 8px;
-        }
-
-        .cart-item:last-child { border-bottom: none; }
-
-        .cart-name { font-size: 14px; font-weight: 600; flex: 1; }
-        .cart-qty-ctrl { display: flex; align-items: center; gap: 8px; }
-        .qty-btn { background: #fdf9f0; border: none; width: 26px; height: 26px; border-radius: 50%; font-size: 16px; cursor: pointer; color: #c9a84c; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-        .qty-num { font-weight: 700; min-width: 20px; text-align: center; }
-        .cart-total { font-weight: 700; color: #c9a84c; min-width: 60px; text-align: right; font-size: 14px; }
-
-        .cart-summary {
-            background: #faf9f5;
-            border-radius: 12px;
-            padding: 14px;
-            margin-top: 12px;
-        }
-
-        .summary-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; color: #555; }
-        .summary-row.total { font-size: 17px; font-weight: 700; color: #333; border-top: 1px solid #e0e0e0; padding-top: 10px; margin-top: 4px; }
-
-        /* ── RECEIPT MODAL ── */
-        .overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.55);
-            z-index: 9000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .overlay.open { display: flex; }
-
-        .modal {
-            background: white;
-            border-radius: 20px;
-            padding: 28px 24px;
-            width: 100%;
-            max-width: 400px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .receipt-header { text-align: center; margin-bottom: 20px; }
-        .receipt-header h2 { color: #c9a84c; font-size: 22px; }
-        .receipt-header p  { color: #888; font-size: 13px; margin-top: 4px; }
-        .receipt-divider { border: none; border-top: 1px dashed #ccc; margin: 14px 0; }
-        .receipt-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; }
-        .receipt-row.bold { font-weight: 700; font-size: 15px; }
-
-        /* ── EMPTY STATE ── */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #aaa;
-        }
-
-        .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
-        .empty-state p { font-size: 14px; }
-
-        /* ── MOBILE BOTTOM NAV ── */
-        .bottom-nav {
-            display: none;
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: #1a1a2e;
-            border-top: 1px solid rgba(201,168,76,0.3);
-            z-index: 500;
-            box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
-        }
-
-        .bottom-nav-inner {
-            display: flex;
-            justify-content: space-around;
-            padding: 6px 0 max(6px, env(safe-area-inset-bottom));
-        }
-
-        .bnav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            padding: 6px 10px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            color: rgba(255,255,255,0.4);
-            font-size: 10px;
-            font-weight: 600;
-            flex: 1;
-            transition: color 0.2s;
-        }
-
-        .bnav-item .bnav-icon { font-size: 20px; }
-        .bnav-item.active { color: #c9a84c; }
-
-        /* ── MOBILE OVERLAY SIDEBAR ── */
-        .sidebar-backdrop {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.4);
-            z-index: 800;
-        }
-
-        .sidebar-backdrop.open { display: block; }
-
-        /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
-            .sidebar { display: none; position: fixed; top:0; left:0; bottom:0; z-index:900; width:260px; }
-            .sidebar.mobile-open { display: flex; }
-            .hamburger { display: flex; align-items: center; }
-            .bottom-nav { display: block; }
-            .content { padding: 16px 14px 90px; }
+            .content { padding: 16px 14px 24px; }
+            .topbar { padding: 0 14px; }
+        }
+
+        /* ── RESPONSIVE (kept for other rules) ── */
+        @media (max-width: 768px) {
+            .content { padding: 16px 14px 24px; }
             .stats-grid { grid-template-columns: repeat(2,1fr); }
             .form-grid-2 { grid-template-columns: 1fr; }
             .stat-value { font-size: 20px; }
@@ -1369,62 +1089,61 @@
 
 
 <div id="app">
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-logo">
-            <h2>💇 BarberPro</h2>
-            <p>Management System</p>
+    <!-- Topbar with avatar dropdown -->
+    <div class="topbar">
+        <div class="topbar-left">
+            <span class="topbar-brand">💇 BarberPro</span>
+            <span class="topbar-sep">|</span>
+            <span class="topbar-title" id="topbarTitle">Dashboard</span>
         </div>
-        <div class="sidebar-user">
-            <div class="user-avatar" id="sidebarAvatar">?</div>
-            <div class="user-info">
-                <p id="sidebarName">Loading…</p>
-                <span id="sidebarRole">—</span>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div style="text-align:right; line-height:1.3; display:none;" id="topbarUser">
+                <div style="font-size:13px; font-weight:600; color:#c9a84c;" id="topbarName"></div>
+                <div style="font-size:11px; color:rgba(255,255,255,0.5); text-transform:capitalize;" id="topbarDate"></div>
             </div>
-        </div>
-        <nav class="sidebar-nav">
-            <div class="nav-item active" id="nav-dashboard" onclick="navigate('dashboard')">
-                <span class="nav-icon">📊</span> Dashboard
+            <!-- Avatar button -->
+            <div style="position:relative;">
+                <button class="avatar-btn" id="avatarBtn" onclick="toggleDropdown(event)" title="Menu">
+                    <span id="avatarInitials">?</span>
+                </button>
+                <!-- Backdrop -->
+                <div class="dropdown-backdrop" id="ddBackdrop" onclick="closeDropdown()"></div>
+                <!-- Dropdown -->
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <!-- User header -->
+                    <div class="dd-header">
+                        <div class="dd-avatar" id="ddAvatar">?</div>
+                        <div>
+                            <div class="dd-name" id="ddName">—</div>
+                            <div class="dd-role" id="ddRole">—</div>
+                        </div>
+                    </div>
+                    <div class="dd-divider"></div>
+                    <!-- Nav items -->
+                    <button class="dd-item active" id="dd-dashboard" onclick="ddNavigate('dashboard')">
+                        <span class="dd-icon">📊</span> Dashboard
+                    </button>
+                    <button class="dd-item" id="dd-sale" onclick="ddNavigate('sale')">
+                        <span class="dd-icon">💰</span> New Sale
+                    </button>
+                    <button class="dd-item" id="dd-expenses" onclick="ddNavigate('expenses')">
+                        <span class="dd-icon">💸</span> Expenses
+                    </button>
+                    <button class="dd-item" id="dd-staff" onclick="ddNavigate('staff')">
+                        <span class="dd-icon">👥</span> Staff
+                    </button>
+                    <button class="dd-item" id="dd-reports" onclick="ddNavigate('reports')">
+                        <span class="dd-icon">📈</span> Reports
+                    </button>
+                    <div class="dd-divider"></div>
+                    <button class="dd-logout" onclick="logout()">🚪 Logout</button>
+                </div>
             </div>
-            <div class="nav-item" onclick="navigate('sale')">
-                <span class="nav-icon">💰</span> New Sale
-            </div>
-            <div class="nav-item" onclick="navigate('expenses')">
-                <span class="nav-icon">💸</span> Expenses
-            </div>
-            <div class="nav-item" id="nav-staff" onclick="navigate('staff')">
-                <span class="nav-icon">👥</span> Staff
-            </div>
-            <div class="nav-item" id="nav-reports" onclick="navigate('reports')">
-                <span class="nav-icon">📈</span> Reports
-            </div>
-        </nav>
-        <div class="sidebar-footer">
-            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
         </div>
     </div>
 
-    <!-- Mobile sidebar backdrop -->
-    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
-
     <!-- Main -->
     <div class="main">
-        <!-- Topbar -->
-        <div class="topbar">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <button class="hamburger" id="hamburger" onclick="toggleSidebar()">☰</button>
-                <div>
-                    <div class="topbar-title" id="topbarTitle">Dashboard</div>
-                    <div class="topbar-date" id="topbarDate"></div>
-                </div>
-            </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div id="topbarUser" style="font-size:13px; color:rgba(255,255,255,0.7); text-align:right; display:none;">
-                    <div id="topbarName" style="font-weight:600; color:#c9a84c;"></div>
-                    <div id="topbarRole" style="font-size:11px; text-transform:capitalize;"></div>
-                </div>
-            </div>
-        </div>
 
         <!-- Content -->
         <div class="content">
@@ -1687,25 +1406,7 @@
 </div><!-- end #app -->
 
 <!-- Bottom Nav (mobile) -->
-<nav class="bottom-nav">
-    <div class="bottom-nav-inner">
-        <button class="bnav-item active" id="bn-dashboard" onclick="navigate('dashboard')">
-            <span class="bnav-icon">📊</span>Dashboard
-        </button>
-        <button class="bnav-item" id="bn-sale" onclick="navigate('sale')">
-            <span class="bnav-icon">💰</span>New Sale
-        </button>
-        <button class="bnav-item" id="bn-expenses" onclick="navigate('expenses')">
-            <span class="bnav-icon">💸</span>Expenses
-        </button>
-        <button class="bnav-item" id="bn-staff" onclick="navigate('staff')">
-            <span class="bnav-icon">👥</span>Staff
-        </button>
-        <button class="bnav-item" id="bn-reports" onclick="navigate('reports')">
-            <span class="bnav-icon">📈</span>Reports
-        </button>
-    </div>
-</nav>
+
 
 <!-- Add Service Modal -->
 <div class="overlay" id="addServiceOverlay">
@@ -2004,46 +1705,54 @@ function navigate(name) {
     const isManager = currentUser && ['manager', 'owner'].includes(currentUser.role);
     const managerOnly = ['dashboard', 'staff', 'reports'];
 
-    // Block staff from manager-only sections
     if (!isManager && managerOnly.includes(name)) {
         showToast('Access restricted to Managers & Owners.', 'error');
         return;
     }
 
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-item:not(.locked)').forEach(n => n.classList.remove('active'));
-    document.querySelectorAll('.bnav-item:not(.locked)').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.dd-item').forEach(n => n.classList.remove('active'));
 
     document.getElementById('sec-' + name).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => {
-        if (n.textContent.toLowerCase().includes(sectionTitles[name].split(' ')[0].toLowerCase())) n.classList.add('active');
-    });
-    const bn = document.getElementById('bn-' + name);
-    if (bn) bn.classList.add('active');
+    const ddEl = document.getElementById('dd-' + name);
+    if (ddEl) ddEl.classList.add('active');
     document.getElementById('topbarTitle').textContent = sectionTitles[name];
 
-    // Refresh data on navigate
     if (name === 'dashboard') loadDashboard();
     if (name === 'staff')     { renderStaffDropdown(); loadStaffList(); }
     if (name === 'expenses')  loadExpensesList();
     if (name === 'reports')   loadReports();
     if (name === 'sale')      { renderStaffDropdown(); renderServicesGrid(); }
+}
 
-    closeSidebar();
+function ddNavigate(name) {
+    navigate(name);
+    closeDropdown();
+}
+
+function toggleDropdown(e) {
+    e.stopPropagation();
+    const menu = document.getElementById('dropdownMenu');
+    const back = document.getElementById('ddBackdrop');
+    const isOpen = menu.classList.contains('open');
+    if (isOpen) {
+        menu.classList.remove('open');
+        back.classList.remove('open');
+    } else {
+        menu.classList.add('open');
+        back.classList.add('open');
+    }
+}
+
+function closeDropdown() {
+    document.getElementById('dropdownMenu').classList.remove('open');
+    document.getElementById('ddBackdrop').classList.remove('open');
 }
 
 // ══════════════════════════════════════════
 // SIDEBAR
 // ══════════════════════════════════════════
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('mobile-open');
-    document.getElementById('sidebarBackdrop').classList.toggle('open');
-}
-
-function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('mobile-open');
-    document.getElementById('sidebarBackdrop').classList.remove('open');
-}
+// sidebar removed
 
 // ══════════════════════════════════════════
 // DATA HELPERS
@@ -2554,21 +2263,17 @@ function initPOS() {
 
     currentUser = JSON.parse(stored);
 
-    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('en-KE', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    // Topbar date
+    document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('en-KE', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
 
-    const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
-    document.getElementById('sidebarAvatar').textContent = initials;
-    document.getElementById('sidebarName').textContent   = currentUser.name;
-
-    const roleBadgeColor = { owner:'#ffc107', manager:'#c9a84c', staff:'rgba(255,255,255,0.5)' };
-    const roleEl = document.getElementById('sidebarRole');
-    roleEl.textContent  = currentUser.role;
-    roleEl.style.color  = roleBadgeColor[currentUser.role] || 'rgba(255,255,255,0.65)';
-    roleEl.style.fontWeight = currentUser.role !== 'staff' ? '700' : '400';
-
-    document.getElementById('topbarName').textContent   = currentUser.name;
-    document.getElementById('topbarRole').textContent   = currentUser.role;
-    document.getElementById('topbarUser').style.display = 'block';
+    // Avatar initials
+    const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    document.getElementById('avatarInitials').textContent = initials;
+    document.getElementById('ddAvatar').textContent       = initials;
+    document.getElementById('ddName').textContent         = currentUser.name;
+    document.getElementById('ddRole').textContent         = currentUser.role;
+    document.getElementById('topbarName').textContent     = currentUser.name;
+    document.getElementById('topbarUser').style.display   = 'block';
 
     document.getElementById('expDate').valueAsDate = new Date();
 
@@ -2578,8 +2283,8 @@ function initPOS() {
 
     const isManager = ['manager', 'owner'].includes(currentUser.role);
 
-    // Reset locked items first
-    ['nav-dashboard','nav-staff','nav-reports','bn-dashboard','bn-staff','bn-reports'].forEach(id => {
+    // Reset locked state
+    ['dd-dashboard','dd-staff','dd-reports'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.remove('locked');
     });
@@ -2591,17 +2296,11 @@ function initPOS() {
         loadReports();
         navigate('dashboard');
     } else {
-        ['nav-dashboard','nav-staff','nav-reports'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.classList.add('locked');
-        });
-        ['bn-dashboard','bn-staff','bn-reports'].forEach(id => {
+        ['dd-dashboard','dd-staff','dd-reports'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.add('locked');
         });
         loadExpensesList();
-        renderStaffDropdown();
-        renderServicesGrid();
         navigate('sale');
     }
 }

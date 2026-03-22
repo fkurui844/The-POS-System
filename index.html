@@ -752,13 +752,41 @@
                     <label>Email</label>
                     <input id="loginEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
                 </div>
-                <div class="form-field">
-                    <label>Password</label>
+                <div class="form-field" style="position:relative;">
+                    <label style="display:flex; justify-content:space-between; align-items:center;">
+                        Password
+                        <a href="#" onclick="showForgotPassword(); return false;" style="font-size:12px; color:#667eea; font-weight:600;">Forgot password?</a>
+                    </label>
                     <input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••">
                 </div>
                 <div id="loginError" class="form-error"></div>
                 <button class="form-submit" onclick="handleLogin()">Login</button>
                 <p class="form-switch">No account? <a href="#" onclick="switchTab('signup'); return false;">Sign up free</a></p>
+            </div>
+
+            <!-- Forgot Password Panel -->
+            <div id="forgotForm" style="display:none">
+                <div style="text-align:center; margin-bottom:18px;">
+                    <div style="font-size:36px; margin-bottom:8px;">🔑</div>
+                    <h3 style="color:#333; font-size:18px; font-weight:700; margin-bottom:6px;">Reset Password</h3>
+                    <p style="color:#888; font-size:13px; line-height:1.5;">Enter your registered email and choose a new password.</p>
+                </div>
+                <div class="form-field">
+                    <label>Email Address</label>
+                    <input id="resetEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+                </div>
+                <div class="form-field">
+                    <label>New Password</label>
+                    <input id="resetNewPassword" type="password" autocomplete="new-password" placeholder="Min. 6 characters">
+                </div>
+                <div class="form-field">
+                    <label>Confirm New Password</label>
+                    <input id="resetConfirmPassword" type="password" autocomplete="new-password" placeholder="Repeat new password">
+                </div>
+                <div id="resetError"   class="form-error"></div>
+                <div id="resetSuccess" class="form-success"></div>
+                <button class="form-submit" onclick="handleResetPassword()">Reset Password</button>
+                <p class="form-switch"><a href="#" onclick="showLoginForm(); return false;">&#8592; Back to Login</a></p>
             </div>
 
             <!-- Sign Up -->
@@ -821,7 +849,7 @@
         }
 
         function clearErrors() {
-            ['loginError','signupError','signupSuccess'].forEach(id => {
+            ['loginError','signupError','signupSuccess','resetError','resetSuccess'].forEach(id => {
                 const el = document.getElementById(id);
                 el.style.display = 'none';
                 el.textContent = '';
@@ -911,6 +939,66 @@
             }
         }, { threshold: 0.3 });
         if (statsSection) observer.observe(statsSection);
+
+        // ── Forgot / Reset Password ─────────────────────────────
+        function showForgotPassword() {
+            document.getElementById('loginForm').style.display   = 'none';
+            document.getElementById('signupForm').style.display  = 'none';
+            document.getElementById('forgotForm').style.display  = 'block';
+            // Hide tabs while on reset screen
+            document.querySelector('.modal-tabs').style.display  = 'none';
+            clearErrors();
+        }
+
+        function showLoginForm() {
+            document.getElementById('forgotForm').style.display  = 'none';
+            document.getElementById('loginForm').style.display   = 'block';
+            document.querySelector('.modal-tabs').style.display  = 'flex';
+            clearErrors();
+        }
+
+        function handleResetPassword() {
+            const email    = document.getElementById('resetEmail').value.trim();
+            const newPass  = document.getElementById('resetNewPassword').value;
+            const confirm  = document.getElementById('resetConfirmPassword').value;
+
+            if (!email || !newPass || !confirm) {
+                showMsg('resetError', 'Please fill in all fields.');
+                return;
+            }
+            if (!/\S+@\S+\.\S+/.test(email)) {
+                showMsg('resetError', 'Please enter a valid email address.');
+                return;
+            }
+            if (newPass.length < 6) {
+                showMsg('resetError', 'New password must be at least 6 characters.');
+                return;
+            }
+            if (newPass !== confirm) {
+                showMsg('resetError', 'Passwords do not match. Please try again.');
+                return;
+            }
+
+            const users = getUsers();
+            const idx   = users.findIndex(u => u.email === email);
+            if (idx === -1) {
+                showMsg('resetError', 'No account found with that email address.');
+                return;
+            }
+
+            // Update the password
+            users[idx].password = newPass;
+            saveUsers(users);
+
+            document.getElementById('resetError').style.display = 'none';
+            showMsg('resetSuccess', '✅ Password reset successfully! You can now log in.');
+
+            // Clear fields and return to login after 2s
+            document.getElementById('resetEmail').value           = '';
+            document.getElementById('resetNewPassword').value     = '';
+            document.getElementById('resetConfirmPassword').value = '';
+            setTimeout(() => showLoginForm(), 2000);
+        }
 
         function scrollToFeatures() {
             document.getElementById('features').scrollIntoView({ behavior: 'smooth' });

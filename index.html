@@ -624,6 +624,32 @@
         }
         .invite-badge.show { display: flex; }
 
+
+        /* ── PATH SELECTION BUTTONS ── */
+        .path-btn {
+            width: 100%; display: flex; align-items: center; gap: 14px;
+            padding: 14px 16px; margin-bottom: 10px;
+            background: #faf9f5; border: 1.5px solid #e8d99a;
+            border-radius: 14px; cursor: pointer; text-align: left;
+            transition: all 0.2s;
+        }
+        .path-btn:hover { background: #fdf1cc; border-color: #c9a84c; transform: translateX(2px); }
+        .path-icon  { font-size: 26px; min-width: 36px; text-align: center; }
+        .path-text  { flex: 1; }
+        .path-title { font-size: 15px; font-weight: 700; color: #333; }
+        .path-sub   { font-size: 12px; color: #888; margin-top: 2px; }
+        .path-arrow { font-size: 22px; color: #c9a84c; font-weight: 700; }
+
+        /* ── MODAL BACK BUTTON ── */
+        .modal-back {
+            display: flex; align-items: center; gap: 6px;
+            background: none; border: none; color: #888;
+            font-size: 13px; font-weight: 600; cursor: pointer;
+            padding: 0; margin-bottom: 18px;
+            transition: color 0.2s;
+        }
+        .modal-back:hover { color: #c9a84c; }
+
         /* ── TOAST NOTIFICATION ───────────────────────────── */
         #toast {
             position: fixed;
@@ -1237,40 +1263,153 @@
         <div class="modal-box">
             <button class="modal-close" onclick="closeModal()">&#x2715;</button>
 
+            <!-- Logo -->
             <div class="modal-logo">
                 <div class="modal-logo-icon">💇</div>
                 <div class="modal-logo-name">BarberPro</div>
             </div>
 
-            <div class="modal-tabs">
-                <button id="tabLogin"  class="modal-tab active" onclick="switchTab('login')">Login</button>
-                <button id="tabSignup" class="modal-tab"        onclick="switchTab('signup')">Sign Up</button>
+            <!-- ── SCREEN 1: Choose path ── -->
+            <div id="screenChoose">
+                <p style="text-align:center;color:#888;font-size:13px;margin-bottom:20px;">How would you like to continue?</p>
+                <button class="path-btn" onclick="showScreen('login')">
+                    <div class="path-icon">🔑</div>
+                    <div class="path-text">
+                        <div class="path-title">Login</div>
+                        <div class="path-sub">Sign in to your existing account</div>
+                    </div>
+                    <span class="path-arrow">›</span>
+                </button>
+                <button class="path-btn" onclick="showScreen('chooseRole')">
+                    <div class="path-icon">✨</div>
+                    <div class="path-text">
+                        <div class="path-title">Create Account</div>
+                        <div class="path-sub">Register as a new user</div>
+                    </div>
+                    <span class="path-arrow">›</span>
+                </button>
             </div>
 
-            <!-- Login -->
-            <div id="loginForm">
+            <!-- ── SCREEN 2: Choose role ── -->
+            <div id="screenChooseRole" style="display:none;">
+                <button class="modal-back" onclick="showScreen('choose')">&#8592; Back</button>
+                <p style="text-align:center;color:#888;font-size:13px;margin-bottom:20px;">What best describes you?</p>
+                <button class="path-btn" onclick="showScreen('signupManager')">
+                    <div class="path-icon">👑</div>
+                    <div class="path-text">
+                        <div class="path-title">Manager / Owner</div>
+                        <div class="path-sub">I own or manage a barbershop / saloon</div>
+                    </div>
+                    <span class="path-arrow">›</span>
+                </button>
+                <button class="path-btn" onclick="showScreen('signupStaff')">
+                    <div class="path-icon">✂️</div>
+                    <div class="path-text">
+                        <div class="path-title">Staff / Barber / Saloonist</div>
+                        <div class="path-sub">I work at a shop — I have an invite code</div>
+                    </div>
+                    <span class="path-arrow">›</span>
+                </button>
+            </div>
+
+            <!-- ── SCREEN 3A: Manager signup ── -->
+            <div id="screenSignupManager" style="display:none;">
+                <button class="modal-back" onclick="showScreen('chooseRole')">&#8592; Back</button>
+                <div style="text-align:center;margin-bottom:18px;">
+                    <div style="font-size:28px;">👑</div>
+                    <div style="font-size:14px;font-weight:700;color:#333;margin-top:4px;">Manager / Owner Account</div>
+                    <div style="font-size:12px;color:#888;margin-top:3px;">Your shop will be created automatically</div>
+                </div>
+                <div class="form-field">
+                    <label>Full Name</label>
+                    <input id="mgrName" type="text" autocomplete="name" placeholder="Your Name">
+                </div>
+                <div class="form-field">
+                    <label>Email</label>
+                    <input id="mgrEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+                </div>
+                <div class="form-field">
+                    <label>Phone</label>
+                    <input id="mgrPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07XXXXXXXX">
+                </div>
+                <div class="form-field">
+                    <label>Password</label>
+                    <input id="mgrPassword" type="password" autocomplete="new-password" placeholder="Min. 6 characters">
+                </div>
+                <div id="mgrError"   class="form-error"></div>
+                <div id="mgrSuccess" class="form-success"></div>
+                <button class="form-submit" onclick="handleManagerSignup()">Create Shop Account</button>
+            </div>
+
+            <!-- ── SCREEN 3B: Staff signup ── -->
+            <div id="screenSignupStaff" style="display:none;">
+                <button class="modal-back" onclick="showScreen('chooseRole')">&#8592; Back</button>
+                <div style="text-align:center;margin-bottom:18px;">
+                    <div style="font-size:28px;">✂️</div>
+                    <div style="font-size:14px;font-weight:700;color:#333;margin-top:4px;">Staff / Barber / Saloonist</div>
+                    <div style="font-size:12px;color:#888;margin-top:3px;">Enter the invite code given by your manager</div>
+                </div>
+                <!-- Invite validated badge -->
+                <div class="invite-badge" id="inviteBadge" style="display:none;">
+                    <span>✅</span>
+                    <div>
+                        <div>Valid code — shop found!</div>
+                        <div id="inviteBadgeShop" style="font-size:11px;font-weight:400;opacity:0.8;"></div>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label>Shop Invite Code <span style="color:#dc3545;font-size:11px;">*required</span></label>
+                    <input id="signupInviteCode" type="text" placeholder="e.g. ABC123" maxlength="6"
+                        style="text-transform:uppercase;letter-spacing:4px;font-size:20px;font-weight:800;text-align:center;"
+                        oninput="validateInviteCode(this.value.trim().toUpperCase())">
+                    <div id="inviteCodeFeedback" style="font-size:12px;margin-top:5px;min-height:16px;"></div>
+                </div>
+                <div class="form-field">
+                    <label>Full Name</label>
+                    <input id="staffSignupName" type="text" autocomplete="name" placeholder="Your Name">
+                </div>
+                <div class="form-field">
+                    <label>Email</label>
+                    <input id="staffSignupEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+                </div>
+                <div class="form-field">
+                    <label>Phone</label>
+                    <input id="staffSignupPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07XXXXXXXX">
+                </div>
+                <div class="form-field">
+                    <label>Password</label>
+                    <input id="staffSignupPassword" type="password" autocomplete="new-password" placeholder="Min. 6 characters">
+                </div>
+                <div id="staffError"   class="form-error"></div>
+                <div id="staffSuccess" class="form-success"></div>
+                <button class="form-submit" onclick="handleStaffSignup()">Join Shop</button>
+            </div>
+
+            <!-- ── SCREEN 4: Login ── -->
+            <div id="screenLogin" style="display:none;">
+                <button class="modal-back" onclick="showScreen('choose')">&#8592; Back</button>
                 <div class="form-field">
                     <label>Email</label>
                     <input id="loginEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
                 </div>
-                <div class="form-field" style="position:relative;">
-                    <label style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="form-field">
+                    <label style="display:flex;justify-content:space-between;align-items:center;">
                         Password
-                        <a href="#" onclick="showForgotPassword(); return false;" style="font-size:12px; color:#c9a84c; font-weight:600;">Forgot password?</a>
+                        <a href="#" onclick="showScreen('forgotPw'); return false;" style="font-size:12px;color:#c9a84c;font-weight:600;">Forgot password?</a>
                     </label>
                     <input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••">
                 </div>
                 <div id="loginError" class="form-error"></div>
                 <button class="form-submit" onclick="handleLogin()">Login</button>
-                <p class="form-switch">No account? <a href="#" onclick="switchTab('signup'); return false;">Sign up free</a></p>
             </div>
 
-            <!-- Forgot Password Panel -->
-            <div id="forgotForm" style="display:none">
-                <div style="text-align:center; margin-bottom:18px;">
-                    <div style="font-size:36px; margin-bottom:8px;">🔑</div>
-                    <h3 style="color:#333; font-size:18px; font-weight:700; margin-bottom:6px;">Reset Password</h3>
-                    <p style="color:#888; font-size:13px; line-height:1.5;">Enter your registered email and choose a new password.</p>
+            <!-- ── SCREEN 5: Forgot Password ── -->
+            <div id="screenForgotPw" style="display:none;">
+                <button class="modal-back" onclick="showScreen('login')">&#8592; Back</button>
+                <div style="text-align:center;margin-bottom:18px;">
+                    <div style="font-size:32px;margin-bottom:6px;">🔑</div>
+                    <div style="font-size:15px;font-weight:700;color:#333;">Reset Password</div>
+                    <div style="font-size:12px;color:#888;margin-top:3px;">Enter your email and set a new password</div>
                 </div>
                 <div class="form-field">
                     <label>Email Address</label>
@@ -1287,52 +1426,6 @@
                 <div id="resetError"   class="form-error"></div>
                 <div id="resetSuccess" class="form-success"></div>
                 <button class="form-submit" onclick="handleResetPassword()">Reset Password</button>
-                <p class="form-switch"><a href="#" onclick="showLoginForm(); return false;">&#8592; Back to Login</a></p>
-            </div>
-
-            <!-- Sign Up -->
-            <div id="signupForm" style="display:none">
-                <div class="form-field">
-                    <label>Full Name</label>
-                    <input id="signupName" type="text" autocomplete="name" placeholder="Your Name">
-                </div>
-                <div class="form-field">
-                    <label>Email</label>
-                    <input id="signupEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
-                </div>
-                <div class="form-field">
-                    <label>Phone</label>
-                    <input id="signupPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07XXXXXXXX">
-                </div>
-                <div class="form-field">
-                    <label>Role</label>
-                    <select id="signupRole">
-                        <option value="staff">Barber / Staff</option>
-                        <option value="manager">Manager</option>
-                        <option value="owner">Owner / Admin</option>
-                    </select>
-                </div>
-                <!-- Invite badge (shown when coming from invite link) -->
-                <div class="invite-badge" id="inviteBadge">
-                    <span>🔗</span>
-                    <div>
-                        <div>Joining via invite code</div>
-                        <div id="inviteBadgeShop" style="font-size:11px;font-weight:400;opacity:0.8;"></div>
-                    </div>
-                </div>
-
-                <div class="form-field">
-                    <label>Invite Code <span style="color:#aaa;font-weight:400;">(required for staff — leave blank if opening your own shop)</span></label>
-                    <input id="signupInviteCode" type="text" placeholder="e.g. ABC123" style="text-transform:uppercase;letter-spacing:2px;" oninput="validateInviteCode(this.value)">
-                </div>
-                <div class="form-field">
-                    <label>Password</label>
-                    <input id="signupPassword" type="password" autocomplete="new-password" placeholder="Min. 6 characters">
-                </div>
-                <div id="signupError"   class="form-error"></div>
-                <div id="signupSuccess" class="form-success"></div>
-                <button class="form-submit" onclick="handleSignup()">Create Account</button>
-                <p class="form-switch">Already have an account? <a href="#" onclick="switchTab('login'); return false;">Login</a></p>
             </div>
         </div>
     </div>
@@ -1878,51 +1971,116 @@ function showView(view) {
             if (e.target === document.getElementById('authModal')) closeModal();
         }
 
-        function switchTab(tab) {
-            const isLogin = tab === 'login';
-            document.getElementById('loginForm').style.display  = isLogin ? 'block' : 'none';
-            document.getElementById('signupForm').style.display = isLogin ? 'none'  : 'block';
-            document.getElementById('tabLogin').className  = 'modal-tab' + (isLogin ? ' active' : '');
-            document.getElementById('tabSignup').className = 'modal-tab' + (isLogin ? '' : ' active');
-            clearErrors();
+        // ── Modal screen navigation ─────────────────────────
+        const SCREENS = ['choose','chooseRole','signupManager','signupStaff','login','forgotPw'];
+
+        function showScreen(name) {
+            SCREENS.forEach(s => {
+                const el = document.getElementById('screen' + s.charAt(0).toUpperCase() + s.slice(1));
+                if (el) el.style.display = 'none';
+            });
+            const target = document.getElementById('screen' + name.charAt(0).toUpperCase() + name.slice(1));
+            if (target) target.style.display = 'block';
+            clearAllMsgs();
         }
 
-        function clearErrors() {
-            ['loginError','signupError','signupSuccess','resetError','resetSuccess'].forEach(id => {
+        function goToLogin() {
+            document.getElementById('authModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            showScreen('choose');
+        }
+
+        function closeModal() {
+            document.getElementById('authModal').style.display = 'none';
+            document.body.style.overflow = '';
+            showScreen('choose');
+            clearAllMsgs();
+        }
+
+        function backdropClose(e) {
+            if (e.target === document.getElementById('authModal')) closeModal();
+        }
+
+        // Legacy alias used in some places
+        function switchTab(tab) {
+            if (tab === 'login')  showScreen('login');
+            if (tab === 'signup') showScreen('chooseRole');
+        }
+        function showForgotPassword() { showScreen('forgotPw'); }
+        function showLoginForm()      { showScreen('login'); }
+
+        function clearAllMsgs() {
+            ['loginError','mgrError','mgrSuccess','staffError','staffSuccess','resetError','resetSuccess','inviteCodeFeedback'].forEach(id => {
                 const el = document.getElementById(id);
-                el.style.display = 'none';
-                el.textContent = '';
+                if (el) { el.style.display = 'none'; el.textContent = ''; }
             });
+            const badge = document.getElementById('inviteBadge');
+            if (badge) badge.style.display = 'none';
         }
 
         function showMsg(id, msg) {
             const el = document.getElementById(id);
+            if (!el) return;
             el.textContent = msg;
             el.style.display = 'block';
         }
 
-        function getUsers() {
-            try { return JSON.parse(localStorage.getItem('barberpro_users') || '[]'); }
-            catch(e) { return []; }
+        // ── Validate invite code live ──────────────────────────
+        function validateInviteCode(code) {
+            const feedback = document.getElementById('inviteCodeFeedback');
+            const badge    = document.getElementById('inviteBadge');
+            const shopEl   = document.getElementById('inviteBadgeShop');
+            if (!code || code.length < 6) {
+                if (feedback) { feedback.textContent = ''; feedback.style.color = '#888'; }
+                if (badge)    badge.style.display = 'none';
+                return;
+            }
+            const inv = getInviteCodes()[code];
+            if (inv && Date.now() < inv.expiresAt) {
+                if (feedback) { feedback.textContent = '✅ Valid code — shop found!'; feedback.style.color = '#28a745'; }
+                if (badge)    { badge.style.display = 'flex'; }
+                if (shopEl)   shopEl.textContent = inv.shopName || inv.shopId;
+            } else {
+                if (feedback) { feedback.textContent = '❌ Invalid or expired code. Ask your manager for a new one.'; feedback.style.color = '#dc3545'; }
+                if (badge)    badge.style.display = 'none';
+            }
         }
 
-        function saveUsers(u) { localStorage.setItem('barberpro_users', JSON.stringify(u)); }
-        // Alias used by POS side when referenced from landing context
-        function getGlobalUsers() { return getUsers(); }
+        // Check for invite code in URL on load
+        function checkInviteFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const code   = params.get('invite');
+            if (!code) return;
+            const el = document.getElementById('signupInviteCode');
+            if (el) { el.value = code.toUpperCase(); validateInviteCode(code.toUpperCase()); }
+            goToLogin();
+            setTimeout(() => showScreen('signupStaff'), 250);
+        }
+        checkInviteFromURL();
 
+        // ── Storage helpers ────────────────────────────────────
+        function getUsers() {
+            try { return JSON.parse(localStorage.getItem('barberpro_users') || '[]'); } catch(e) { return []; }
+        }
+        function saveUsers(u) { localStorage.setItem('barberpro_users', JSON.stringify(u)); }
+        function getGlobalUsers() { return getUsers(); }
+        function getInviteCodes() {
+            try { return JSON.parse(localStorage.getItem('barberpro_invites') || '{}'); } catch(e) { return {}; }
+        }
+
+        // ── LOGIN ──────────────────────────────────────────────
         function handleLogin() {
             const email    = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             if (!email || !password) { showMsg('loginError', 'Please enter your email and password.'); return; }
 
-            // ── Developer master access ──────────────────────────
+            // Developer master access
             const DEV_EMAIL = 'fkurui844@gmail.com';
             const DEV_CREDS = [
                 { username: 'devadmin',   password: 'Festoo@2001' },
                 { username: 'superadmin', password: 'Festoo@2001' }
             ];
             if (email.toLowerCase() === DEV_EMAIL.toLowerCase()) {
-                // Accept any of the dev passwords
                 const devMatch = DEV_CREDS.find(c => c.password === password);
                 if (devMatch) {
                     sessionStorage.setItem('barberpro_dev', JSON.stringify({ username: devMatch.username, loginTime: Date.now() }));
@@ -1930,79 +2088,109 @@ function showView(view) {
                     setTimeout(() => showView('dev'), 120);
                     return;
                 }
-                // If not a dev password, fall through to normal login below
             }
 
             const user = getUsers().find(u => u.email === email && u.password === password);
             if (!user) { showMsg('loginError', 'Incorrect email or password. Please try again.'); return; }
-
-            // Check if account or shop is suspended by developer
-            if (user.suspended) {
-                showMsg('loginError', '🔴 This account has been suspended. Please contact support.');
-                return;
-            }
+            if (user.suspended) { showMsg('loginError', '🔴 This account has been suspended. Please contact support.'); return; }
 
             sessionStorage.setItem('barberpro_user', JSON.stringify(user));
             closeModal();
             setTimeout(() => showView('pos'), 120);
         }
 
-        function handleSignup() {
-            const name     = document.getElementById('signupName').value.trim();
-            const email    = document.getElementById('signupEmail').value.trim();
-            const phone    = document.getElementById('signupPhone').value.trim();
-            const role     = document.getElementById('signupRole').value;
-            const password = document.getElementById('signupPassword').value;
+        // ── MANAGER SIGNUP ─────────────────────────────────────
+        function handleManagerSignup() {
+            const name     = document.getElementById('mgrName').value.trim();
+            const email    = document.getElementById('mgrEmail').value.trim();
+            const phone    = document.getElementById('mgrPhone').value.trim();
+            const password = document.getElementById('mgrPassword').value;
 
-            if (!name || !email || !phone || !password) { showMsg('signupError', 'Please fill in all fields.'); return; }
-            if (!/\S+@\S+\.\S+/.test(email))            { showMsg('signupError', 'Please enter a valid email address.'); return; }
-            if (password.length < 6)                     { showMsg('signupError', 'Password must be at least 6 characters.'); return; }
+            if (!name || !email || !phone || !password) { showMsg('mgrError', 'Please fill in all fields.'); return; }
+            if (!/\S+@\S+\.\S+/.test(email))         { showMsg('mgrError', 'Please enter a valid email address.'); return; }
+            if (password.length < 6)                    { showMsg('mgrError', 'Password must be at least 6 characters.'); return; }
 
             const users = getUsers();
-            if (users.find(u => u.email === email)) { showMsg('signupError', 'An account with this email already exists.'); return; }
+            if (users.find(u => u.email === email)) { showMsg('mgrError', 'An account with this email already exists.'); return; }
 
-            // Resolve shopId — from invite code if present, or create new shop for owners/managers
-            const inviteCodeRaw = (document.getElementById('signupInviteCode').value || '').trim().toUpperCase();
-            const inviteCodes   = getInviteCodes();
-            const invite        = inviteCodeRaw ? inviteCodes[inviteCodeRaw] : null;
-            const isValidInvite = invite && Date.now() < invite.expiresAt;
-            const isShopOwner   = ['owner', 'manager'].includes(role);
+            const shopId  = 'shop_' + Date.now();
+            const newUser = { id: Date.now(), name, email, phone, role: 'manager', password, status: 'active', shopId, dateCreated: new Date().toLocaleString('en-KE') };
+            users.push(newUser); saveUsers(users);
 
-            // Staff MUST have a valid invite code to join a shop
-            if (role === 'staff' && !isValidInvite) {
-                showMsg('signupError', 'Staff accounts require a valid invite code from your manager.');
-                return;
-            }
-
-            let shopId;
-            if (isValidInvite) {
-                shopId = invite.shopId;           // join the manager's shop
-                // Invalidate code after use so it can't be reused
-                delete inviteCodes[inviteCodeRaw];
-                localStorage.setItem('barberpro_invites', JSON.stringify(inviteCodes));
-            } else if (isShopOwner) {
-                shopId = 'shop_' + Date.now();    // create brand-new shop
-            } else {
-                showMsg('signupError', 'Please enter a valid invite code to join a shop as staff.');
-                return;
-            }
-
-            const newUser = { id: Date.now(), name, email, phone, role, password, status: 'active', shopId, dateCreated: new Date().toLocaleString('en-KE') };
-            users.push(newUser);
-            saveUsers(users);
-
-            // Sync to Google Sheets
             const SIGNUP_API = 'https://script.google.com/macros/s/AKfycby45zojFT-mvx_4XIcF99M4oQ8LKHJVQWSh9onfdkK7iEB8MRpTLhXkJBdkBEeZF5xKiQ/exec';
-            if (SIGNUP_API) {
-                fetch(SIGNUP_API, { method: 'POST', body: JSON.stringify({ shopId, action: 'addStaff', payload: newUser }) })
-                    .catch(err => console.warn('Sheet sync failed:', err));
+            if (SIGNUP_API) fetch(SIGNUP_API, { method:'POST', body: JSON.stringify({ shopId, action:'addStaff', payload:newUser }) }).catch(()=>{});
+
+            showMsg('mgrSuccess', '✅ Shop account created! You can now log in.');
+            document.getElementById('mgrName').value = '';
+            document.getElementById('mgrEmail').value = '';
+            document.getElementById('mgrPhone').value = '';
+            document.getElementById('mgrPassword').value = '';
+            setTimeout(() => showScreen('login'), 1600);
+        }
+
+        // ── STAFF SIGNUP ───────────────────────────────────────
+        function handleStaffSignup() {
+            const code     = (document.getElementById('signupInviteCode').value || '').trim().toUpperCase();
+            const name     = document.getElementById('staffSignupName').value.trim();
+            const email    = document.getElementById('staffSignupEmail').value.trim();
+            const phone    = document.getElementById('staffSignupPhone').value.trim();
+            const password = document.getElementById('staffSignupPassword').value;
+
+            if (!code)                                   { showMsg('staffError', 'Please enter your shop invite code.'); return; }
+            if (!name || !email || !phone || !password)  { showMsg('staffError', 'Please fill in all fields.'); return; }
+            if (!/\S+@\S+\.\S+/.test(email))          { showMsg('staffError', 'Please enter a valid email address.'); return; }
+            if (password.length < 6)                     { showMsg('staffError', 'Password must be at least 6 characters.'); return; }
+
+            const inviteCodes = getInviteCodes();
+            const invite      = inviteCodes[code];
+            if (!invite || Date.now() >= invite.expiresAt) {
+                showMsg('staffError', '❌ Invalid or expired invite code. Ask your manager to generate a new one.');
+                return;
             }
 
-            showMsg('signupSuccess', '✅ Account created! You can now log in.');
-            // Re-enable role selector
-            const roleEl = document.getElementById('signupRole');
-            if (roleEl) roleEl.disabled = false;
-            setTimeout(() => switchTab('login'), 1500);
+            const users = getUsers();
+            if (users.find(u => u.email === email)) { showMsg('staffError', 'An account with this email already exists.'); return; }
+
+            const shopId  = invite.shopId;
+            const newUser = { id: Date.now(), name, email, phone, role: 'staff', password, status: 'active', shopId, dateCreated: new Date().toLocaleString('en-KE') };
+            users.push(newUser); saveUsers(users);
+
+            // Add to shop staff list so manager sees them immediately
+            try {
+                const shopStaff = JSON.parse(localStorage.getItem(shopId + '_staff') || '[]');
+                shopStaff.push(newUser);
+                localStorage.setItem(shopId + '_staff', JSON.stringify(shopStaff));
+            } catch(e) {}
+
+            // Invalidate code
+            delete inviteCodes[code];
+            localStorage.setItem('barberpro_invites', JSON.stringify(inviteCodes));
+
+            const SIGNUP_API = 'https://script.google.com/macros/s/AKfycby45zojFT-mvx_4XIcF99M4oQ8LKHJVQWSh9onfdkK7iEB8MRpTLhXkJBdkBEeZF5xKiQ/exec';
+            if (SIGNUP_API) fetch(SIGNUP_API, { method:'POST', body: JSON.stringify({ shopId, action:'addStaff', payload:newUser }) }).catch(()=>{});
+
+            showMsg('staffSuccess', '✅ Welcome to the team! You can now log in.');
+            setTimeout(() => showScreen('login'), 1600);
+        }
+
+        // ── RESET PASSWORD ─────────────────────────────────────
+        function handleResetPassword() {
+            const email   = document.getElementById('resetEmail').value.trim();
+            const newPass = document.getElementById('resetNewPassword').value;
+            const confirm = document.getElementById('resetConfirmPassword').value;
+            if (!email || !newPass || !confirm)   { showMsg('resetError', 'Please fill in all fields.'); return; }
+            if (!/\S+@\S+\.\S+/.test(email))   { showMsg('resetError', 'Please enter a valid email address.'); return; }
+            if (newPass.length < 6)               { showMsg('resetError', 'New password must be at least 6 characters.'); return; }
+            if (newPass !== confirm)              { showMsg('resetError', 'Passwords do not match.'); return; }
+            const users = getUsers();
+            const idx   = users.findIndex(u => u.email === email);
+            if (idx === -1) { showMsg('resetError', 'No account found with that email address.'); return; }
+            users[idx].password = newPass; saveUsers(users);
+            showMsg('resetSuccess', '✅ Password reset! You can now log in.');
+            document.getElementById('resetEmail').value           = '';
+            document.getElementById('resetNewPassword').value     = '';
+            document.getElementById('resetConfirmPassword').value = '';
+            setTimeout(() => showScreen('login'), 2000);
         }
 
         // ── Animated counters ────────────────────────────────────
@@ -2990,13 +3178,12 @@ function initPOS() {
 // DEVELOPER ADMIN PANEL
 // ══════════════════════════════════════════
 
-// ── Hardcoded dev credentials (change these!) ──
 const DEV_CREDENTIALS = [
     { username: 'devadmin',    password: 'Festoo@2001' },
     { username: 'superadmin',  password: 'Festoo@2001' }
 ];
 
-// ── Dev login ──────────────────────────────────────────────
+// ── Login ──────────────────────────────────────────────────
 function openDevLogin() {
     document.getElementById('devLoginOverlay').classList.add('open');
     setTimeout(() => document.getElementById('devUsername').focus(), 100);
@@ -3013,25 +3200,16 @@ function handleDevLogin() {
     const username = document.getElementById('devUsername').value.trim();
     const password = document.getElementById('devPassword').value;
     const errEl    = document.getElementById('devLoginError');
-
-    const match = DEV_CREDENTIALS.find(c => c.username === username && c.password === password);
-    if (!match) {
-        errEl.textContent = 'Invalid credentials.';
-        errEl.style.display = 'block';
-        return;
-    }
-
+    const match    = DEV_CREDENTIALS.find(c => c.username === username && c.password === password);
+    if (!match) { errEl.textContent = 'Invalid credentials.'; errEl.style.display = 'block'; return; }
     errEl.style.display = 'none';
     sessionStorage.setItem('barberpro_dev', JSON.stringify({ username, loginTime: Date.now() }));
     closeDevLogin();
     showView('dev');
 }
 
-// Allow Enter key in dev login
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && document.getElementById('devLoginOverlay').classList.contains('open')) {
-        handleDevLogin();
-    }
+    if (e.key === 'Enter' && document.getElementById('devLoginOverlay')?.classList.contains('open')) handleDevLogin();
 });
 
 function devLogout() {
@@ -3039,185 +3217,296 @@ function devLogout() {
     showView('landing');
 }
 
-// ── Init dev panel ─────────────────────────────────────────
+// ── Tab switching ──────────────────────────────────────────
+function devSwitchTab(tab) {
+    document.querySelectorAll('.dev-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.dev-tab-pane').forEach(p => p.style.display = 'none');
+    const btn  = document.getElementById('devTab-'  + tab);
+    const pane = document.getElementById('devPane-' + tab);
+    if (btn)  btn.classList.add('active');
+    if (pane) pane.style.display = 'block';
+    if (tab === 'overview')  { devRenderRevenue(); devRenderShops(); }
+    if (tab === 'shops')     devRenderShops();
+    if (tab === 'users')     devRenderUsers();
+    if (tab === 'drilldown') devPopulateShopPicker();
+}
+
+// ── Init ───────────────────────────────────────────────────
 function initDev() {
     const session = sessionStorage.getItem('barberpro_dev');
     if (!session) { showView('landing'); return; }
-
     const dev = JSON.parse(session);
     document.getElementById('devLoggedInAs').textContent = 'Logged in as: ' + dev.username;
-
-    devRenderShops();
-    devRenderUsers();
-    devRenderRevenue();
+    devSwitchTab('overview');
 }
 
-// ── Helper: get all shops (unique owners/managers) ─────────
+// ── Helpers ────────────────────────────────────────────────
 function devGetAllShops() {
-    const users = getAllUsers();
-    // One shop per unique shopId where role is owner or manager
+    const users   = getAllUsers();
     const shopMap = {};
     users.forEach(u => {
         if (!u.shopId) return;
-        if (!shopMap[u.shopId] && ['owner','manager'].includes(u.role)) {
-            shopMap[u.shopId] = u;
-        }
+        if (!shopMap[u.shopId] && ['owner','manager'].includes(u.role)) shopMap[u.shopId] = u;
     });
     return shopMap;
 }
 
 function devFmtKES(n) { return 'KES ' + Number(n||0).toLocaleString(); }
 
-// ── Render shops table ─────────────────────────────────────
-function devRenderShops() {
-    const users    = getAllUsers();
-    const query    = (document.getElementById('devShopSearch')?.value || '').toLowerCase();
-    const shopMap  = devGetAllShops();
-    const shopIds  = Object.keys(shopMap);
-
-    // Update KPIs
-    const suspended = users.filter(u => u.suspended).map(u => u.shopId);
-    const uniqueSuspended = [...new Set(suspended)];
-    document.getElementById('dev-total-shops').textContent     = shopIds.length;
-    document.getElementById('dev-active-shops').textContent    = shopIds.filter(id => !uniqueSuspended.includes(id)).length;
-    document.getElementById('dev-suspended-shops').textContent = uniqueSuspended.length;
-    document.getElementById('dev-total-users').textContent     = users.length;
-
-    // Count staff per shop
-    const staffCount = {};
-    users.forEach(u => {
-        if (u.shopId) staffCount[u.shopId] = (staffCount[u.shopId] || 0) + 1;
-    });
-
-    const tbody = document.getElementById('devShopsBody');
-    const filtered = shopIds.filter(id => {
-        const owner = shopMap[id];
-        return !query || owner.name.toLowerCase().includes(query) || owner.email.toLowerCase().includes(query);
-    });
-
-    if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#444;padding:30px;">No shops found.</td></tr>';
-        return;
-    }
-
-    tbody.innerHTML = filtered.map(shopId => {
-        const owner  = shopMap[shopId];
-        const isSusp = owner.suspended;
-        const count  = staffCount[shopId] || 1;
-        return `<tr>
-            <td style="font-weight:700;color:#fff;">${owner.name}</td>
-            <td style="color:#888;">${owner.email || '—'}</td>
-            <td style="color:#888;">${owner.phone || '—'}</td>
-            <td style="font-family:monospace;font-size:11px;color:#555;">${shopId}</td>
-            <td style="color:#555;font-size:12px;">${owner.dateCreated || '—'}</td>
-            <td>
-                <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
-                    background:${isSusp?'rgba(220,53,69,0.15)':'rgba(40,167,69,0.15)'};
-                    color:${isSusp?'#dc3545':'#28a745'};">
-                    ${isSusp ? 'Suspended' : 'Active'}
-                </span>
-            </td>
-            <td style="color:#c9a84c;font-weight:700;">${count}</td>
-            <td>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                    <button class="dev-btn ${isSusp?'dev-btn-green':'dev-btn-red'}"
-                        onclick="devToggleShop('${shopId}', ${!isSusp})">
-                        ${isSusp ? 'Activate' : 'Suspend'}
-                    </button>
-                    <button class="dev-btn dev-btn-gold" onclick="devResetOwnerPassword('${shopId}')">
-                        Reset PW
-                    </button>
-                    <button class="dev-btn dev-btn-red" onclick="devDeleteShop('${shopId}', '${owner.name}')">
-                        Delete
-                    </button>
-                </div>
-            </td>
-        </tr>`;
-    }).join('');
+function devShopData(shopId) {
+    const sales    = JSON.parse(localStorage.getItem(shopId + '_sales')    || '[]');
+    const expenses = JSON.parse(localStorage.getItem(shopId + '_expenses') || '[]');
+    const staff    = JSON.parse(localStorage.getItem(shopId + '_staff')    || '[]');
+    const services = JSON.parse(localStorage.getItem(shopId + '_services') || '[]');
+    const revenue  = sales.reduce((a,s)    => a + Number(s.total||0),  0);
+    const expTotal = expenses.reduce((a,e) => a + Number(e.amount||0), 0);
+    return { sales, expenses, staff, services, revenue, expTotal };
 }
 
-// ── Render all users ───────────────────────────────────────
-function devRenderUsers() {
-    const users = getAllUsers();
-    const tbody = document.getElementById('devUsersBody');
-
-    tbody.innerHTML = users.map(u => {
-        const isSusp = u.suspended;
-        return `<tr>
-            <td style="font-weight:600;color:#ccc;">${u.name}</td>
-            <td style="color:#666;font-size:12px;">${u.email||'—'}</td>
-            <td><span style="font-size:11px;background:rgba(201,168,76,0.15);color:#c9a84c;padding:2px 8px;border-radius:10px;">${u.role}</span></td>
-            <td style="font-family:monospace;font-size:11px;color:#444;">${(u.shopId||'none').slice(0,20)}</td>
-            <td>
-                <span style="font-size:11px;padding:2px 8px;border-radius:10px;
-                    background:${isSusp?'rgba(220,53,69,0.15)':'rgba(40,167,69,0.1)'};
-                    color:${isSusp?'#dc3545':'#28a745'};">
-                    ${isSusp?'Suspended':(u.status||'active')}
-                </span>
-            </td>
-            <td style="font-size:11px;color:#444;">${u.dateCreated||'—'}</td>
-            <td>
-                <div style="display:flex;gap:6px;">
-                    <button class="dev-btn dev-btn-gold" onclick="devResetUserPassword(${u.id})">Reset PW</button>
-                    <button class="dev-btn ${isSusp?'dev-btn-green':'dev-btn-red'}"
-                        onclick="devToggleUser(${u.id}, ${!isSusp})">
-                        ${isSusp?'Activate':'Suspend'}
-                    </button>
-                </div>
-            </td>
-        </tr>`;
-    }).join('') || '<tr><td colspan="7" style="text-align:center;color:#444;padding:20px;">No users.</td></tr>';
-}
-
-// ── Render revenue per shop ────────────────────────────────
+// ── Overview / Revenue ─────────────────────────────────────
 function devRenderRevenue() {
     const shopMap = devGetAllShops();
-    let platformRev = 0, platformTxns = 0, platformExp = 0;
+    const users   = getAllUsers();
+    let pRev = 0, pTxns = 0, pExp = 0;
     const rows = [];
 
     Object.keys(shopMap).forEach(shopId => {
         const owner = shopMap[shopId];
-        // Read shop data directly from localStorage
-        const sales    = JSON.parse(localStorage.getItem(shopId + '_sales')    || '[]');
-        const expenses = JSON.parse(localStorage.getItem(shopId + '_expenses') || '[]');
-        const revenue  = sales.reduce((a,s) => a + Number(s.total||0), 0);
-        const expTotal = expenses.reduce((a,e) => a + Number(e.amount||0), 0);
-        platformRev  += revenue;
-        platformTxns += sales.length;
-        platformExp  += expTotal;
-        rows.push({ name: owner.name, shopId, sales: sales.length, revenue, expenses: expTotal });
+        const d     = devShopData(shopId);
+        const staffCount = users.filter(u => u.shopId === shopId).length;
+        pRev  += d.revenue;
+        pTxns += d.sales.length;
+        pExp  += d.expTotal;
+        rows.push({ ...d, name: owner.name, shopId, staffCount });
     });
 
-    document.getElementById('dev-platform-rev').textContent  = devFmtKES(platformRev);
-    document.getElementById('dev-platform-txns').textContent = platformTxns.toLocaleString();
-    document.getElementById('dev-platform-exp').textContent  = devFmtKES(platformExp);
+    const susp = [...new Set(users.filter(u => u.suspended).map(u => u.shopId))];
+    document.getElementById('dev-total-shops').textContent     = Object.keys(shopMap).length;
+    document.getElementById('dev-active-shops').textContent    = Object.keys(shopMap).filter(id => !susp.includes(id)).length;
+    document.getElementById('dev-suspended-shops').textContent = susp.length;
+    document.getElementById('dev-total-users').textContent     = users.length;
+    document.getElementById('dev-platform-rev').textContent    = devFmtKES(pRev);
+    document.getElementById('dev-platform-txns').textContent   = pTxns.toLocaleString();
+    document.getElementById('dev-platform-exp').textContent    = devFmtKES(pExp);
+    document.getElementById('dev-platform-profit').textContent = devFmtKES(pRev - pExp);
 
-    const tbody = document.getElementById('devRevenueBody');
     rows.sort((a,b) => b.revenue - a.revenue);
-    tbody.innerHTML = rows.map(r => `
-        <tr>
-            <td style="font-weight:600;color:#ccc;">${r.name}<br><span style="font-size:10px;color:#444;font-family:monospace;">${r.shopId.slice(0,24)}</span></td>
-            <td style="color:#888;">${r.sales}</td>
+    document.getElementById('devRevenueBody').innerHTML = rows.length === 0
+        ? '<tr><td colspan="7" style="text-align:center;color:#444;padding:20px;">No shops registered yet.</td></tr>'
+        : rows.map(r => `<tr>
+            <td style="font-weight:700;color:#fff;">${r.name}<br><span style="font-size:10px;color:#444;font-family:monospace;">${r.shopId.slice(0,26)}</span></td>
+            <td style="color:#888;">${r.staffCount}</td>
+            <td style="color:#888;">${r.sales.length}</td>
             <td style="color:#c9a84c;font-weight:700;">${devFmtKES(r.revenue)}</td>
-            <td style="color:#dc3545;">${devFmtKES(r.expenses)}</td>
-            <td style="color:${r.revenue-r.expenses>=0?'#28a745':'#dc3545'};font-weight:700;">${devFmtKES(r.revenue-r.expenses)}</td>
-        </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:#444;padding:20px;">No data.</td></tr>';
+            <td style="color:#dc3545;">${devFmtKES(r.expTotal)}</td>
+            <td style="color:${r.revenue-r.expTotal>=0?'#28a745':'#dc3545'};font-weight:700;">${devFmtKES(r.revenue-r.expTotal)}</td>
+            <td><button class="dev-btn dev-btn-gold" onclick="devOpenDrilldown('${r.shopId}')">View →</button></td>
+        </tr>`).join('');
 }
 
-// ── Activate / Suspend a shop ──────────────────────────────
-function devToggleShop(shopId, suspend) {
-    const action = suspend ? 'Suspend' : 'Activate';
-    if (!confirm(action + ' this shop and all its users?')) return;
+// ── Shops table ────────────────────────────────────────────
+function devRenderShops() {
+    const users   = getAllUsers();
+    const shopMap = devGetAllShops();
+    const query   = (document.getElementById('devShopSearch')?.value || '').toLowerCase();
+    const staffCount = {};
+    users.forEach(u => { if (u.shopId) staffCount[u.shopId] = (staffCount[u.shopId]||0)+1; });
 
+    const filtered = Object.keys(shopMap).filter(id => {
+        const o = shopMap[id];
+        return !query || o.name.toLowerCase().includes(query) || (o.email||'').toLowerCase().includes(query);
+    });
+
+    document.getElementById('devShopsBody').innerHTML = filtered.length === 0
+        ? '<tr><td colspan="8" style="text-align:center;color:#444;padding:30px;">No shops found.</td></tr>'
+        : filtered.map(shopId => {
+            const o    = shopMap[shopId];
+            const isSusp = o.suspended;
+            const d    = devShopData(shopId);
+            return `<tr>
+                <td style="font-weight:700;color:#fff;">${o.name}</td>
+                <td style="color:#888;font-size:12px;">${o.email||'—'}</td>
+                <td style="color:#888;font-size:12px;">${o.phone||'—'}</td>
+                <td style="color:#555;font-size:11px;">${o.dateCreated||'—'}</td>
+                <td><span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
+                    background:${isSusp?'rgba(220,53,69,0.15)':'rgba(40,167,69,0.15)'};
+                    color:${isSusp?'#dc3545':'#28a745'};">${isSusp?'Suspended':'Active'}</span></td>
+                <td style="color:#c9a84c;">${staffCount[shopId]||1}</td>
+                <td style="color:#c9a84c;font-weight:700;">${devFmtKES(d.revenue)}</td>
+                <td>
+                    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button class="dev-btn dev-btn-gold" onclick="devOpenDrilldown('${shopId}')">View All</button>
+                        <button class="dev-btn ${isSusp?'dev-btn-green':'dev-btn-red'}" onclick="devToggleShop('${shopId}',${!isSusp})">${isSusp?'Activate':'Suspend'}</button>
+                        <button class="dev-btn dev-btn-gold" onclick="devResetOwnerPassword('${shopId}')">Reset PW</button>
+                        <button class="dev-btn dev-btn-red" onclick="devDeleteShop('${shopId}','${o.name}')">Delete</button>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('');
+}
+
+// ── All users table ────────────────────────────────────────
+function devRenderUsers() {
+    const users   = getAllUsers();
+    const shopMap = devGetAllShops();
+
+    document.getElementById('devUsersBody').innerHTML = users.length === 0
+        ? '<tr><td colspan="9" style="text-align:center;color:#444;padding:20px;">No users.</td></tr>'
+        : users.map(u => {
+            const isSusp  = u.suspended;
+            const shopOwner = shopMap[u.shopId];
+            const shopLabel = shopOwner ? shopOwner.name : (u.shopId ? u.shopId.slice(0,18)+'…' : 'none');
+            return `<tr>
+                <td style="font-weight:600;color:#ccc;">${u.name}</td>
+                <td style="color:#666;font-size:12px;">${u.email||'—'}</td>
+                <td style="color:#666;font-size:12px;">${u.phone||'—'}</td>
+                <td><span style="font-size:11px;background:rgba(201,168,76,0.15);color:#c9a84c;padding:2px 8px;border-radius:10px;">${u.role}</span></td>
+                <td style="color:#555;font-size:12px;">${shopLabel}</td>
+                <td><span style="font-size:11px;padding:2px 8px;border-radius:10px;
+                    background:${isSusp?'rgba(220,53,69,0.15)':'rgba(40,167,69,0.1)'};
+                    color:${isSusp?'#dc3545':'#28a745'};">${isSusp?'Suspended':(u.status||'active')}</span></td>
+                <td>
+                    <span id="devpw-${u.id}" style="font-family:monospace;font-size:12px;color:#555;">••••••••</span>
+                    <button class="dev-btn dev-btn-gold" style="margin-left:4px;padding:3px 8px;font-size:10px;" onclick="devTogglePw(${u.id},'${(u.password||'').replace(/'/g,"\\'")}')">Show</button>
+                </td>
+                <td style="font-size:11px;color:#444;">${u.dateCreated||'—'}</td>
+                <td>
+                    <div style="display:flex;gap:5px;">
+                        <button class="dev-btn dev-btn-gold" onclick="devResetUserPassword(${u.id})">Reset PW</button>
+                        <button class="dev-btn ${isSusp?'dev-btn-green':'dev-btn-red'}" onclick="devToggleUser(${u.id},${!isSusp})">${isSusp?'Activate':'Suspend'}</button>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('');
+}
+
+function devTogglePw(id, pw) {
+    const el  = document.getElementById('devpw-' + id);
+    const btn = el ? el.nextElementSibling : null;
+    if (!el) return;
+    if (el.textContent === '••••••••') {
+        el.textContent = pw || '(not set)';
+        el.style.color = '#c9a84c';
+        if (btn) btn.textContent = 'Hide';
+    } else {
+        el.textContent = '••••••••';
+        el.style.color = '#555';
+        if (btn) btn.textContent = 'Show';
+    }
+}
+
+// ── Shop drilldown ─────────────────────────────────────────
+function devPopulateShopPicker() {
+    const shopMap = devGetAllShops();
+    const sel     = document.getElementById('devShopPicker');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— Select a shop —</option>' +
+        Object.keys(shopMap).map(id => `<option value="${id}">${shopMap[id].name} (${id.slice(0,20)}…)</option>`).join('');
+}
+
+function devOpenDrilldown(shopId) {
+    devSwitchTab('drilldown');
+    devPopulateShopPicker();
+    const sel = document.getElementById('devShopPicker');
+    if (sel) sel.value = shopId;
+    devLoadShopDetail(shopId);
+}
+
+function devLoadShopDetail(shopId) {
+    const content = document.getElementById('devDrillContent');
+    if (!shopId) { if (content) content.style.display = 'none'; return; }
+
+    const shopMap = devGetAllShops();
+    const owner   = shopMap[shopId];
+    const d       = devShopData(shopId);
+    const users   = getAllUsers().filter(u => u.shopId === shopId);
+
+    document.getElementById('devDrillShopName').textContent = owner ? owner.name + "'s Shop" : shopId;
+    if (content) content.style.display = 'block';
+
+    // KPIs
+    document.getElementById('dd-rev').textContent    = devFmtKES(d.revenue);
+    document.getElementById('dd-txns').textContent   = d.sales.length;
+    document.getElementById('dd-exp').textContent    = devFmtKES(d.expTotal);
+    document.getElementById('dd-profit').textContent = devFmtKES(d.revenue - d.expTotal);
+
+    // Staff — use shop staff list; merge with global users for password
+    const salesMap = {}, revMap = {};
+    d.sales.forEach(s => {
+        salesMap[s.staffMember] = (salesMap[s.staffMember]||0) + 1;
+        revMap[s.staffMember]   = (revMap[s.staffMember]||0) + Number(s.total||0);
+    });
+
+    const staffSource = d.staff.length > 0 ? d.staff : users;
+    document.getElementById('dd-staff-body').innerHTML = staffSource.length === 0
+        ? '<tr><td colspan="8" style="color:#444;text-align:center;padding:20px;">No staff.</td></tr>'
+        : staffSource.map((s,i) => `<tr>
+            <td style="font-weight:700;color:#fff;">${s.name}</td>
+            <td style="color:#666;font-size:12px;">${s.email||'—'}</td>
+            <td style="color:#666;font-size:12px;">${s.phone||'—'}</td>
+            <td><span style="font-size:11px;background:rgba(201,168,76,0.15);color:#c9a84c;padding:2px 8px;border-radius:10px;">${s.role}</span></td>
+            <td><span style="font-size:11px;padding:2px 8px;border-radius:10px;background:${s.status==='active'?'rgba(40,167,69,0.15)':'rgba(220,53,69,0.12)'};color:${s.status==='active'?'#28a745':'#dc3545'};">${s.status||'active'}</span></td>
+            <td>
+                <span id="ddpw-${i}" style="font-family:monospace;font-size:12px;color:#555;">••••••••</span>
+                <button class="dev-btn dev-btn-gold" style="padding:3px 8px;font-size:10px;margin-left:4px;" onclick="devToggleDdPw(${i},'${(s.password||'').replace(/'/g,"\\'")}')">Show</button>
+            </td>
+            <td style="color:#c9a84c;">${salesMap[s.name]||0}</td>
+            <td style="color:#c9a84c;font-weight:700;">${devFmtKES(revMap[s.name]||0)}</td>
+        </tr>`).join('');
+
+    // Sales
+    document.getElementById('dd-sales-body').innerHTML = d.sales.length === 0
+        ? '<tr><td colspan="7" style="color:#444;text-align:center;padding:20px;">No sales recorded.</td></tr>'
+        : [...d.sales].reverse().map(s => `<tr>
+            <td style="white-space:nowrap;font-size:12px;color:#888;">${new Date(s.date).toLocaleDateString('en-KE')} ${new Date(s.date).toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})}</td>
+            <td style="font-weight:600;color:#ccc;">${s.staffMember}</td>
+            <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#888;font-size:12px;">${s.items}</td>
+            <td style="color:#888;">${devFmtKES(s.subtotal)}</td>
+            <td style="color:#dc3545;">${s.discount>0?'−'+devFmtKES(s.discount):'—'}</td>
+            <td style="color:#c9a84c;font-weight:700;">${devFmtKES(s.total)}</td>
+            <td><span style="font-size:11px;background:rgba(201,168,76,0.12);color:#c9a84c;padding:2px 8px;border-radius:10px;">${s.paymentMethod||'cash'}</span></td>
+        </tr>`).join('');
+
+    // Expenses
+    document.getElementById('dd-expenses-body').innerHTML = d.expenses.length === 0
+        ? '<tr><td colspan="5" style="color:#444;text-align:center;padding:20px;">No expenses recorded.</td></tr>'
+        : [...d.expenses].reverse().map(e => `<tr>
+            <td style="white-space:nowrap;font-size:12px;color:#888;">${new Date(e.date).toLocaleDateString('en-KE')}</td>
+            <td><span style="font-size:11px;background:rgba(255,193,7,0.15);color:#ffc107;padding:2px 8px;border-radius:10px;">${e.category}</span></td>
+            <td style="color:#ccc;font-weight:600;">${e.byStaff||'General'}</td>
+            <td style="color:#888;font-size:12px;">${e.description||'—'}</td>
+            <td style="color:#dc3545;font-weight:700;">${devFmtKES(e.amount)}</td>
+        </tr>`).join('');
+
+    // Services
+    document.getElementById('dd-services-body').innerHTML = d.services.length === 0
+        ? '<tr><td colspan="4" style="color:#444;text-align:center;padding:20px;">No services configured.</td></tr>'
+        : d.services.map(s => `<tr>
+            <td style="font-weight:600;color:#ccc;">${s.name}</td>
+            <td style="color:#888;font-size:12px;">${s.category}</td>
+            <td style="color:#c9a84c;font-weight:700;">KES ${Number(s.price).toLocaleString()}</td>
+            <td><span style="font-size:11px;padding:2px 8px;border-radius:10px;background:${s.status==='active'?'rgba(40,167,69,0.15)':'rgba(220,53,69,0.12)'};color:${s.status==='active'?'#28a745':'#dc3545'};">${s.status}</span></td>
+        </tr>`).join('');
+}
+
+function devToggleDdPw(i, pw) {
+    const el  = document.getElementById('ddpw-' + i);
+    const btn = el ? el.nextElementSibling : null;
+    if (!el) return;
+    if (el.textContent === '••••••••') { el.textContent = pw||'(not set)'; el.style.color='#c9a84c'; if(btn) btn.textContent='Hide'; }
+    else { el.textContent='••••••••'; el.style.color='#555'; if(btn) btn.textContent='Show'; }
+}
+
+// ── Actions ────────────────────────────────────────────────
+function devToggleShop(shopId, suspend) {
+    if (!confirm((suspend?'Suspend':'Activate') + ' this shop and all its users?')) return;
     const users = getAllUsers();
     users.forEach(u => { if (u.shopId === shopId) u.suspended = suspend; });
     saveAllUsers(users);
-    devRenderShops();
-    devRenderUsers();
-    alert((suspend ? '🔴 Shop suspended.' : '🟢 Shop activated.') + '\nUsers will see an access denied message on next login.');
+    devSwitchTab('overview');
+    showToast ? showToast((suspend?'Shop suspended.':'Shop activated.'), suspend?'error':'success') : alert(suspend?'Suspended.':'Activated.');
 }
 
-// ── Toggle individual user ─────────────────────────────────
 function devToggleUser(userId, suspend) {
     const users = getAllUsers();
     const idx   = users.findIndex(u => u.id === userId);
@@ -3225,69 +3514,51 @@ function devToggleUser(userId, suspend) {
     users[idx].suspended = suspend;
     saveAllUsers(users);
     devRenderUsers();
-    devRenderShops();
 }
 
-// ── Reset owner password ───────────────────────────────────
 function devResetOwnerPassword(shopId) {
-    const newPass = prompt('Enter new password for the shop owner (min 6 chars):');
-    if (!newPass || newPass.length < 6) { alert('Password too short or cancelled.'); return; }
+    const newPass = prompt('New password for shop owner (min 6 chars):');
+    if (!newPass || newPass.length < 6) { alert('Too short or cancelled.'); return; }
     const users = getAllUsers();
     const idx   = users.findIndex(u => u.shopId === shopId && ['owner','manager'].includes(u.role));
     if (idx === -1) { alert('Owner not found.'); return; }
     users[idx].password = newPass;
     saveAllUsers(users);
-    // Also update shop staff list
     try {
-        const shopStaff = JSON.parse(localStorage.getItem(shopId + '_staff') || '[]');
-        const sIdx = shopStaff.findIndex(s => s.id === users[idx].id);
-        if (sIdx !== -1) { shopStaff[sIdx].password = newPass; localStorage.setItem(shopId + '_staff', JSON.stringify(shopStaff)); }
+        const ss = JSON.parse(localStorage.getItem(shopId+'_staff')||'[]');
+        const si = ss.findIndex(s => s.id === users[idx].id);
+        if (si !== -1) { ss[si].password = newPass; localStorage.setItem(shopId+'_staff', JSON.stringify(ss)); }
     } catch(e) {}
     alert('✅ Password reset for ' + users[idx].name);
+    devRenderShops();
 }
 
-// ── Reset any user's password ──────────────────────────────
 function devResetUserPassword(userId) {
-    const newPass = prompt('Enter new password (min 6 chars):');
-    if (!newPass || newPass.length < 6) { alert('Password too short or cancelled.'); return; }
+    const newPass = prompt('New password (min 6 chars):');
+    if (!newPass || newPass.length < 6) { alert('Too short or cancelled.'); return; }
     const users = getAllUsers();
     const idx   = users.findIndex(u => u.id === userId);
     if (idx === -1) { alert('User not found.'); return; }
     const shopId = users[idx].shopId;
     users[idx].password = newPass;
     saveAllUsers(users);
-    // Mirror to shop staff list
     try {
-        const shopStaff = JSON.parse(localStorage.getItem(shopId + '_staff') || '[]');
-        const sIdx = shopStaff.findIndex(s => s.id === userId);
-        if (sIdx !== -1) { shopStaff[sIdx].password = newPass; localStorage.setItem(shopId + '_staff', JSON.stringify(shopStaff)); }
+        const ss = JSON.parse(localStorage.getItem(shopId+'_staff')||'[]');
+        const si = ss.findIndex(s => s.id === userId);
+        if (si !== -1) { ss[si].password = newPass; localStorage.setItem(shopId+'_staff', JSON.stringify(ss)); }
     } catch(e) {}
     devRenderUsers();
     alert('✅ Password reset for ' + users[idx].name);
 }
 
-// ── Delete a shop entirely ─────────────────────────────────
 function devDeleteShop(shopId, shopName) {
-    if (!confirm('⚠️ PERMANENTLY DELETE shop "' + shopName + '" and ALL its data?\n\nThis cannot be undone.')) return;
-    if (!confirm('Are you absolutely sure? All sales, expenses, staff and services will be gone.')) return;
-
-    // Remove all shop data from localStorage
-    ['sales','expenses','services','staff'].forEach(key => {
-        localStorage.removeItem(shopId + '_' + key);
-    });
-
-    // Remove all users belonging to this shop from global list
-    const users    = getAllUsers();
-    const remaining = users.filter(u => u.shopId !== shopId);
-    saveAllUsers(remaining);
-
-    devRenderShops();
-    devRenderUsers();
-    devRenderRevenue();
-    alert('🗑️ Shop "' + shopName + '" and all its data have been deleted.');
+    if (!confirm('⚠️ PERMANENTLY DELETE "' + shopName + '" and ALL its data?\n\nThis cannot be undone.')) return;
+    if (!confirm('Final confirmation — delete everything?')) return;
+    ['sales','expenses','services','staff'].forEach(k => localStorage.removeItem(shopId+'_'+k));
+    saveAllUsers(getAllUsers().filter(u => u.shopId !== shopId));
+    devSwitchTab('overview');
+    alert('🗑️ Shop "' + shopName + '" deleted.');
 }
-
-
 
 </script>
 
@@ -3331,109 +3602,180 @@ function devDeleteShop(shopId, shopName) {
         </div>
     </div>
 
+    <!-- Navigation Tabs -->
+    <div style="background:#111118; border-bottom:1px solid rgba(255,255,255,0.06); padding:0 24px; display:flex; gap:0; overflow-x:auto;">
+        <button class="dev-tab active" id="devTab-overview"  onclick="devSwitchTab('overview')">📊 Overview</button>
+        <button class="dev-tab" id="devTab-shops"    onclick="devSwitchTab('shops')">🏪 Shops</button>
+        <button class="dev-tab" id="devTab-users"    onclick="devSwitchTab('users')">👥 All Users</button>
+        <button class="dev-tab" id="devTab-drilldown" onclick="devSwitchTab('drilldown')">🔍 Shop Detail</button>
+    </div>
+
     <!-- Content -->
     <div class="dev-content">
 
-        <!-- KPI Row -->
-        <div class="dev-section-title">Platform Overview</div>
-        <div class="dev-stats-grid">
-            <div class="dev-stat-card">
-                <div class="dev-stat-label">Total Shops</div>
-                <div class="dev-stat-value" id="dev-total-shops">—</div>
-                <div class="dev-stat-sub">registered owners</div>
+        <!-- ══ TAB: OVERVIEW ══ -->
+        <div class="dev-tab-pane active" id="devPane-overview">
+            <div class="dev-section-title">Platform Overview</div>
+            <div class="dev-stats-grid">
+                <div class="dev-stat-card">
+                    <div class="dev-stat-label">Total Shops</div>
+                    <div class="dev-stat-value" id="dev-total-shops">—</div>
+                    <div class="dev-stat-sub">registered owners</div>
+                </div>
+                <div class="dev-stat-card green">
+                    <div class="dev-stat-label">Active Shops</div>
+                    <div class="dev-stat-value" id="dev-active-shops">—</div>
+                    <div class="dev-stat-sub">operational</div>
+                </div>
+                <div class="dev-stat-card red">
+                    <div class="dev-stat-label">Suspended</div>
+                    <div class="dev-stat-value" id="dev-suspended-shops">—</div>
+                    <div class="dev-stat-sub">accounts</div>
+                </div>
+                <div class="dev-stat-card blue">
+                    <div class="dev-stat-label">Total Users</div>
+                    <div class="dev-stat-value" id="dev-total-users">—</div>
+                    <div class="dev-stat-sub">across all shops</div>
+                </div>
+                <div class="dev-stat-card">
+                    <div class="dev-stat-label">Platform Revenue</div>
+                    <div class="dev-stat-value" id="dev-platform-rev">—</div>
+                    <div class="dev-stat-sub">all time</div>
+                </div>
+                <div class="dev-stat-card green">
+                    <div class="dev-stat-label">Total Transactions</div>
+                    <div class="dev-stat-value" id="dev-platform-txns">—</div>
+                    <div class="dev-stat-sub">all shops</div>
+                </div>
+                <div class="dev-stat-card red">
+                    <div class="dev-stat-label">Total Expenses</div>
+                    <div class="dev-stat-value" id="dev-platform-exp">—</div>
+                    <div class="dev-stat-sub">all shops</div>
+                </div>
+                <div class="dev-stat-card" style="border-left-color:#28a745;">
+                    <div class="dev-stat-label">Net Profit</div>
+                    <div class="dev-stat-value" id="dev-platform-profit">—</div>
+                    <div class="dev-stat-sub">all shops</div>
+                </div>
             </div>
-            <div class="dev-stat-card green">
-                <div class="dev-stat-label">Active Shops</div>
-                <div class="dev-stat-value" id="dev-active-shops">—</div>
-                <div class="dev-stat-sub">operational</div>
-            </div>
-            <div class="dev-stat-card red">
-                <div class="dev-stat-label">Suspended</div>
-                <div class="dev-stat-value" id="dev-suspended-shops">—</div>
-                <div class="dev-stat-sub">accounts</div>
-            </div>
-            <div class="dev-stat-card blue">
-                <div class="dev-stat-label">Total Users</div>
-                <div class="dev-stat-value" id="dev-total-users">—</div>
-                <div class="dev-stat-sub">across all shops</div>
+
+            <div class="dev-section-title">Revenue per Shop</div>
+            <div class="dev-card">
+                <div style="overflow-x:auto;">
+                    <table class="dev-table">
+                        <thead>
+                            <tr><th>Shop / Owner</th><th>Staff</th><th>Sales</th><th>Revenue</th><th>Expenses</th><th>Net Profit</th><th>View</th></tr>
+                        </thead>
+                        <tbody id="devRevenueBody">
+                            <tr><td colspan="7" style="text-align:center;color:#444;padding:20px;">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- Shops Table -->
-        <div class="dev-section-title">Registered Shops</div>
-        <div class="dev-card">
-            <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
-                <input class="dev-input" id="devShopSearch" placeholder="Search by name or email…" style="max-width:260px;" oninput="devRenderShops()">
-                <button class="dev-btn dev-btn-gold" onclick="devRenderShops()">Refresh</button>
-            </div>
-            <div style="overflow-x:auto;">
-                <table class="dev-table" id="devShopsTable">
-                    <thead>
-                        <tr>
-                            <th>Owner</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Shop ID</th>
-                            <th>Joined</th>
-                            <th>Status</th>
-                            <th>Staff</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="devShopsBody">
-                        <tr><td colspan="8" style="text-align:center;color:#444;padding:30px;">Loading…</td></tr>
-                    </tbody>
-                </table>
+        <!-- ══ TAB: SHOPS ══ -->
+        <div class="dev-tab-pane" id="devPane-shops" style="display:none;">
+            <div class="dev-section-title">Registered Shops</div>
+            <div class="dev-card">
+                <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+                    <input class="dev-input" id="devShopSearch" placeholder="Search by name or email…" style="max-width:260px;" oninput="devRenderShops()">
+                    <button class="dev-btn dev-btn-gold" onclick="devRenderShops()">Refresh</button>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="dev-table">
+                        <thead>
+                            <tr><th>Owner</th><th>Email</th><th>Phone</th><th>Joined</th><th>Status</th><th>Staff</th><th>Revenue</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="devShopsBody">
+                            <tr><td colspan="8" style="text-align:center;color:#444;padding:30px;">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- Platform Revenue -->
-        <div class="dev-section-title">Platform Revenue (All Shops)</div>
-        <div class="dev-stats-grid">
-            <div class="dev-stat-card">
-                <div class="dev-stat-label">Total Revenue</div>
-                <div class="dev-stat-value" id="dev-platform-rev">—</div>
-                <div class="dev-stat-sub">all time, all shops</div>
-            </div>
-            <div class="dev-stat-card green">
-                <div class="dev-stat-label">Total Transactions</div>
-                <div class="dev-stat-value" id="dev-platform-txns">—</div>
-                <div class="dev-stat-sub">across all shops</div>
-            </div>
-            <div class="dev-stat-card blue">
-                <div class="dev-stat-label">Total Expenses</div>
-                <div class="dev-stat-value" id="dev-platform-exp">—</div>
-                <div class="dev-stat-sub">all time, all shops</div>
+        <!-- ══ TAB: USERS ══ -->
+        <div class="dev-tab-pane" id="devPane-users" style="display:none;">
+            <div class="dev-section-title">All Users — Global</div>
+            <div class="dev-card">
+                <div style="overflow-x:auto;">
+                    <table class="dev-table">
+                        <thead>
+                            <tr><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Shop</th><th>Status</th><th>Password</th><th>Joined</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="devUsersBody">
+                            <tr><td colspan="9" style="text-align:center;color:#444;padding:20px;">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- Per-shop revenue breakdown -->
-        <div class="dev-card">
-            <div class="dev-section-title" style="margin-top:0;">Revenue per Shop</div>
-            <div style="overflow-x:auto;">
-                <table class="dev-table">
-                    <thead>
-                        <tr><th>Shop / Owner</th><th>Sales</th><th>Revenue</th><th>Expenses</th><th>Net Profit</th></tr>
-                    </thead>
-                    <tbody id="devRevenueBody">
-                        <tr><td colspan="5" style="text-align:center;color:#444;padding:20px;">Loading…</td></tr>
-                    </tbody>
-                </table>
+        <!-- ══ TAB: SHOP DRILLDOWN ══ -->
+        <div class="dev-tab-pane" id="devPane-drilldown" style="display:none;">
+            <div class="dev-section-title">Shop Detail View</div>
+            <div class="dev-card" style="margin-bottom:16px;">
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                    <select class="dev-input" id="devShopPicker" onchange="devLoadShopDetail(this.value)" style="max-width:300px;">
+                        <option value="">— Select a shop —</option>
+                    </select>
+                    <span id="devDrillShopName" style="color:#c9a84c; font-weight:700; font-size:14px;"></span>
+                </div>
             </div>
-        </div>
 
-        <!-- All Users -->
-        <div class="dev-section-title">All Users (Global)</div>
-        <div class="dev-card">
-            <div style="overflow-x:auto;">
-                <table class="dev-table">
-                    <thead>
-                        <tr><th>Name</th><th>Email</th><th>Role</th><th>Shop ID</th><th>Status</th><th>Joined</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody id="devUsersBody">
-                        <tr><td colspan="7" style="text-align:center;color:#444;padding:20px;">Loading…</td></tr>
-                    </tbody>
-                </table>
+            <div id="devDrillContent" style="display:none;">
+                <!-- Shop KPIs -->
+                <div class="dev-stats-grid">
+                    <div class="dev-stat-card"><div class="dev-stat-label">Revenue</div><div class="dev-stat-value" id="dd-rev">—</div></div>
+                    <div class="dev-stat-card green"><div class="dev-stat-label">Transactions</div><div class="dev-stat-value" id="dd-txns">—</div></div>
+                    <div class="dev-stat-card red"><div class="dev-stat-label">Expenses</div><div class="dev-stat-value" id="dd-exp">—</div></div>
+                    <div class="dev-stat-card" style="border-left-color:#28a745;"><div class="dev-stat-label">Net Profit</div><div class="dev-stat-value" id="dd-profit">—</div></div>
+                </div>
+
+                <!-- Staff -->
+                <div class="dev-section-title">Staff Members</div>
+                <div class="dev-card">
+                    <div style="overflow-x:auto;">
+                        <table class="dev-table">
+                            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Status</th><th>Password</th><th>Sales</th><th>Revenue</th></tr></thead>
+                            <tbody id="dd-staff-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sales -->
+                <div class="dev-section-title">All Sales</div>
+                <div class="dev-card">
+                    <div style="overflow-x:auto;">
+                        <table class="dev-table">
+                            <thead><tr><th>Date</th><th>Staff</th><th>Services</th><th>Subtotal</th><th>Discount</th><th>Total</th><th>Method</th></tr></thead>
+                            <tbody id="dd-sales-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Expenses -->
+                <div class="dev-section-title">All Expenses</div>
+                <div class="dev-card">
+                    <div style="overflow-x:auto;">
+                        <table class="dev-table">
+                            <thead><tr><th>Date</th><th>Category</th><th>Staff / By</th><th>Description</th><th>Amount</th></tr></thead>
+                            <tbody id="dd-expenses-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Services -->
+                <div class="dev-section-title">Services Offered</div>
+                <div class="dev-card">
+                    <div style="overflow-x:auto;">
+                        <table class="dev-table">
+                            <thead><tr><th>Service</th><th>Category</th><th>Price</th><th>Status</th></tr></thead>
+                            <tbody id="dd-services-body"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -3441,6 +3783,7 @@ function devDeleteShop(shopId, shopName) {
     </div>
 </div>
 
-
+</body>
+</html
 </body>
 </html>

@@ -592,6 +592,38 @@
 
         button, a { -webkit-tap-highlight-color: transparent; }
 
+
+        /* ── INVITE CODE ── */
+        .invite-box {
+            background: linear-gradient(135deg, #1a1a2e, #0f3460);
+            border-radius: 14px; padding: 20px; margin-bottom: 16px; color: white;
+        }
+        .invite-box h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #c9a84c; }
+        .invite-box p  { font-size: 12px; color: rgba(255,255,255,0.65); margin-bottom: 14px; line-height: 1.5; }
+        .invite-code-display {
+            background: rgba(201,168,76,0.15); border: 1.5px dashed #c9a84c;
+            border-radius: 10px; padding: 12px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 10px; margin-bottom: 10px;
+        }
+        .invite-code-text {
+            font-family: monospace; font-size: 22px; font-weight: 800;
+            letter-spacing: 5px; color: #c9a84c;
+        }
+        .invite-code-expiry { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 3px; }
+        .invite-link-row {
+            background: rgba(255,255,255,0.07); border-radius: 8px;
+            padding: 8px 12px; font-size: 11px; color: rgba(255,255,255,0.55);
+            word-break: break-all; margin-bottom: 10px;
+        }
+        .invite-badge {
+            background: linear-gradient(135deg,#c9a84c,#a07830);
+            color: #1a1a2e; border-radius: 10px; padding: 10px 14px;
+            margin-bottom: 14px; font-size: 13px; font-weight: 700;
+            display: none; align-items: center; gap: 8px;
+        }
+        .invite-badge.show { display: flex; }
+
         /* ── TOAST NOTIFICATION ───────────────────────────── */
         #toast {
             position: fixed;
@@ -1236,6 +1268,19 @@
                         <option value="owner">Owner / Admin</option>
                     </select>
                 </div>
+                <!-- Invite badge (shown when coming from invite link) -->
+                <div class="invite-badge" id="inviteBadge">
+                    <span>🔗</span>
+                    <div>
+                        <div>Joining via invite code</div>
+                        <div id="inviteBadgeShop" style="font-size:11px;font-weight:400;opacity:0.8;"></div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Invite Code <span style="color:#aaa;font-weight:400;">(required for staff — leave blank if opening your own shop)</span></label>
+                    <input id="signupInviteCode" type="text" placeholder="e.g. ABC123" style="text-transform:uppercase;letter-spacing:2px;" oninput="validateInviteCode(this.value)">
+                </div>
                 <div class="form-field">
                     <label>Password</label>
                     <input id="signupPassword" type="password" autocomplete="new-password" placeholder="Min. 6 characters">
@@ -1558,6 +1603,29 @@
                     </div>
                 </div>
 
+                <!-- Invite Staff -->
+                <div class="invite-box" id="inviteBox" style="display:none;">
+                    <h4>✉️ Staff Invite Code</h4>
+                    <p>Share this code or link with your staff. They enter it on the Sign Up page to join your shop automatically. Code expires in 24 hours.</p>
+                    <div class="invite-code-display">
+                        <div>
+                            <div class="invite-code-text" id="inviteCodeText">——</div>
+                            <div class="invite-code-expiry" id="inviteCodeExpiry"></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" onclick="copyInviteCode()" style="background:rgba(201,168,76,0.15);border-color:#c9a84c;color:#c9a84c;white-space:nowrap;">Copy Code</button>
+                    </div>
+                    <div class="invite-link-row" id="inviteLinkRow"></div>
+                    <button class="btn btn-outline btn-sm" onclick="copyInviteLink()" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);">Copy Full Link</button>
+                </div>
+
+                <div class="card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+                        <div class="card-title" style="margin-bottom:0;">Generate Staff Invite</div>
+                        <button class="btn btn-primary btn-sm" onclick="generateInviteCode()">✉️ Create Invite Link</button>
+                    </div>
+                    <p style="font-size:13px;color:#888;line-height:1.6;">Generate a unique invite code. Your staff member enters this code when signing up on the landing page — they will automatically join your barbershop with no manual linking needed.</p>
+                </div>
+
                 <!-- Add Staff -->
                 <div class="card">
                     <div class="card-title">Add New Staff Member</div>
@@ -1824,21 +1892,47 @@ function showView(view) {
             const users = getUsers();
             if (users.find(u => u.email === email)) { showMsg('signupError', 'An account with this email already exists.'); return; }
 
-            // Owners/managers create a new shop; staff role picked up via invite (or admin adds them)
-            const isShopOwner = ['owner', 'manager'].includes(role);
-            const shopId = isShopOwner ? 'shop_' + Date.now() : null;
+            // Resolve shopId — from invite code if present, or create new shop for owners/managers
+            const inviteCodeRaw = (document.getElementById('signupInviteCode').value || '').trim().toUpperCase();
+            const inviteCodes   = getInviteCodes();
+            const invite        = inviteCodeRaw ? inviteCodes[inviteCodeRaw] : null;
+            const isValidInvite = invite && Date.now() < invite.expiresAt;
+            const isShopOwner   = ['owner', 'manager'].includes(role);
+
+            // Staff MUST have a valid invite code to join a shop
+            if (role === 'staff' && !isValidInvite) {
+                showMsg('signupError', 'Staff accounts require a valid invite code from your manager.');
+                return;
+            }
+
+            let shopId;
+            if (isValidInvite) {
+                shopId = invite.shopId;           // join the manager's shop
+                // Invalidate code after use so it can't be reused
+                delete inviteCodes[inviteCodeRaw];
+                localStorage.setItem('barberpro_invites', JSON.stringify(inviteCodes));
+            } else if (isShopOwner) {
+                shopId = 'shop_' + Date.now();    // create brand-new shop
+            } else {
+                showMsg('signupError', 'Please enter a valid invite code to join a shop as staff.');
+                return;
+            }
+
             const newUser = { id: Date.now(), name, email, phone, role, password, status: 'active', shopId, dateCreated: new Date().toLocaleString('en-KE') };
             users.push(newUser);
             saveUsers(users);
 
-            // Paste your Google Apps Script deployment URL here to sync signups to Sheets
+            // Sync to Google Sheets
             const SIGNUP_API = 'https://script.google.com/macros/s/AKfycby45zojFT-mvx_4XIcF99M4oQ8LKHJVQWSh9onfdkK7iEB8MRpTLhXkJBdkBEeZF5xKiQ/exec';
             if (SIGNUP_API) {
-                fetch(SIGNUP_API, { method: 'POST', body: JSON.stringify({ action: 'addStaff', payload: newUser }) })
+                fetch(SIGNUP_API, { method: 'POST', body: JSON.stringify({ shopId, action: 'addStaff', payload: newUser }) })
                     .catch(err => console.warn('Sheet sync failed:', err));
             }
 
             showMsg('signupSuccess', '✅ Account created! You can now log in.');
+            // Re-enable role selector
+            const roleEl = document.getElementById('signupRole');
+            if (roleEl) roleEl.disabled = false;
             setTimeout(() => switchTab('login'), 1500);
         }
 
@@ -1942,6 +2036,48 @@ function showView(view) {
             if (toastTimer) clearTimeout(toastTimer);
             toastTimer = setTimeout(() => { toast.className = type; }, 3500);
         }
+
+
+        // ── Invite Code — Landing Page ──────────────────────────
+        function getInviteCodes() {
+            try { return JSON.parse(localStorage.getItem('barberpro_invites') || '{}'); } catch(e) { return {}; }
+        }
+
+        function validateInviteCode(rawCode) {
+            const code  = rawCode.trim().toUpperCase();
+            const codes = getInviteCodes();
+            const inv   = codes[code];
+            const badge = document.getElementById('inviteBadge');
+            const shopEl = document.getElementById('inviteBadgeShop');
+
+            if (inv && Date.now() < inv.expiresAt) {
+                badge.classList.add('show');
+                shopEl.textContent = 'Shop: ' + (inv.shopName || inv.shopId);
+                // Lock role to staff
+                const roleEl = document.getElementById('signupRole');
+                if (roleEl) { roleEl.value = 'staff'; roleEl.disabled = true; }
+            } else {
+                badge.classList.remove('show');
+                const roleEl = document.getElementById('signupRole');
+                if (roleEl) roleEl.disabled = false;
+            }
+        }
+
+        // Check URL for ?invite=CODE on page load
+        function checkInviteFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const code   = params.get('invite');
+            if (!code) return;
+            const inviteEl = document.getElementById('signupInviteCode');
+            if (inviteEl) {
+                inviteEl.value = code.toUpperCase();
+                validateInviteCode(code);
+                // Auto-open signup tab
+                goToLogin();
+                setTimeout(() => switchTab('signup'), 200);
+            }
+        }
+        checkInviteFromURL();
 
         function scrollToFeatures() {
             document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
@@ -2638,6 +2774,58 @@ function filterSales(period) {
             <td style="font-weight:700;color:#c9a84c;">${fmtKES(s.total)}</td>
             <td><span class="badge badge-purple">${s.paymentMethod}</span></td>
         </tr>`).join('');
+}
+
+
+// ══════════════════════════════════════════
+// INVITE CODE SYSTEM
+// ══════════════════════════════════════════
+function generateInviteCode() {
+    if (!currentUser || !['manager','owner'].includes(currentUser.role)) {
+        showToast('Only managers can generate invite codes.', 'error'); return;
+    }
+
+    // Generate a 6-character alphanumeric code (no O/0/I/1 to avoid confusion)
+    const chars   = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+
+    const expiresAt  = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
+    const inviteCodes = JSON.parse(localStorage.getItem('barberpro_invites') || '{}');
+    inviteCodes[code] = {
+        shopId:    currentShopId,
+        shopName:  currentUser.name + "'s Shop",
+        createdBy: currentUser.name,
+        expiresAt
+    };
+    localStorage.setItem('barberpro_invites', JSON.stringify(inviteCodes));
+
+    // Display the code
+    document.getElementById('inviteCodeText').textContent    = code;
+    document.getElementById('inviteCodeExpiry').textContent  = 'Expires: ' + new Date(expiresAt).toLocaleString('en-KE');
+
+    // Build invite link (works when file is served from a URL)
+    const baseUrl = window.location.href.split('?')[0];
+    const link    = baseUrl + '?invite=' + code;
+    document.getElementById('inviteLinkRow').textContent = link;
+
+    document.getElementById('inviteBox').style.display = 'block';
+    document.getElementById('inviteBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    showToast('Invite code ' + code + ' generated — valid for 24 hours', 'success');
+}
+
+function copyInviteCode() {
+    const code = document.getElementById('inviteCodeText').textContent;
+    navigator.clipboard.writeText(code)
+        .then(() => showToast('Code ' + code + ' copied!', 'success'))
+        .catch(() => showToast('Copy manually: ' + code, 'info'));
+}
+
+function copyInviteLink() {
+    const link = document.getElementById('inviteLinkRow').textContent;
+    navigator.clipboard.writeText(link)
+        .then(() => showToast('Invite link copied!', 'success'))
+        .catch(() => showToast('Copy manually from the link above.', 'info'));
 }
 
 // ══════════════════════════════════════════

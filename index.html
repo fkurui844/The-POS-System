@@ -761,6 +761,8 @@
             border-left-color: #c9a84c;
         }
         .dd-item.locked { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+        .active-filter { background: linear-gradient(135deg,#c9a84c,#a07830) !important; color: #1a1a2e !important; border-color: #c9a84c !important; }
         .dd-item .dd-icon {
             width: 32px; height: 28px; border-radius: 8px;
             background: #f5f0e8; display: flex; align-items: center;
@@ -1319,6 +1321,8 @@
 
             <!-- ══ DASHBOARD ══ -->
             <div class="section active" id="sec-dashboard">
+
+                <!-- KPI Cards -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">Today's Revenue</div>
@@ -1331,30 +1335,56 @@
                         <div class="stat-sub" id="d-week-txns">0 sales</div>
                     </div>
                     <div class="stat-card yellow">
-                        <div class="stat-label">Total Expenses</div>
+                        <div class="stat-label">Monthly Expenses</div>
                         <div class="stat-value" id="d-expenses">KES 0</div>
                         <div class="stat-sub">this month</div>
                     </div>
-                    <div class="stat-card" style="border-left-color:#8b6914">
+                    <div class="stat-card" style="border-left-color:#28a745">
                         <div class="stat-label">Net Profit</div>
                         <div class="stat-value" id="d-profit">KES 0</div>
                         <div class="stat-sub">this month</div>
                     </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-title">🏆 Top Barbers Today</div>
-                    <div id="d-top-barbers">
-                        <div class="empty-state"><div class="icon">✂️</div><p>No sales recorded today yet.</p></div>
+                    <div class="stat-card" style="border-left-color:#8b6914">
+                        <div class="stat-label">This Month Revenue</div>
+                        <div class="stat-value" id="d-month-rev">KES 0</div>
+                        <div class="stat-sub" id="d-month-txns">0 transactions</div>
+                    </div>
+                    <div class="stat-card" style="border-left-color:#0f3460">
+                        <div class="stat-label">Active Staff</div>
+                        <div class="stat-value" id="d-active-staff">0</div>
+                        <div class="stat-sub">team members</div>
                     </div>
                 </div>
 
+                <!-- Profit vs Expenses Bar -->
                 <div class="card">
-                    <div class="card-title">🕒 Recent Sales</div>
+                    <div class="card-title">Business Health — This Month</div>
+                    <div id="d-health-bar" style="margin-bottom:8px;"></div>
+                </div>
+
+                <!-- Staff Performance -->
+                <div class="card">
+                    <div class="card-title">Staff Performance — This Month</div>
+                    <div id="d-staff-perf">
+                        <div class="empty-state"><div class="icon" style="font-size:32px;">✂️</div><p>No sales recorded this month yet.</p></div>
+                    </div>
+                </div>
+
+                <!-- Top Services -->
+                <div class="card">
+                    <div class="card-title">Top Services — This Month</div>
+                    <div id="d-top-services">
+                        <div class="empty-state"><p>No data yet.</p></div>
+                    </div>
+                </div>
+
+                <!-- Recent Sales -->
+                <div class="card">
+                    <div class="card-title">Recent Transactions</div>
                     <div class="table-wrap">
                         <table>
                             <thead>
-                                <tr><th>Time</th><th>Staff</th><th>Services</th><th>Total</th><th>Method</th></tr>
+                                <tr><th>Date/Time</th><th>Staff</th><th>Services</th><th>Total</th><th>Method</th></tr>
                             </thead>
                             <tbody id="d-recent-sales">
                                 <tr><td colspan="5"><div class="empty-state"><p>No sales yet.</p></div></td></tr>
@@ -1362,6 +1392,7 @@
                         </table>
                     </div>
                 </div>
+
             </div>
 
             <!-- ══ NEW SALE ══ -->
@@ -1413,8 +1444,24 @@
 
             <!-- ══ EXPENSES ══ -->
             <div class="section" id="sec-expenses">
+
+                <!-- Summary KPI -->
+                <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);">
+                    <div class="stat-card yellow">
+                        <div class="stat-label">Total This Month</div>
+                        <div class="stat-value" id="exp-month-total">KES 0</div>
+                        <div class="stat-sub" id="exp-month-count">0 entries</div>
+                    </div>
+                    <div class="stat-card red">
+                        <div class="stat-label">All Time Total</div>
+                        <div class="stat-value" id="exp-all-total">KES 0</div>
+                        <div class="stat-sub">all expenses</div>
+                    </div>
+                </div>
+
+                <!-- Record Expense -->
                 <div class="card">
-                    <div class="card-title">➕ Record Expense</div>
+                    <div class="card-title">Record New Expense</div>
                     <div class="form-grid-2">
                         <div class="form-row">
                             <label>Category</label>
@@ -1424,6 +1471,7 @@
                                 <option value="utilities">Utilities</option>
                                 <option value="salaries">Salaries</option>
                                 <option value="equipment">Equipment</option>
+                                <option value="staff-purchase">Staff Purchase</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
@@ -1432,27 +1480,61 @@
                             <input type="number" id="expAmount" placeholder="0" min="0">
                         </div>
                     </div>
-                    <div class="form-row">
-                        <label>Description</label>
-                        <input type="text" id="expDesc" placeholder="e.g. Clippers oil, Rent for June…">
+                    <div class="form-grid-2">
+                        <div class="form-row">
+                            <label>Recorded By / Staff</label>
+                            <select id="expStaff">
+                                <option value="">— General / Shop —</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label>Date</label>
+                            <input type="date" id="expDate">
+                        </div>
                     </div>
                     <div class="form-row">
-                        <label>Date</label>
-                        <input type="date" id="expDate">
+                        <label>Description</label>
+                        <input type="text" id="expDesc" placeholder="e.g. Clippers oil, Rent for June, Staff supplies…">
                     </div>
                     <button class="btn btn-primary" onclick="addExpense()">Save Expense</button>
                 </div>
 
+                <!-- Filter -->
+                <div class="card" style="padding:14px 20px;">
+                    <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                        <span style="font-size:12px; font-weight:700; color:#888; margin-right:4px;">FILTER:</span>
+                        <button class="btn btn-outline btn-sm exp-filter-btn active-filter" onclick="filterExpenses('all',this)">All</button>
+                        <button class="btn btn-outline btn-sm exp-filter-btn" onclick="filterExpenses('month',this)">This Month</button>
+                        <button class="btn btn-outline btn-sm exp-filter-btn" onclick="filterExpenses('week',this)">This Week</button>
+                        <select id="expFilterStaff" onchange="filterExpenses('staff', null)" style="padding:6px 10px; border:1.5px solid #c9a84c; border-radius:8px; font-size:12px; font-weight:600; background:white; color:#8b6914; cursor:pointer;">
+                            <option value="">By Staff: All</option>
+                        </select>
+                        <select id="expFilterCat" onchange="filterExpenses('cat', null)" style="padding:6px 10px; border:1.5px solid #c9a84c; border-radius:8px; font-size:12px; font-weight:600; background:white; color:#8b6914; cursor:pointer;">
+                            <option value="">By Category: All</option>
+                            <option value="supplies">Supplies</option>
+                            <option value="rent">Rent</option>
+                            <option value="utilities">Utilities</option>
+                            <option value="salaries">Salaries</option>
+                            <option value="equipment">Equipment</option>
+                            <option value="staff-purchase">Staff Purchase</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Category Summary Badges -->
+                <div id="expSummaryBadges" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;"></div>
+
+                <!-- Expenses Table -->
                 <div class="card">
-                    <div class="card-title">📋 Expense History</div>
-                    <div id="expSummaryBadges" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;"></div>
+                    <div class="card-title">Expense History</div>
                     <div class="table-wrap">
                         <table>
                             <thead>
-                                <tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th></th></tr>
+                                <tr><th>Date</th><th>Category</th><th>Staff / By</th><th>Description</th><th>Amount</th><th></th></tr>
                             </thead>
                             <tbody id="expensesList">
-                                <tr><td colspan="5"><div class="empty-state"><p>No expenses recorded.</p></div></td></tr>
+                                <tr><td colspan="6"><div class="empty-state"><p>No expenses recorded.</p></div></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1461,8 +1543,24 @@
 
             <!-- ══ STAFF ══ -->
             <div class="section" id="sec-staff">
+
+                <!-- Stats -->
+                <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);">
+                    <div class="stat-card green">
+                        <div class="stat-label">Active Staff</div>
+                        <div class="stat-value" id="staff-active-count">0</div>
+                        <div class="stat-sub">team members</div>
+                    </div>
+                    <div class="stat-card red">
+                        <div class="stat-label">Dormant Accounts</div>
+                        <div class="stat-value" id="staff-dormant-count">0</div>
+                        <div class="stat-sub">deactivated</div>
+                    </div>
+                </div>
+
+                <!-- Add Staff -->
                 <div class="card">
-                    <div class="card-title">➕ Add Staff Member</div>
+                    <div class="card-title">Add New Staff Member</div>
                     <div class="form-grid-2">
                         <div class="form-row">
                             <label>Full Name</label>
@@ -1484,23 +1582,24 @@
                                 <option value="owner">Owner / Admin</option>
                             </select>
                         </div>
+                        <div class="form-row">
+                            <label>Password</label>
+                            <input type="text" id="staffPassword" placeholder="Min. 6 characters">
+                        </div>
                     </div>
-                    <button class="btn btn-primary" onclick="addStaffMember()">Add Staff</button>
+                    <button class="btn btn-primary" onclick="addStaffMember()">Add Staff Member</button>
                 </div>
 
-                <div class="card">
-                    <div class="card-title">👥 All Staff</div>
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr><th>Name</th><th>Phone</th><th>Role</th><th>Sales</th><th>Status</th><th></th></tr>
-                            </thead>
-                            <tbody id="staffList">
-                                <tr><td colspan="6"><div class="empty-state"><p>No staff added yet.</p></div></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <!-- Filter -->
+                <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+                    <button class="btn btn-outline btn-sm staff-filter-btn active-filter" onclick="filterStaff('all',this)">All Staff</button>
+                    <button class="btn btn-outline btn-sm staff-filter-btn" onclick="filterStaff('active',this)">Active Only</button>
+                    <button class="btn btn-outline btn-sm staff-filter-btn" onclick="filterStaff('inactive',this)">Dormant Only</button>
                 </div>
+
+                <!-- Staff List -->
+                <div id="staffListContainer"></div>
+
             </div>
 
             <!-- ══ REPORTS ══ -->
@@ -1976,66 +2075,126 @@ function initServices() {
 function loadDashboard() {
     const sales    = getSales();
     const expenses = getExpenses();
+    const staff    = getStaff();
 
     const todaySales  = sales.filter(s => isToday(s.date));
     const weekSales   = sales.filter(s => isThisWeek(s.date));
-    const monthExp    = expenses.filter(e => isThisMonth(e.date));
     const monthSales  = sales.filter(s => isThisMonth(s.date));
+    const monthExp    = expenses.filter(e => isThisMonth(e.date));
 
-    const todayRev  = todaySales.reduce((a,s)  => a + Number(s.total), 0);
-    const weekRev   = weekSales.reduce((a,s)   => a + Number(s.total), 0);
-    const monthExpT = monthExp.reduce((a,e)    => a + Number(e.amount), 0);
-    const monthRevT = monthSales.reduce((a,s)  => a + Number(s.total), 0);
+    const todayRev  = todaySales.reduce((a,s) => a + Number(s.total), 0);
+    const weekRev   = weekSales.reduce((a,s)  => a + Number(s.total), 0);
+    const monthRev  = monthSales.reduce((a,s) => a + Number(s.total), 0);
+    const monthExpT = monthExp.reduce((a,e)   => a + Number(e.amount), 0);
+    const netProfit = monthRev - monthExpT;
+    const activeStaff = staff.filter(s => s.status === 'active').length;
 
-    document.getElementById('d-revenue').textContent   = fmtKES(todayRev);
-    document.getElementById('d-txns').textContent      = todaySales.length + ' transaction' + (todaySales.length!==1?'s':'');
-    document.getElementById('d-week').textContent      = fmtKES(weekRev);
-    document.getElementById('d-week-txns').textContent = weekSales.length + ' sales';
-    document.getElementById('d-expenses').textContent  = fmtKES(monthExpT);
-    document.getElementById('d-profit').textContent    = fmtKES(monthRevT - monthExpT);
+    // KPI cards
+    document.getElementById('d-revenue').textContent      = fmtKES(todayRev);
+    document.getElementById('d-txns').textContent         = todaySales.length + ' transaction' + (todaySales.length !== 1 ? 's' : '');
+    document.getElementById('d-week').textContent         = fmtKES(weekRev);
+    document.getElementById('d-week-txns').textContent    = weekSales.length + ' sales';
+    document.getElementById('d-expenses').textContent     = fmtKES(monthExpT);
+    document.getElementById('d-profit').textContent       = fmtKES(netProfit);
+    document.getElementById('d-month-rev').textContent    = fmtKES(monthRev);
+    document.getElementById('d-month-txns').textContent   = monthSales.length + ' transactions';
+    document.getElementById('d-active-staff').textContent = activeStaff;
 
-    // Top barbers today
-    const barberMap = {};
-    todaySales.forEach(s => {
-        if (!barberMap[s.staffMember]) barberMap[s.staffMember] = { txns:0, total:0 };
-        barberMap[s.staffMember].txns++;
-        barberMap[s.staffMember].total += Number(s.total);
+    // Business health bar
+    const healthEl = document.getElementById('d-health-bar');
+    const total    = monthRev + monthExpT;
+    const revPct   = total > 0 ? Math.round((monthRev  / total) * 100) : 50;
+    const expPct   = total > 0 ? Math.round((monthExpT / total) * 100) : 50;
+    const profitColor = netProfit >= 0 ? '#28a745' : '#dc3545';
+    healthEl.innerHTML = `
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:#888; margin-bottom:6px;">
+            <span>Revenue <strong style="color:#c9a84c">${fmtKES(monthRev)}</strong></span>
+            <span style="color:${profitColor}; font-weight:700;">Net Profit: ${fmtKES(netProfit)}</span>
+            <span>Expenses <strong style="color:#dc3545">${fmtKES(monthExpT)}</strong></span>
+        </div>
+        <div style="height:14px; border-radius:8px; overflow:hidden; background:#f0f0f0; display:flex;">
+            <div style="width:${revPct}%; background:linear-gradient(90deg,#c9a84c,#a07830); transition:width 0.5s;"></div>
+            <div style="width:${expPct}%; background:linear-gradient(90deg,#dc3545,#b02a2a); transition:width 0.5s;"></div>
+        </div>
+        <div style="display:flex; gap:16px; margin-top:8px; font-size:11px; color:#888;">
+            <span><span style="display:inline-block;width:10px;height:10px;background:#c9a84c;border-radius:2px;margin-right:4px;"></span>Revenue ${revPct}%</span>
+            <span><span style="display:inline-block;width:10px;height:10px;background:#dc3545;border-radius:2px;margin-right:4px;"></span>Expenses ${expPct}%</span>
+        </div>`;
+
+    // Staff performance this month
+    const staffMap = {};
+    monthSales.forEach(s => {
+        if (!staffMap[s.staffMember]) staffMap[s.staffMember] = { txns:0, total:0 };
+        staffMap[s.staffMember].txns++;
+        staffMap[s.staffMember].total += Number(s.total);
     });
-
-    const sorted = Object.entries(barberMap).sort((a,b) => b[1].total - a[1].total);
-    const topEl  = document.getElementById('d-top-barbers');
-
-    if (sorted.length === 0) {
-        topEl.innerHTML = '<div class="empty-state"><div class="icon">✂️</div><p>No sales recorded today yet.</p></div>';
+    const topMonth  = Object.entries(staffMap).sort((a,b) => b[1].total - a[1].total);
+    const maxRevenue = topMonth.length > 0 ? topMonth[0][1].total : 1;
+    const perfEl = document.getElementById('d-staff-perf');
+    if (topMonth.length === 0) {
+        perfEl.innerHTML = '<div class="empty-state"><div class="icon" style="font-size:32px;">✂️</div><p>No sales recorded this month yet.</p></div>';
     } else {
-        topEl.innerHTML = sorted.map(([name, data], i) => `
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f0f0f0;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#c9a84c,#a07830); color:#1a1a2e; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px;">${i+1}</div>
-                    <div>
-                        <div style="font-weight:600; font-size:14px;">${name}</div>
-                        <div style="font-size:11px; color:#888;">${data.txns} sale${data.txns!==1?'s':''}</div>
+        perfEl.innerHTML = topMonth.map(([name, d], i) => {
+            const pct = Math.round((d.total / maxRevenue) * 100);
+            const medals = ['🥇','🥈','🥉'];
+            return `<div style="margin-bottom:14px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:16px;">${medals[i] || '✂️'}</span>
+                        <span style="font-weight:700; font-size:14px;">${name}</span>
+                        <span class="badge badge-purple">${d.txns} sale${d.txns!==1?'s':''}</span>
                     </div>
+                    <span style="font-weight:700; color:#c9a84c;">${fmtKES(d.total)}</span>
                 </div>
-                <div style="font-weight:700; color:#c9a84c;">${fmtKES(data.total)}</div>
-            </div>`).join('');
+                <div style="height:8px; background:#f0ece0; border-radius:4px; overflow:hidden;">
+                    <div style="height:100%; width:${pct}%; background:linear-gradient(90deg,#c9a84c,#a07830); border-radius:4px; transition:width 0.6s;"></div>
+                </div>
+            </div>`;
+        }).join('');
     }
 
-    // Recent sales (last 8)
-    const recent = [...sales].reverse().slice(0, 8);
-    const rsEl   = document.getElementById('d-recent-sales');
-    if (recent.length === 0) {
-        rsEl.innerHTML = '<tr><td colspan="5"><div class="empty-state"><p>No sales yet.</p></div></td></tr>';
+    // Top services this month
+    const serviceMap = {};
+    monthSales.forEach(s => {
+        s.items.split(', ').forEach(item => {
+            const m = item.match(/^(.+) x(\d+)$/);
+            if (m) {
+                const svcName = m[1].trim();
+                serviceMap[svcName] = (serviceMap[svcName] || 0) + parseInt(m[2]);
+            }
+        });
+    });
+    const topSvcs = Object.entries(serviceMap).sort((a,b) => b[1]-a[1]).slice(0,5);
+    const maxSvc  = topSvcs.length > 0 ? topSvcs[0][1] : 1;
+    const svcsEl  = document.getElementById('d-top-services');
+    if (topSvcs.length === 0) {
+        svcsEl.innerHTML = '<div class="empty-state"><p>No data yet.</p></div>';
     } else {
-        rsEl.innerHTML = recent.map(s => `
+        svcsEl.innerHTML = topSvcs.map(([name, count]) => {
+            const pct = Math.round((count / maxSvc) * 100);
+            return `<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <span style="min-width:110px; font-size:13px; font-weight:600;">${name}</span>
+                <div style="flex:1; height:8px; background:#f0ece0; border-radius:4px; overflow:hidden;">
+                    <div style="height:100%; width:${pct}%; background:#c9a84c; border-radius:4px;"></div>
+                </div>
+                <span style="font-size:12px; color:#888; min-width:40px; text-align:right;">${count}x</span>
+            </div>`;
+        }).join('');
+    }
+
+    // Recent transactions (last 10)
+    const recent = [...sales].reverse().slice(0, 10);
+    const rsEl   = document.getElementById('d-recent-sales');
+    rsEl.innerHTML = recent.length === 0
+        ? '<tr><td colspan="5"><div class="empty-state"><p>No sales yet.</p></div></td></tr>'
+        : recent.map(s => `
             <tr>
-                <td>${new Date(s.date).toLocaleTimeString('en-KE', {hour:'2-digit', minute:'2-digit'})}</td>
-                <td>${s.staffMember}</td>
-                <td style="max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.items}</td>
+                <td style="white-space:nowrap;">${new Date(s.date).toLocaleDateString('en-KE')} ${new Date(s.date).toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})}</td>
+                <td style="font-weight:600;">${s.staffMember}</td>
+                <td style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.items}</td>
                 <td style="font-weight:700; color:#c9a84c;">${fmtKES(s.total)}</td>
                 <td><span class="badge badge-purple">${s.paymentMethod}</span></td>
             </tr>`).join('');
-    }
 }
 
 // ══════════════════════════════════════════
@@ -2045,11 +2204,16 @@ let cart = {};
 
 function renderStaffDropdown() {
     const staff = getStaff().filter(s => s.status === 'active');
-    const sel   = document.getElementById('saleStaff');
-    const cur   = sel.value;
-    sel.innerHTML = '<option value="">— Choose barber —</option>' +
-        staff.map(s => `<option value="${s.name}">${s.name} (${s.role})</option>`).join('');
-    if (cur) sel.value = cur;
+    const dropdowns = ['saleStaff', 'expStaff', 'expFilterStaff'];
+    dropdowns.forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        const cur = sel.value;
+        const placeholder = id === 'expStaff' ? '— General / Shop —' : id === 'expFilterStaff' ? 'By Staff: All' : '— Choose barber —';
+        sel.innerHTML = `<option value="">${placeholder}</option>` +
+            staff.map(s => `<option value="${s.name}">${s.name} (${s.role})</option>`).join('');
+        if (cur) sel.value = cur;
+    });
 }
 
 function renderServicesGrid() {
@@ -2070,26 +2234,23 @@ function toggleService(id, name, price) {
 
 function updateCart() {
     const keys = Object.keys(cart);
-    document.getElementById('cartCard').style.display   = keys.length > 0 ? 'block' : 'none';
-    document.getElementById('noCartMsg').style.display  = keys.length > 0 ? 'none'  : 'block';
-
+    document.getElementById('cartCard').style.display  = keys.length > 0 ? 'block' : 'none';
+    document.getElementById('noCartMsg').style.display = keys.length > 0 ? 'none'  : 'block';
     let subtotal = 0;
     document.getElementById('cartItems').innerHTML = keys.map(id => {
         const item = cart[id];
         const lineTotal = item.price * item.qty;
         subtotal += lineTotal;
-        return `
-            <div class="cart-item">
-                <div class="cart-name">${item.name}</div>
-                <div class="cart-qty-ctrl">
-                    <button class="qty-btn" onclick="changeQty(${id}, -1)">−</button>
-                    <span class="qty-num">${item.qty}</span>
-                    <button class="qty-btn" onclick="changeQty(${id}, 1)">+</button>
-                </div>
-                <div class="cart-total">${fmtKES(lineTotal)}</div>
-            </div>`;
+        return `<div class="cart-item">
+            <div class="cart-name">${item.name}</div>
+            <div class="cart-qty-ctrl">
+                <button class="qty-btn" onclick="changeQty(${id},-1)">−</button>
+                <span class="qty-num">${item.qty}</span>
+                <button class="qty-btn" onclick="changeQty(${id},1)">+</button>
+            </div>
+            <div class="cart-total">${fmtKES(lineTotal)}</div>
+        </div>`;
     }).join('');
-
     const discount = Math.max(0, Number(document.getElementById('discountInput').value) || 0);
     const total    = Math.max(0, subtotal - discount);
     document.getElementById('cartSubtotal').textContent = fmtKES(subtotal);
@@ -2104,54 +2265,28 @@ function changeQty(id, delta) {
 
 function processSale() {
     const staffMember = document.getElementById('saleStaff').value;
-    if (!staffMember)         { showToast('Please select a staff member.', 'error'); return; }
+    if (!staffMember)               { showToast('Please select a staff member.', 'error'); return; }
     if (Object.keys(cart).length === 0) { showToast('Cart is empty.', 'error'); return; }
-
     const items    = Object.values(cart);
     const subtotal = items.reduce((a,i) => a + i.price * i.qty, 0);
     const discount = Math.max(0, Number(document.getElementById('discountInput').value) || 0);
     const total    = Math.max(0, subtotal - discount);
     const method   = document.getElementById('paymentMethod').value;
     const now      = new Date().toISOString();
-
-    const sale = {
-        id: Date.now(),
-        date: now,
-        staffMember,
-        items: items.map(i => `${i.name} x${i.qty}`).join(', '),
-        subtotal,
-        discount,
-        total,
-        paymentMethod: method
-    };
-
-    const sales = getSales();
-    sales.push(sale);
-    saveSales(sales);
-
-    // Sync to Google Sheets
-    if (API_URL) {
-        fetch(API_URL, { method:'POST', body: JSON.stringify({ action:'recordSale', payload: sale }) })
-            .catch(err => console.warn('Sync failed:', err));
-    }
-
-    // Show receipt
+    const sale = { id:Date.now(), date:now, staffMember, items:items.map(i=>`${i.name} x${i.qty}`).join(', '), subtotal, discount, total, paymentMethod:method };
+    const sales = getSales(); sales.push(sale); saveSales(sales);
+    if (API_URL) fetch(API_URL,{method:'POST',body:JSON.stringify({action:'recordSale',payload:sale})}).catch(()=>{});
     document.getElementById('receiptDate').textContent = new Date(now).toLocaleString('en-KE');
     document.getElementById('rStaff').textContent      = staffMember;
-    document.getElementById('rMethod').textContent     = method.charAt(0).toUpperCase() + method.slice(1);
-    document.getElementById('rItems').innerHTML        = items.map(i =>
-        `<div class="receipt-row"><span>${i.name} x${i.qty}</span><span>${fmtKES(i.price * i.qty)}</span></div>`).join('');
+    document.getElementById('rMethod').textContent     = method.charAt(0).toUpperCase()+method.slice(1);
+    document.getElementById('rItems').innerHTML        = items.map(i=>`<div class="receipt-row"><span>${i.name} x${i.qty}</span><span>${fmtKES(i.price*i.qty)}</span></div>`).join('');
     document.getElementById('rSubtotal').textContent   = fmtKES(subtotal);
-    document.getElementById('rDiscount').textContent   = discount > 0 ? '−' + fmtKES(discount) : 'None';
+    document.getElementById('rDiscount').textContent   = discount > 0 ? '−'+fmtKES(discount) : 'None';
     document.getElementById('rTotal').textContent      = fmtKES(total);
     document.getElementById('receiptOverlay').classList.add('open');
-
-    // Reset cart
-    cart = {};
-    document.getElementById('discountInput').value = 0;
+    cart = {}; document.getElementById('discountInput').value = 0;
     document.getElementById('saleStaff').value = '';
-    renderServicesGrid();
-    updateCart();
+    renderServicesGrid(); updateCart();
 }
 
 function closeReceipt() {
@@ -2159,59 +2294,43 @@ function closeReceipt() {
     navigate('dashboard');
 }
 
-// ── Add Service Modal ──
-function showAddServiceModal() {
-    document.getElementById('addServiceOverlay').classList.add('open');
-}
-
+function showAddServiceModal() { document.getElementById('addServiceOverlay').classList.add('open'); }
 function closeAddServiceModal() {
     document.getElementById('addServiceOverlay').classList.remove('open');
     document.getElementById('newServiceName').value  = '';
     document.getElementById('newServicePrice').value = '';
 }
-
 function saveNewService() {
     const name     = document.getElementById('newServiceName').value.trim();
     const category = document.getElementById('newServiceCategory').value;
     const price    = Number(document.getElementById('newServicePrice').value);
-
     if (!name || !price) { showToast('Please enter name and price.', 'error'); return; }
-
     const services = getServices();
-    const service  = { id: Date.now(), name, category, price, status:'active' };
-    services.push(service);
-    saveServices(services);
-
-    if (API_URL) {
-        fetch(API_URL, { method:'POST', body: JSON.stringify({ action:'addService', payload: service }) })
-            .catch(() => {});
-    }
-
-    closeAddServiceModal();
-    renderServicesGrid();
-    showToast('Service added!', 'success');
+    const service  = { id:Date.now(), name, category, price, status:'active' };
+    services.push(service); saveServices(services);
+    if (API_URL) fetch(API_URL,{method:'POST',body:JSON.stringify({action:'addService',payload:service})}).catch(()=>{});
+    closeAddServiceModal(); renderServicesGrid(); showToast('Service added!', 'success');
 }
 
 // ══════════════════════════════════════════
 // EXPENSES
 // ══════════════════════════════════════════
+let _expenseFilter = { period: 'all', staff: '', cat: '' };
+
 function addExpense() {
     const category = document.getElementById('expCategory').value;
     const amount   = Number(document.getElementById('expAmount').value);
     const desc     = document.getElementById('expDesc').value.trim();
     const date     = document.getElementById('expDate').value;
-
+    const byStaff  = document.getElementById('expStaff').value;
     if (!amount || !date) { showToast('Please fill in amount and date.', 'error'); return; }
-
-    const expense = { id: Date.now(), category, amount, description: desc || '—', date };
-    const expenses = getExpenses();
-    expenses.push(expense);
-    saveExpenses(expenses);
-
+    const expense = { id:Date.now(), category, amount, description:desc||'—', date, byStaff:byStaff||'General' };
+    const expenses = getExpenses(); expenses.push(expense); saveExpenses(expenses);
     document.getElementById('expAmount').value = '';
     document.getElementById('expDesc').value   = '';
     document.getElementById('expDate').valueAsDate = new Date();
-
+    _expenseFilter = { period: 'all', staff: '', cat: '' };
+    _staffFilter   = 'all';
     loadExpensesList();
     showToast('Expense recorded!', 'success');
 }
@@ -2223,28 +2342,53 @@ function deleteExpense(id) {
     showToast('Expense deleted.', 'info');
 }
 
-function loadExpensesList() {
-    const expenses = getExpenses();
-    const tbody    = document.getElementById('expensesList');
-    const summaryEl = document.getElementById('expSummaryBadges');
-
-    if (expenses.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><p>No expenses recorded.</p></div></td></tr>';
-        summaryEl.innerHTML = '';
-        return;
+function filterExpenses(type, btn) {
+    if (btn) {
+        document.querySelectorAll('.exp-filter-btn').forEach(b => b.classList.remove('active-filter'));
+        btn.classList.add('active-filter');
     }
+    if (type === 'all')   _expenseFilter.period = 'all';
+    if (type === 'month') _expenseFilter.period = 'month';
+    if (type === 'week')  _expenseFilter.period = 'week';
+    if (type === 'staff') _expenseFilter.staff  = document.getElementById('expFilterStaff').value;
+    if (type === 'cat')   _expenseFilter.cat    = document.getElementById('expFilterCat').value;
+    loadExpensesList();
+}
 
-    // Summary badges by category
+function loadExpensesList() {
+    let expenses = getExpenses();
+    const allTotal   = expenses.reduce((a,e) => a + Number(e.amount), 0);
+    const monthTotal = expenses.filter(e => isThisMonth(e.date)).reduce((a,e) => a + Number(e.amount), 0);
+    const monthCount = expenses.filter(e => isThisMonth(e.date)).length;
+
+    document.getElementById('exp-all-total').textContent   = fmtKES(allTotal);
+    document.getElementById('exp-month-total').textContent = fmtKES(monthTotal);
+    document.getElementById('exp-month-count').textContent = monthCount + ' entries';
+
+    // Apply filters
+    if (_expenseFilter.period === 'month') expenses = expenses.filter(e => isThisMonth(e.date));
+    if (_expenseFilter.period === 'week')  expenses = expenses.filter(e => isThisWeek(e.date));
+    if (_expenseFilter.staff) expenses = expenses.filter(e => e.byStaff === _expenseFilter.staff);
+    if (_expenseFilter.cat)   expenses = expenses.filter(e => e.category === _expenseFilter.cat);
+
+    // Category summary badges
     const cats = {};
     expenses.forEach(e => { cats[e.category] = (cats[e.category] || 0) + Number(e.amount); });
-    summaryEl.innerHTML = Object.entries(cats).map(([cat, total]) =>
-        `<span class="badge badge-purple" style="font-size:12px; padding:5px 12px;">${cat}: ${fmtKES(total)}</span>`).join('');
+    document.getElementById('expSummaryBadges').innerHTML = Object.entries(cats)
+        .sort((a,b) => b[1]-a[1])
+        .map(([cat, tot]) => `<span class="badge badge-purple" style="font-size:12px; padding:5px 12px;">${cat}: ${fmtKES(tot)}</span>`)
+        .join('');
 
-    // Table (newest first)
+    const tbody = document.getElementById('expensesList');
+    if (expenses.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><p>No expenses found.</p></div></td></tr>';
+        return;
+    }
     tbody.innerHTML = [...expenses].reverse().map(e => `
         <tr>
-            <td>${new Date(e.date).toLocaleDateString('en-KE')}</td>
+            <td style="white-space:nowrap;">${new Date(e.date).toLocaleDateString('en-KE')}</td>
             <td><span class="badge badge-yellow">${e.category}</span></td>
+            <td style="font-weight:600;">${e.byStaff || 'General'}</td>
             <td>${e.description}</td>
             <td style="font-weight:700; color:#dc3545;">${fmtKES(e.amount)}</td>
             <td><button class="btn btn-danger btn-sm" onclick="deleteExpense(${e.id})">✕</button></td>
@@ -2254,69 +2398,150 @@ function loadExpensesList() {
 // ══════════════════════════════════════════
 // STAFF
 // ══════════════════════════════════════════
+let _staffFilter = 'all';
+
 function addStaffMember() {
-    const name  = document.getElementById('staffName').value.trim();
-    const phone = document.getElementById('staffPhone').value.trim();
-    const email = document.getElementById('staffEmail').value.trim();
-    const role  = document.getElementById('staffRole').value;
-
-    if (!name || !phone) { showToast('Name and phone are required.', 'error'); return; }
-
+    const name     = document.getElementById('staffName').value.trim();
+    const phone    = document.getElementById('staffPhone').value.trim();
+    const email    = document.getElementById('staffEmail').value.trim();
+    const role     = document.getElementById('staffRole').value;
+    const password = document.getElementById('staffPassword').value.trim();
+    if (!name || !phone)     { showToast('Name and phone are required.', 'error'); return; }
+    if (!password || password.length < 6) { showToast('Password must be at least 6 characters.', 'error'); return; }
     const staff   = getStaff();
-    const newUser = { id: Date.now(), name, phone, email, role, status:'active', dateCreated: new Date().toLocaleString('en-KE'), password: 'barber123' };
-    staff.push(newUser);
-    saveStaff(staff);
-
-    if (API_URL) {
-        fetch(API_URL, { method:'POST', body: JSON.stringify({ action:'addStaff', payload: newUser }) }).catch(() => {});
-    }
-
-    document.getElementById('staffName').value  = '';
-    document.getElementById('staffPhone').value = '';
-    document.getElementById('staffEmail').value = '';
-
-    loadStaffList();
-    renderStaffDropdown();
-    showToast(name + ' added to staff!', 'success');
+    if (staff.find(s => s.email && s.email === email && email)) { showToast('Email already exists.', 'error'); return; }
+    const newUser = { id:Date.now(), name, phone, email, role, status:'active', password, dateCreated:new Date().toLocaleString('en-KE') };
+    staff.push(newUser); saveStaff(staff);
+    if (API_URL) fetch(API_URL,{method:'POST',body:JSON.stringify({action:'addStaff',payload:newUser})}).catch(()=>{});
+    document.getElementById('staffName').value     = '';
+    document.getElementById('staffPhone').value    = '';
+    document.getElementById('staffEmail').value    = '';
+    document.getElementById('staffPassword').value = '';
+    loadStaffList(); renderStaffDropdown();
+    showToast(name + ' added!', 'success');
 }
 
 function toggleStaffStatus(id) {
+    if (!currentUser || !['manager','owner'].includes(currentUser.role)) {
+        showToast('Only managers can change staff status.', 'error'); return;
+    }
     const staff = getStaff();
     const idx   = staff.findIndex(s => s.id === id);
     if (idx === -1) return;
-    staff[idx].status = staff[idx].status === 'active' ? 'inactive' : 'active';
+    const newStatus = staff[idx].status === 'active' ? 'inactive' : 'active';
+    staff[idx].status = newStatus;
+    saveStaff(staff);
+    loadStaffList(); renderStaffDropdown();
+    showToast(staff[idx].name + ' is now ' + newStatus + '.', 'success');
+}
+
+function managerResetPassword(id) {
+    if (!currentUser || !['manager','owner'].includes(currentUser.role)) {
+        showToast('Only managers can reset passwords.', 'error'); return;
+    }
+    const newPass = prompt('Enter new password for this staff member (min 6 chars):');
+    if (!newPass) return;
+    if (newPass.length < 6) { showToast('Password too short.', 'error'); return; }
+    const staff = getStaff();
+    const idx   = staff.findIndex(s => s.id === id);
+    if (idx === -1) return;
+    staff[idx].password = newPass;
     saveStaff(staff);
     loadStaffList();
-    renderStaffDropdown();
+    showToast('Password reset for ' + staff[idx].name + '.', 'success');
+}
+
+function togglePasswordView(id) {
+    const cell = document.getElementById('pw-' + id);
+    const btn  = document.getElementById('pw-btn-' + id);
+    const staff = getStaff().find(s => s.id === id);
+    if (!staff) return;
+    if (cell.textContent === '••••••••') {
+        cell.textContent = staff.password || '(not set)';
+        btn.textContent  = 'Hide';
+    } else {
+        cell.textContent = '••••••••';
+        btn.textContent  = 'Show';
+    }
+}
+
+function filterStaff(type, btn) {
+    _staffFilter = type;
+    document.querySelectorAll('.staff-filter-btn').forEach(b => b.classList.remove('active-filter'));
+    if (btn) btn.classList.add('active-filter');
+    loadStaffList();
 }
 
 function loadStaffList() {
-    const staff = getStaff();
-    const sales = getSales();
-    const tbody = document.getElementById('staffList');
+    const allStaff = getStaff();
+    const sales    = getSales();
+
+    let staff = allStaff;
+    if (_staffFilter === 'active')   staff = allStaff.filter(s => s.status === 'active');
+    if (_staffFilter === 'inactive') staff = allStaff.filter(s => s.status === 'inactive');
+
+    const activeCount  = allStaff.filter(s => s.status === 'active').length;
+    const dormantCount = allStaff.filter(s => s.status !== 'active').length;
+    const activeEl  = document.getElementById('staff-active-count');
+    const dormantEl = document.getElementById('staff-dormant-count');
+    if (activeEl)  activeEl.textContent  = activeCount;
+    if (dormantEl) dormantEl.textContent = dormantCount;
+
+    const salesMap = {};
+    const revenueMap = {};
+    sales.forEach(s => {
+        salesMap[s.staffMember]   = (salesMap[s.staffMember] || 0) + 1;
+        revenueMap[s.staffMember] = (revenueMap[s.staffMember] || 0) + Number(s.total);
+    });
+
+    const isManager = currentUser && ['manager','owner'].includes(currentUser.role);
+    const container = document.getElementById('staffListContainer');
 
     if (staff.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><p>No staff added yet.</p></div></td></tr>';
+        container.innerHTML = '<div class="card"><div class="empty-state"><div class="icon" style="font-size:32px;">👥</div><p>No staff found.</p></div></div>';
         return;
     }
 
-    // Count sales per staff
-    const salesMap = {};
-    sales.forEach(s => { salesMap[s.staffMember] = (salesMap[s.staffMember] || 0) + 1; });
+    container.innerHTML = staff.map(s => `
+        <div class="card" style="margin-bottom:12px; border-left:4px solid ${s.status==='active'?'#28a745':'#aaa'};">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,#a07830);color:#1a1a2e;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0;">
+                        ${s.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2)}
+                    </div>
+                    <div>
+                        <div style="font-weight:700;font-size:15px;">${s.name}</div>
+                        <div style="font-size:12px;color:#888;">${s.phone}${s.email ? ' · '+s.email : ''}</div>
+                        <div style="margin-top:3px;display:flex;gap:6px;flex-wrap:wrap;">
+                            <span class="badge badge-purple">${s.role}</span>
+                            <span class="badge ${s.status==='active'?'badge-green':'badge-red'}">${s.status}</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:12px;color:#888;">Sales: <strong>${salesMap[s.name]||0}</strong></div>
+                    <div style="font-size:12px;color:#888;">Revenue: <strong style="color:#c9a84c">${fmtKES(revenueMap[s.name]||0)}</strong></div>
+                    <div style="font-size:11px;color:#aaa;">Joined: ${s.dateCreated||'—'}</div>
+                </div>
+            </div>
 
-    tbody.innerHTML = staff.map(s => `
-        <tr>
-            <td style="font-weight:600;">${s.name}</td>
-            <td>${s.phone}</td>
-            <td><span class="badge badge-purple">${s.role}</span></td>
-            <td>${salesMap[s.name] || 0}</td>
-            <td><span class="badge ${s.status==='active' ? 'badge-green' : 'badge-red'}">${s.status}</span></td>
-            <td>
-                <button class="btn btn-outline btn-sm" onclick="toggleStaffStatus(${s.id})">
-                    ${s.status === 'active' ? 'Deactivate' : 'Activate'}
-                </button>
-            </td>
-        </tr>`).join('');
+            ${isManager ? `
+            <div style="margin-top:14px;padding-top:12px;border-top:1px solid #f0ece0;">
+                <!-- Password row -->
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                    <span style="font-size:12px;font-weight:600;color:#888;">Password:</span>
+                    <span id="pw-${s.id}" style="font-size:13px;font-family:monospace;background:#faf9f5;padding:3px 10px;border-radius:6px;border:1px solid #e8d99a;">••••••••</span>
+                    <button id="pw-btn-${s.id}" class="btn btn-outline btn-sm" onclick="togglePasswordView(${s.id})" style="padding:4px 10px;font-size:11px;">Show</button>
+                    <button class="btn btn-sm" style="background:#fff3cd;color:#8b6914;border:1px solid #e8d99a;padding:4px 10px;font-size:11px;" onclick="managerResetPassword(${s.id})">Reset Password</button>
+                </div>
+                <!-- Actions -->
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn btn-sm ${s.status==='active'?'btn-danger':'btn-success'}" onclick="toggleStaffStatus(${s.id})">
+                        ${s.status==='active'?'Deactivate Account':'Activate Account'}
+                    </button>
+                </div>
+            </div>` : ''}
+        </div>`).join('');
 }
 
 // ══════════════════════════════════════════
@@ -2325,78 +2550,62 @@ function loadStaffList() {
 function loadReports() {
     const sales    = getSales();
     const expenses = getExpenses();
-
-    const totalRev = sales.reduce((a,s) => a + Number(s.total), 0);
+    const totalRev = sales.reduce((a,s)    => a + Number(s.total), 0);
     const totalExp = expenses.reduce((a,e) => a + Number(e.amount), 0);
-
     document.getElementById('r-total-rev').textContent   = fmtKES(totalRev);
     document.getElementById('r-total-sales').textContent = sales.length;
     document.getElementById('r-total-exp').textContent   = fmtKES(totalExp);
     document.getElementById('r-net-profit').textContent  = fmtKES(totalRev - totalExp);
-
-    // Sales by staff
     const staffMap = {};
     sales.forEach(s => {
         if (!staffMap[s.staffMember]) staffMap[s.staffMember] = { txns:0, total:0 };
-        staffMap[s.staffMember].txns++;
-        staffMap[s.staffMember].total += Number(s.total);
+        staffMap[s.staffMember].txns++; staffMap[s.staffMember].total += Number(s.total);
     });
-
-    const staffTbody = document.getElementById('r-staff-table');
-    const sorted     = Object.entries(staffMap).sort((a,b) => b[1].total - a[1].total);
-    staffTbody.innerHTML = sorted.length === 0
+    const sorted = Object.entries(staffMap).sort((a,b) => b[1].total - a[1].total);
+    document.getElementById('r-staff-table').innerHTML = sorted.length === 0
         ? '<tr><td colspan="4"><div class="empty-state"><p>No data.</p></div></td></tr>'
-        : sorted.map(([name, d]) => `
-            <tr>
-                <td style="font-weight:600;">${name}</td>
-                <td>${d.txns}</td>
-                <td style="font-weight:700; color:#c9a84c;">${fmtKES(d.total)}</td>
-                <td>${fmtKES(d.txns > 0 ? d.total / d.txns : 0)}</td>
-            </tr>`).join('');
-
-    // Expenses by category
-    const cats    = {};
-    expenses.forEach(e => { cats[e.category] = (cats[e.category] || 0) + Number(e.amount); });
-    const expEl   = document.getElementById('r-expenses-cats');
-    const catEntries = Object.entries(cats).sort((a,b) => b[1]-a[1]);
-    expEl.innerHTML = catEntries.length === 0
+        : sorted.map(([name,d]) => `<tr>
+            <td style="font-weight:600;">${name}</td>
+            <td>${d.txns}</td>
+            <td style="font-weight:700;color:#c9a84c;">${fmtKES(d.total)}</td>
+            <td>${fmtKES(d.txns>0?d.total/d.txns:0)}</td>
+        </tr>`).join('');
+    const cats = {};
+    expenses.forEach(e => { cats[e.category] = (cats[e.category]||0) + Number(e.amount); });
+    const catEntries = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+    document.getElementById('r-expenses-cats').innerHTML = catEntries.length === 0
         ? '<div class="empty-state"><p>No expenses recorded.</p></div>'
-        : catEntries.map(([cat, total]) => {
-            const pct = totalExp > 0 ? Math.round((total / totalExp) * 100) : 0;
-            return `
-                <div style="margin-bottom:12px;">
-                    <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
-                        <span style="font-weight:600; text-transform:capitalize;">${cat}</span>
-                        <span style="color:#c9a84c; font-weight:700;">${fmtKES(total)} (${pct}%)</span>
-                    </div>
-                    <div style="height:8px; background:#f0f0f0; border-radius:4px; overflow:hidden;">
-                        <div style="height:100%; width:${pct}%; background:linear-gradient(135deg,#c9a84c,#a07830); border-radius:4px;"></div>
-                    </div>
-                </div>`;}).join('');
-
+        : catEntries.map(([cat,total]) => {
+            const pct = totalExp > 0 ? Math.round((total/totalExp)*100) : 0;
+            return `<div style="margin-bottom:12px;">
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;">
+                    <span style="font-weight:600;text-transform:capitalize;">${cat}</span>
+                    <span style="color:#c9a84c;font-weight:700;">${fmtKES(total)} (${pct}%)</span>
+                </div>
+                <div style="height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;">
+                    <div style="height:100%;width:${pct}%;background:linear-gradient(135deg,#c9a84c,#a07830);border-radius:4px;"></div>
+                </div>
+            </div>`;}).join('');
     filterSales('all');
 }
 
 function filterSales(period) {
-    const all   = getSales();
-    let filtered;
-    if (period === 'today')  filtered = all.filter(s => isToday(s.date));
-    else if (period === 'week')  filtered = all.filter(s => isThisWeek(s.date));
-    else if (period === 'month') filtered = all.filter(s => isThisMonth(s.date));
-    else filtered = all;
-
+    const all = getSales();
+    let filtered = period==='today' ? all.filter(s=>isToday(s.date))
+                 : period==='week'  ? all.filter(s=>isThisWeek(s.date))
+                 : period==='month' ? all.filter(s=>isThisMonth(s.date))
+                 : all;
     const tbody = document.getElementById('r-sales-table');
     tbody.innerHTML = filtered.length === 0
         ? '<tr><td colspan="6"><div class="empty-state"><p>No sales in this period.</p></div></td></tr>'
-        : [...filtered].reverse().map(s => `
-            <tr>
-                <td>${new Date(s.date).toLocaleDateString('en-KE')}</td>
-                <td>${s.staffMember}</td>
-                <td style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.items}</td>
-                <td>${s.discount > 0 ? '−' + fmtKES(s.discount) : '—'}</td>
-                <td style="font-weight:700; color:#c9a84c;">${fmtKES(s.total)}</td>
-                <td><span class="badge badge-purple">${s.paymentMethod}</span></td>
-            </tr>`).join('');
+        : [...filtered].reverse().map(s=>`<tr>
+            <td style="white-space:nowrap;">${new Date(s.date).toLocaleDateString('en-KE')}</td>
+            <td>${s.staffMember}</td>
+            <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.items}</td>
+            <td>${s.discount>0?'−'+fmtKES(s.discount):'—'}</td>
+            <td style="font-weight:700;color:#c9a84c;">${fmtKES(s.total)}</td>
+            <td><span class="badge badge-purple">${s.paymentMethod}</span></td>
+        </tr>`).join('');
 }
 
 // ══════════════════════════════════════════
@@ -2445,6 +2654,8 @@ function initPOS() {
     document.getElementById('topbarUser').style.display   = 'block';
 
     document.getElementById('expDate').valueAsDate = new Date();
+    _expenseFilter = { period: 'all', staff: '', cat: '' };
+    _staffFilter   = 'all';
 
     initServices();
     renderStaffDropdown();
